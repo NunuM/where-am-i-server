@@ -1,0 +1,77 @@
+package me.nunum.whereami.model;
+
+import javax.persistence.*;
+import java.util.Date;
+
+@Entity
+@NamedQuery(
+        name = "Device.findByInstance",
+        query = "SELECT OBJECT(u) FROM Device u where u.instanceId=:instance"
+)
+public class Device implements Comparable<Device> {
+
+    @Id
+    @GeneratedValue
+    private Long id;
+
+    @Column(unique = true, updatable = false, nullable = false)
+    private String instanceId;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date created;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date updated;
+
+    protected Device() {
+        //JPA
+    }
+
+    public Device(String instanceId) {
+        this.instanceId = instanceId;
+    }
+
+    public String instanceId() {
+        return instanceId;
+    }
+
+    @PrePersist
+    protected void onCreate() {
+        updated = created = new Date(System.currentTimeMillis());
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updated = new Date(System.currentTimeMillis());
+    }
+
+    @Override
+    public String toString() {
+        return "Device{" +
+                "id=" + id +
+                ", instanceId='" + instanceId + '\'' +
+                ", created=" + created +
+                ", updated=" + updated +
+                '}';
+    }
+
+    @Override
+    public int compareTo(Device device) {
+        return this.created.compareTo(device.created);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Device)) return false;
+
+        Device device = (Device) o;
+
+        return instanceId.equals(device.instanceId);
+    }
+
+    @Override
+    public int hashCode() {
+        return instanceId.hashCode();
+    }
+}
