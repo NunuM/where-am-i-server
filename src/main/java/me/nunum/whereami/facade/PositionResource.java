@@ -1,5 +1,8 @@
 package me.nunum.whereami.facade;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import me.nunum.whereami.controller.PositionsController;
 import me.nunum.whereami.framework.dto.DTO;
 import me.nunum.whereami.model.Localization;
@@ -18,7 +21,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-public final class PositionResource {
+@Api(value = "position")
+public class PositionResource {
 
     private static final Logger LOGGER = Logger.getLogger("PositionResource");
 
@@ -36,6 +40,9 @@ public final class PositionResource {
 
 
     @GET
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "X-APP", value = "App Instance", required = true, dataType = "string", paramType = "header")
+    })
     @Produces({MediaType.APPLICATION_JSON})
     public Response positions() {
 
@@ -55,6 +62,9 @@ public final class PositionResource {
 
 
     @POST
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "X-APP", value = "App Instance", required = true, dataType = "string", paramType = "header")
+    })
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     public Response newPosition(@Valid NewPositionRequest newPositionRequest) {
@@ -82,6 +92,9 @@ public final class PositionResource {
 
     @DELETE
     @Path("{ip}")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "X-APP", value = "App Instance", required = true, dataType = "string", paramType = "header")
+    })
     @Produces({MediaType.APPLICATION_JSON})
     public Response deletePosition(@PathParam("ip") Long ip) {
         try {

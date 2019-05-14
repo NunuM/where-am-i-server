@@ -1,5 +1,8 @@
 package me.nunum.whereami.facade;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import me.nunum.whereami.controller.TrainingController;
 import me.nunum.whereami.model.Localization;
 import me.nunum.whereami.model.exceptions.EntityNotFoundException;
@@ -15,7 +18,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-public final class TrainResource {
+@Api(value = "train")
+public class TrainResource {
 
     private static final Logger LOGGER = Logger.getLogger("TrainResource");
 
@@ -31,6 +35,9 @@ public final class TrainResource {
 
 
     @POST
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "X-APP", value = "App Instance", required = true, dataType = "string", paramType = "header")
+    })
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     public Response submitTrainingRequest(@Valid NewTrainingRequest request) {
@@ -48,6 +55,9 @@ public final class TrainResource {
     }
 
     @GET
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "X-APP", value = "App Instance", required = true, dataType = "string", paramType = "header")
+    })
     @Path("{it}")
     @Produces({MediaType.APPLICATION_JSON})
     public Response trainingStatus(@PathParam("it") Long it) {
@@ -74,6 +84,9 @@ public final class TrainResource {
 
 
     @GET
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "X-APP", value = "App Instance", required = true, dataType = "string", paramType = "header")
+    })
     @Produces({MediaType.APPLICATION_JSON})
     public Response allTrainingStatus(@HeaderParam("timezone") String timezone) {
 

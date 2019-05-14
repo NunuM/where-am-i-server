@@ -1,5 +1,8 @@
 package me.nunum.whereami.facade;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import me.nunum.whereami.controller.LocalizationController;
 import me.nunum.whereami.framework.dto.DTO;
 import me.nunum.whereami.model.exceptions.EntityAlreadyExists;
@@ -20,9 +23,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+@Api("localization")
 @Path("localization")
 @Singleton
-public final class LocalizationResource {
+public class LocalizationResource {
 
     @Context
     SecurityContext securityContext;
@@ -32,6 +36,9 @@ public final class LocalizationResource {
     private final LocalizationController controller = new LocalizationController();
 
     @GET
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "X-APP", value = "App Instance", required = true, dataType = "string", paramType = "header")
+    })
     @Produces({MediaType.APPLICATION_JSON})
     public Response retrieveLocalizations(@QueryParam("page") Integer page, @QueryParam("name") String localizationName) {
         try {
@@ -52,6 +59,9 @@ public final class LocalizationResource {
 
 
     @POST
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "X-APP", value = "App Instance", required = true, dataType = "string", paramType = "header")
+    })
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     public Response newLocalization(@Valid NewLocalizationRequest localizationRequest) {
@@ -76,6 +86,9 @@ public final class LocalizationResource {
     }
 
     @DELETE
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "X-APP", value = "App Instance", required = true, dataType = "string", paramType = "header")
+    })
     @Path("{id}")
     @Produces({MediaType.APPLICATION_JSON})
     public Response deleteLocalization(@PathParam("id") Long id) {
@@ -104,26 +117,28 @@ public final class LocalizationResource {
     }
 
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "X-APP", value = "App Instance", required = true, dataType = "string", paramType = "header")
+    })
     @Path("spam")
     public LocalizationReportResource reportResource() {
         return new LocalizationReportResource(controller, securityContext);
     }
 
+
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "X-APP", value = "App Instance", required = true, dataType = "string", paramType = "header")
+    })
     @Path("{id}/train")
-    public Object trainResource(@PathParam("id") Long id) {
-        try {
-            return new TrainResource(this.controller.localization(id), securityContext);
-        } catch (EntityNotFoundException e) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
+    public TrainResource trainResource(@PathParam("id") Long id) {
+        return new TrainResource(this.controller.localization(id), securityContext);
     }
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "X-APP", value = "App Instance", required = true, dataType = "string", paramType = "header")
+    })
     @Path("{id}/position")
-    public Object positionResource(@PathParam("id") Long id) {
-        try {
-            return new PositionResource(this.controller.localization(id), securityContext);
-        } catch (EntityNotFoundException e) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
+    public PositionResource positionResource(@PathParam("id") Long id) {
+        return new PositionResource(this.controller.localization(id), securityContext);
     }
 }

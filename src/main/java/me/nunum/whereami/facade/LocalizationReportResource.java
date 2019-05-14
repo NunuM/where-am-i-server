@@ -1,5 +1,8 @@
 package me.nunum.whereami.facade;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import me.nunum.whereami.controller.LocalizationController;
 import me.nunum.whereami.framework.dto.DTO;
 import me.nunum.whereami.model.exceptions.EntityNotFoundException;
@@ -14,7 +17,8 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
 
-public final class LocalizationReportResource {
+@Api("spam")
+public class LocalizationReportResource {
 
     private final LocalizationController controller;
     private final SecurityContext securityContext;
@@ -26,6 +30,9 @@ public final class LocalizationReportResource {
     }
 
     @POST
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "X-APP", value = "App Instance", required = true, dataType = "string", paramType = "header")
+    })
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     public Response localizationSpam(@Valid LocalizationSpamRequest spamRequest) {

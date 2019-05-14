@@ -1,5 +1,8 @@
 package me.nunum.whereami.facade;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import me.nunum.whereami.controller.FingerprintController;
 import me.nunum.whereami.framework.dto.DTO;
 import me.nunum.whereami.model.request.FingerprintRequest;
@@ -15,15 +18,19 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+@Api(value = "fingerprint")
 @Path("fingerprint")
 @Singleton
-public final class FingerprintResource {
+public class FingerprintResource {
 
     private static final Logger LOGGER = Logger.getLogger("FingerprintResource");
 
     private final FingerprintController controller = new FingerprintController();
 
     @POST
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "X-APP", value = "App Instance", required = true, dataType = "string", paramType = "header")
+    })
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     public Response collectFingerprint(List<FingerprintRequest> fingerprints) {

@@ -1,5 +1,8 @@
 package me.nunum.whereami.facade;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import me.nunum.whereami.controller.PostController;
 import me.nunum.whereami.framework.dto.DTO;
 import me.nunum.whereami.model.exceptions.EntityNotFoundException;
@@ -19,9 +22,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+@Api("post")
 @Path("post")
 @Singleton
-public final class PostResource {
+public class PostResource {
 
     private static final Logger LOGGER = Logger.getLogger("PostResource");
 
@@ -32,6 +36,9 @@ public final class PostResource {
 
 
     @GET
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "X-APP", value = "App Instance", required = true, dataType = "string", paramType = "header")
+    })
     @Produces({MediaType.APPLICATION_JSON})
     public Response posts(@QueryParam("page") Integer page) {
 
@@ -51,6 +58,9 @@ public final class PostResource {
 
 
     @POST
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "X-APP", value = "App Instance", required = true, dataType = "string", paramType = "header")
+    })
     @RolesAllowed({"admin"})
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
@@ -71,6 +81,9 @@ public final class PostResource {
 
 
     @PUT
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "X-APP", value = "App Instance", required = true, dataType = "string", paramType = "header")
+    })
     @Path("{id}")
     @RolesAllowed({"admin"})
     @Consumes({MediaType.APPLICATION_JSON})
@@ -97,6 +110,9 @@ public final class PostResource {
     }
 
     @DELETE
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "X-APP", value = "App Instance", required = true, dataType = "string", paramType = "header")
+    })
     @Path("{id}")
     @RolesAllowed({"admin"})
     @Produces({MediaType.APPLICATION_JSON})
