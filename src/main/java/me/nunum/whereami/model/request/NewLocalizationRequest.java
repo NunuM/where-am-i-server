@@ -82,6 +82,6 @@ public class NewLocalizationRequest {
     }
 
     public Localization buildLocalization(final Device owner) {
-        return new Localization(this.label.toLowerCase(), this.user.toLowerCase(), latitude, longitude, owner);
+        return new Localization(this.label.trim().toLowerCase(), this.user.trim().toLowerCase(), latitude, longitude, owner);
     }
 }

@@ -37,6 +37,6 @@ public class NewPositionRequest {
 
 
     public Position buildPosition(Localization localization) {
-        return new Position(this.label, localization);
+        return new Position(this.label.trim(), localization);
     }
 }

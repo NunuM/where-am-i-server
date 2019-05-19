@@ -120,11 +120,10 @@ public class LocalizationResource {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "X-APP", value = "App Instance", required = true, dataType = "string", paramType = "header")
     })
-    @Path("spam")
+    @Path("{id}/spam")
     public LocalizationReportResource reportResource() {
         return new LocalizationReportResource(controller, securityContext);
     }
-
 
     @ApiImplicitParams({
             @ApiImplicitParam(name = "X-APP", value = "App Instance", required = true, dataType = "string", paramType = "header")

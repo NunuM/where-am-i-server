@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import me.nunum.whereami.controller.LocalizationController;
 import me.nunum.whereami.framework.dto.DTO;
+import me.nunum.whereami.model.exceptions.EntityAlreadyExists;
 import me.nunum.whereami.model.exceptions.EntityNotFoundException;
 import me.nunum.whereami.model.request.LocalizationSpamRequest;
 
@@ -41,6 +42,8 @@ public class LocalizationReportResource {
             final DTO reportDto = this.controller.newSpamReport(securityContext.getUserPrincipal(), spamRequest);
 
             return Response.ok(reportDto.dtoValues()).build();
+        } catch (EntityAlreadyExists e) {
+            return Response.status(Response.Status.CONFLICT).build();
         } catch (EntityNotFoundException e) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }

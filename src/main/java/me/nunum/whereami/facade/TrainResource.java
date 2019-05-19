@@ -113,4 +113,32 @@ public class TrainResource {
         }
     }
 
+
+    @DELETE
+    @Path("{it}")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "X-APP", value = "App Instance", required = true, dataType = "string", paramType = "header")
+    })
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response deleteTrainingRequest(@PathParam("it") Long trainingId) {
+
+        try {
+
+            return Response.ok(controller
+                    .deleteTraining(securityContext.getUserPrincipal(), trainingId)).build();
+
+        } catch (EntityNotFoundException e) {
+
+            LOGGER.log(Level.SEVERE, "Unable to find entity", e);
+
+            return Response.status(Response.Status.NOT_FOUND).build();
+
+        } catch (ForbiddenEntityAccessException e) {
+
+            LOGGER.log(Level.SEVERE, "Unable to find entity", e);
+
+            return Response.status(Response.Status.FORBIDDEN).build();
+
+        }
+    }
 }

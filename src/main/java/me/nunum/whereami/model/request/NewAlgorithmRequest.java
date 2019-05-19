@@ -65,6 +65,6 @@ public class NewAlgorithmRequest {
     }
 
     public Algorithm build() {
-        return new Algorithm(name, authorName, paperURL);
+        return new Algorithm(name.trim(), authorName.trim(), paperURL.trim());
     }
 }

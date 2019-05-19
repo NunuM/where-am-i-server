@@ -122,4 +122,10 @@ public class PositionResource {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
     }
+
+
+    @Path("{ip}/spam")
+    public PositionReportResource positionReportResource() {
+        return new PositionReportResource(controller, securityContext);
+    }
 }

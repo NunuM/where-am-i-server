@@ -81,4 +81,29 @@ public final class TrainingController {
 
         return trainingList.stream().map(Training::toDTO).collect(Collectors.toList());
     }
+
+    public DTO deleteTraining(final Principal userPrincipal, final Long trainingId) {
+
+        final Device requester = this.deviceRepository.findOrPersist(userPrincipal);
+
+        Optional<Training> optionalTraining = this.repository.findById(trainingId);
+
+        if (optionalTraining.isPresent()) {
+
+            final Training training = optionalTraining.get();
+
+            if (training.isAllowedToCheckTheStatus(requester)) {
+
+                DTO toSend = training.toDTO();
+                this.repository.delete(training);
+
+                return toSend;
+            }
+
+            throw new ForbiddenEntityAccessException(String
+                    .format("Device %s request to delete training %d, however the ownership failed", requester.instanceId(), trainingId));
+        }
+
+        throw new EntityNotFoundException(String.format("Training %d was not found requested by %s", trainingId, requester.instanceId()));
+    }
 }

@@ -9,6 +9,7 @@
         <class>me.nunum.whereami.model.Localization</class>
         <class>me.nunum.whereami.model.LocalizationSpamReport</class>
         <class>me.nunum.whereami.model.Position</class>
+        <class>me.nunum.whereami.model.PositionSpamReport</class>
         <class>me.nunum.whereami.model.Algorithm</class>
         <class>me.nunum.whereami.model.Post</class>
         <class>me.nunum.whereami.model.Fingerprint</class>
@@ -16,11 +17,11 @@
         <class>me.nunum.whereami.model.TrainingStatus</class>
 
         <properties>
-            <property name="javax.persistence.jdbc.url" value="jdbc:h2:./db/test"/>
+            <property name="javax.persistence.jdbc.url" value="jdbc:h2:tcp://localhost/~/test"/>
             <property name="javax.persistence.jdbc.password" value=""/>
             <property name="javax.persistence.jdbc.driver" value="org.h2.Driver"/>
             <property name="javax.persistence.jdbc.user" value="sa"/>
-            <property name="javax.persistence.schema-generation.database.action" value="create"/>
+            <property name="javax.persistence.schema-generation.database.action" value="drop-and-create"/>
         </properties>
     </persistence-unit>
 </persistence>

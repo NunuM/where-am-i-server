@@ -4,19 +4,16 @@ import me.nunum.whereami.framework.dto.DTO;
 import me.nunum.whereami.model.Device;
 import me.nunum.whereami.model.Localization;
 import me.nunum.whereami.model.Position;
+import me.nunum.whereami.model.PositionSpamReport;
 import me.nunum.whereami.model.exceptions.EntityNotFoundException;
 import me.nunum.whereami.model.exceptions.ForbiddenEntityModificationException;
-import me.nunum.whereami.model.persistance.DeviceRepository;
-import me.nunum.whereami.model.persistance.FingerprintRepository;
-import me.nunum.whereami.model.persistance.LocalizationRepository;
-import me.nunum.whereami.model.persistance.PositionRepository;
-import me.nunum.whereami.model.persistance.jpa.DeviceRepositoryJpa;
-import me.nunum.whereami.model.persistance.jpa.FingerprintRepositoryJpa;
-import me.nunum.whereami.model.persistance.jpa.LocalizationRepositoryJpa;
-import me.nunum.whereami.model.persistance.jpa.PostitionRepositoryJpa;
+import me.nunum.whereami.model.persistance.*;
+import me.nunum.whereami.model.persistance.jpa.*;
 import me.nunum.whereami.model.request.NewPositionRequest;
+import me.nunum.whereami.model.request.PostionSpamRequest;
 
 import javax.ws.rs.core.SecurityContext;
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -28,6 +25,7 @@ public class PositionsController {
     private final DeviceRepository deviceRepository;
     private final FingerprintRepository fingerprintRepository;
     private final LocalizationRepository localizationRepository;
+    private final PositionSpamRepository positionSpamRepository;
 
 
     public PositionsController(Localization localization) {
@@ -36,6 +34,7 @@ public class PositionsController {
         this.deviceRepository = new DeviceRepositoryJpa();
         this.fingerprintRepository = new FingerprintRepositoryJpa();
         this.localizationRepository = new LocalizationRepositoryJpa();
+        this.positionSpamRepository = new PositionSpamRepositoryJpa();
     }
 
 
@@ -99,5 +98,27 @@ public class PositionsController {
         this.fingerprintRepository.deleteByPosition(position);
 
         return position.toDTO();
+    }
+
+    public DTO processSpamRequest(Principal userPrincipal, PostionSpamRequest request) {
+
+        Optional<Position> optionalPosition = this.repository.findById(request.getId());
+
+        if (!optionalPosition.isPresent()) {
+            throw new EntityNotFoundException(
+                    String.format("Spam report for localization %d requested by %s does not exists",
+                            request.getId(),
+                            userPrincipal.getName())
+            );
+        }
+
+        final Position position = optionalPosition.get();
+
+        PositionSpamReport positionSpamReport = this.positionSpamRepository.findOrCreateByPosition(position);
+
+        positionSpamReport.newReport(this.deviceRepository.findOrPersist(userPrincipal));
+
+        return this.positionSpamRepository.save(positionSpamReport).toDTO();
+
     }
 }
