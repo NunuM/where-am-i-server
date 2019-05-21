@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class FingerprintController {
+public class FingerprintController implements AutoCloseable {
 
     private final FingerprintRepository repository;
     private final PositionRepository positionRepository;
@@ -67,4 +67,8 @@ public class FingerprintController {
         return position.toDTO();
     }
 
+    @Override
+    public void close() throws Exception {
+        this.repository.close();
+    }
 }

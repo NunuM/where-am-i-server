@@ -1,12 +1,15 @@
 package me.nunum.whereami.model.request;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 public class LocalizationSpamRequest {
 
     @NotNull
     private Long id;
 
+    @NotNull
+    @Size(min = 1, max = 255)
     private String className;
 
     public LocalizationSpamRequest() {

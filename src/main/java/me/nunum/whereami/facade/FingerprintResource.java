@@ -25,8 +25,6 @@ public class FingerprintResource {
 
     private static final Logger LOGGER = Logger.getLogger("FingerprintResource");
 
-    private final FingerprintController controller = new FingerprintController();
-
     @POST
     @ApiImplicitParams({
             @ApiImplicitParam(name = "X-APP", value = "App Instance", required = true, dataType = "string", paramType = "header")
@@ -35,7 +33,7 @@ public class FingerprintResource {
     @Produces({MediaType.APPLICATION_JSON})
     public Response collectFingerprint(List<FingerprintRequest> fingerprints) {
 
-        try {
+        try (final FingerprintController controller = new FingerprintController()) {
 
             final DTO dto = controller.storeFingerprints(fingerprints);
 

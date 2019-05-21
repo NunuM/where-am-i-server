@@ -51,6 +51,13 @@ public class TrainResource {
             LOGGER.log(Level.SEVERE, "Unable to find entity", e);
 
             return Response.status(Response.Status.NOT_FOUND).build();
+
+        } finally {
+            try {
+                this.controller.close();
+            } catch (Exception exception) {
+                LOGGER.log(Level.SEVERE, "Could not close entity manager", exception);
+            }
         }
     }
 
@@ -79,6 +86,13 @@ public class TrainResource {
             LOGGER.log(Level.SEVERE, "Unable to find entity", e);
 
             return Response.status(Response.Status.FORBIDDEN).build();
+
+        } finally {
+            try {
+                this.controller.close();
+            } catch (Exception exception) {
+                LOGGER.log(Level.SEVERE, "Could not close entity manager", exception);
+            }
         }
     }
 
@@ -110,6 +124,13 @@ public class TrainResource {
             LOGGER.log(Level.SEVERE, "Unable to find entity", e);
 
             return Response.status(Response.Status.FORBIDDEN).build();
+
+        } finally {
+            try {
+                this.controller.close();
+            } catch (Exception exception) {
+                LOGGER.log(Level.SEVERE, "Could not close entity manager", exception);
+            }
         }
     }
 
@@ -139,6 +160,12 @@ public class TrainResource {
 
             return Response.status(Response.Status.FORBIDDEN).build();
 
+        } finally {
+            try {
+                this.controller.close();
+            } catch (Exception exception) {
+                LOGGER.log(Level.SEVERE, "Could not close entity manager", exception);
+            }
         }
     }
 }

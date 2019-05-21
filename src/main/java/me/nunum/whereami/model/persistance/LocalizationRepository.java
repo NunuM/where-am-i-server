@@ -6,7 +6,7 @@ import me.nunum.whereami.model.Localization;
 import java.util.List;
 import java.util.Optional;
 
-public interface LocalizationRepository extends Repository<Localization, Long> {
+public interface LocalizationRepository extends Repository<Localization, Long>, AutoCloseable {
 
     List<Localization> paginate(Optional<Integer> page);
 

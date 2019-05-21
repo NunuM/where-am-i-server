@@ -14,6 +14,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -34,7 +35,7 @@ import java.util.logging.Logger;
  * implementation patterns</a>
  */
 public abstract class JpaRepository<T, K extends Serializable>
-        implements Repository<T, K>, IterableRepository<T, K>, DeleteableRepository<T, K> {
+        implements Repository<T, K>, IterableRepository<T, K>, DeleteableRepository<T, K>, AutoCloseable {
 
     @PersistenceUnit
     private static EntityManagerFactory emFactory;
@@ -59,11 +60,9 @@ public abstract class JpaRepository<T, K extends Serializable>
         return emFactory;
     }
 
-    protected synchronized EntityManager entityManager() {
+    protected EntityManager entityManager() {
 
         final String tName = Thread.currentThread().getName();
-
-        System.out.println("......................" + tName + "----------------------------");
 
         EntityManager entityManager = this.manager.get(tName);
 
@@ -198,6 +197,15 @@ public abstract class JpaRepository<T, K extends Serializable>
             em.close();
         }
         return true;
+    }
+
+    @Override
+    public void close() throws Exception {
+        try {
+            entityManager().close();
+        } catch (Exception exception) {
+            LOGGER.log(Level.SEVERE, "Could not close entity manager", exception);
+        }
     }
 
     /**
@@ -343,7 +351,7 @@ public abstract class JpaRepository<T, K extends Serializable>
     /**
      * an iterator over JPA
      *
-     * @author pgsou_000
+     * @author
      */
     private class JpaPagedIterator implements Iterator<T> {
 

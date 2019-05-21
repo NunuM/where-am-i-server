@@ -76,7 +76,7 @@ public class PostitionRepositoryJpa
 
 
             networkingStats.stream()
-                    .map(e -> new NetworkingStats(((int)(long) e[0]), (String) e[1]))
+                    .map(e -> new NetworkingStats(((int) (long) e[0]), (String) e[1]))
                     .map(NetworkingStats::getNumberOfNetworks)
                     .reduce((e0, e1) -> e0 + e1).ifPresent(position::setNumberOfNetworks);
 

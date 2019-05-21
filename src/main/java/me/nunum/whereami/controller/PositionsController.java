@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class PositionsController {
+public class PositionsController implements AutoCloseable {
 
     private final Localization localization;
     private final PositionRepository repository;
@@ -120,5 +120,10 @@ public class PositionsController {
 
         return this.positionSpamRepository.save(positionSpamReport).toDTO();
 
+    }
+
+    @Override
+    public void close() throws Exception {
+        this.repository.close();
     }
 }

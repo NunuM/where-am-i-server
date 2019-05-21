@@ -16,10 +16,14 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 @Api("spam")
 public class LocalizationReportResource {
+
+    private static final Logger LOGGER = Logger.getLogger(LocalizationReportResource.class.getSimpleName());
 
     private final LocalizationController controller;
     private final SecurityContext securityContext;
@@ -46,7 +50,12 @@ public class LocalizationReportResource {
             return Response.status(Response.Status.CONFLICT).build();
         } catch (EntityNotFoundException e) {
             return Response.status(Response.Status.NOT_FOUND).build();
+        } finally {
+            try {
+                this.controller.close();
+            } catch (Exception exception) {
+                LOGGER.log(Level.SEVERE, "Could not close entity manager", exception);
+            }
         }
     }
-
 }

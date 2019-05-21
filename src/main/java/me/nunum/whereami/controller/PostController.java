@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class PostController {
+public class PostController implements AutoCloseable {
 
     private final PostRepository repository;
 
@@ -62,5 +62,10 @@ public class PostController {
         this.repository.delete(post);
 
         return post.toDTO();
+    }
+
+    @Override
+    public void close() throws Exception {
+        this.repository.close();
     }
 }

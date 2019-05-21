@@ -6,7 +6,9 @@ import me.nunum.whereami.framework.dto.DTOable;
 import me.nunum.whereami.model.dto.AlgorithmDTO;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 public class Algorithm
@@ -28,15 +30,16 @@ public class Algorithm
     private String paperURL;
 
 
-    private Float rating;
-
-
     @Temporal(TemporalType.TIMESTAMP)
     private Date created;
 
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date updated;
+
+
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<AlgorithmProvider> providers;
 
 
     public Algorithm() {
@@ -47,9 +50,8 @@ public class Algorithm
         this.name = name;
         this.authorName = authorName;
         this.paperURL = paperURL;
-        this.rating = 0.0f;
+        this.providers = new ArrayList<>();
     }
-
 
     @Override
     public boolean is(String id) {
@@ -77,8 +79,12 @@ public class Algorithm
         return paperURL;
     }
 
-    public Float getRating() {
-        return rating;
+    public void addProvider(AlgorithmProvider provider) {
+        this.providers.add(provider);
+    }
+
+    public void removeProvider(AlgorithmProvider provider) {
+        this.providers.remove(provider);
     }
 
     @PrePersist
@@ -93,7 +99,7 @@ public class Algorithm
 
     @Override
     public int compareTo(Algorithm algorithm) {
-        return this.rating.compareTo(algorithm.rating);
+        return this.authorName.compareTo(algorithm.authorName);
     }
 
     @Override
@@ -122,7 +128,6 @@ public class Algorithm
                 ", name='" + name + '\'' +
                 ", authorName='" + authorName + '\'' +
                 ", paperURL='" + paperURL + '\'' +
-                ", rating=" + rating +
                 ", created=" + created +
                 ", updated=" + updated +
                 '}';
@@ -130,6 +135,6 @@ public class Algorithm
 
     @Override
     public DTO toDTO() {
-        return new AlgorithmDTO(id, name, authorName, paperURL, rating);
+        return new AlgorithmDTO(id, name, authorName, paperURL);
     }
 }

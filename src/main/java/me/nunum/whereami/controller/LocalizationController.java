@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class LocalizationController {
+public class LocalizationController implements AutoCloseable {
 
     private final LocalizationRepository repository;
     private final DeviceRepository deviceRepository;
@@ -39,7 +39,7 @@ public class LocalizationController {
         final Device requester = this.deviceRepository.findOrPersist(principal);
 
         return this.repository
-                .searchWithPagination(page,localizationName)
+                .searchWithPagination(page, localizationName)
                 .stream()
                 .map(e -> e.toDTO(requester))
                 .collect(Collectors.toList());
@@ -115,5 +115,10 @@ public class LocalizationController {
         }
 
         return someLocalization.get();
+    }
+
+    @Override
+    public void close() throws Exception {
+        this.repository.close();
     }
 }

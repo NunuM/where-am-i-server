@@ -14,6 +14,8 @@ import io.swagger.models.Swagger;
 import io.swagger.util.Yaml;
 
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.inject.Singleton;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -25,14 +27,14 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @Path("/api/doc")
 @Singleton
 public class ApiListingResource {
     static boolean initialized = false;
-    Logger LOGGER = LoggerFactory.getLogger(io.swagger.jaxrs.listing.ApiListingResource.class);
+
+
+    Logger LOGGER = Logger.getLogger(ApiListingResource.class.getSimpleName());
 
 
     public Swagger mSwaggerConfig;
@@ -42,7 +44,7 @@ public class ApiListingResource {
         mSwaggerConfig.setBasePath("/");
     }
 
-    public ApiListingResource(Swagger swagger){
+    public ApiListingResource(Swagger swagger) {
         this.mSwaggerConfig = swagger;
     }
 
@@ -64,7 +66,7 @@ public class ApiListingResource {
 
             }
         };
-        this.LOGGER.debug("using scanner " + scanner);
+        this.LOGGER.log(Level.FINE, "using scanner " + scanner);
         SwaggerSerializers.setPrettyPrint(scanner.getPrettyPrint());
         swagger = this.mSwaggerConfig;
         new HashSet();
@@ -90,7 +92,7 @@ public class ApiListingResource {
             });
             swagger = reader.read(classes);
             if (scanner instanceof SwaggerConfig) {
-                swagger = ((SwaggerConfig)scanner).configure(swagger);
+                swagger = ((SwaggerConfig) scanner).configure(swagger);
             } else {
                 SwaggerConfig configurator = new SwaggerConfig() {
                     @Override
@@ -103,7 +105,7 @@ public class ApiListingResource {
                         return "";
                     }
                 };
-                this.LOGGER.debug("configuring swagger with " + configurator);
+                this.LOGGER.log(Level.FINE, "configuring swagger with " + configurator);
                 configurator.configure(swagger);
             }
 
@@ -155,7 +157,7 @@ public class ApiListingResource {
         try {
             if (swagger != null) {
                 SwaggerSpecFilter filterImpl = FilterFactory.getFilter();
-                this.LOGGER.debug("using filter " + filterImpl);
+                this.LOGGER.log(Level.FINE, "using filter " + filterImpl);
                 if (filterImpl != null) {
                     SpecFilter f = new SpecFilter();
                     swagger = f.filter(swagger, filterImpl, this.getQueryParams(uriInfo.getQueryParameters()), this.getCookies(headers), this.getHeaders(headers));
@@ -167,7 +169,7 @@ public class ApiListingResource {
                 String[] arr$ = parts;
                 int len$ = parts.length;
 
-                for(int i$ = 0; i$ < len$; ++i$) {
+                for (int i$ = 0; i$ < len$; ++i$) {
                     String part = arr$[i$];
                     int pos = part.indexOf("!<");
                     int endPos = part.indexOf(">");
@@ -189,9 +191,9 @@ public class ApiListingResource {
         if (params != null) {
             Iterator i$ = params.keySet().iterator();
 
-            while(i$.hasNext()) {
-                String key = (String)i$.next();
-                List<String> values = (List)params.get(key);
+            while (i$.hasNext()) {
+                String key = (String) i$.next();
+                List<String> values = (List) params.get(key);
                 output.put(key, values);
             }
         }
@@ -204,9 +206,9 @@ public class ApiListingResource {
         if (headers != null) {
             Iterator i$ = headers.getCookies().keySet().iterator();
 
-            while(i$.hasNext()) {
-                String key = (String)i$.next();
-                Cookie cookie = (Cookie)headers.getCookies().get(key);
+            while (i$.hasNext()) {
+                String key = (String) i$.next();
+                Cookie cookie = (Cookie) headers.getCookies().get(key);
                 output.put(key, cookie.getValue());
             }
         }
@@ -219,9 +221,9 @@ public class ApiListingResource {
         if (headers != null) {
             Iterator i$ = headers.getRequestHeaders().keySet().iterator();
 
-            while(i$.hasNext()) {
-                String key = (String)i$.next();
-                List<String> values = (List)headers.getRequestHeaders().get(key);
+            while (i$.hasNext()) {
+                String key = (String) i$.next();
+                List<String> values = (List) headers.getRequestHeaders().get(key);
                 output.put(key, values);
             }
         }

@@ -29,7 +29,6 @@ public class PostResource {
 
     private static final Logger LOGGER = Logger.getLogger("PostResource");
 
-    private final PostController controller = new PostController();
 
     @Context
     SecurityContext securityContext;
@@ -42,7 +41,7 @@ public class PostResource {
     @Produces({MediaType.APPLICATION_JSON})
     public Response posts(@QueryParam("page") Integer page) {
 
-        try {
+        try (final PostController controller = new PostController()) {
 
             final List<DTO> dtoList = controller.posts(Optional.ofNullable(page));
 
@@ -66,9 +65,9 @@ public class PostResource {
     @Produces({MediaType.APPLICATION_JSON})
     public Response newPost(@Valid PostRequest postRequest) {
 
-        try {
+        try (final PostController controller = new PostController()) {
 
-            return Response.ok(this.controller.addNewPost(postRequest).dtoValues()).build();
+            return Response.ok(controller.addNewPost(postRequest).dtoValues()).build();
 
         } catch (Exception e) {
 
@@ -90,9 +89,9 @@ public class PostResource {
     @Produces({MediaType.APPLICATION_JSON})
     public Response updatePost(@PathParam("id") Long id, PostRequest postRequest) {
 
-        try {
+        try (final PostController controller = new PostController()) {
 
-            return Response.ok(this.controller.updatePost(id, postRequest).dtoValues()).build();
+            return Response.ok(controller.updatePost(id, postRequest).dtoValues()).build();
 
         } catch (EntityNotFoundException e) {
 
@@ -118,7 +117,7 @@ public class PostResource {
     @Produces({MediaType.APPLICATION_JSON})
     public Response deletePost(@PathParam("id") Long id) {
 
-        try {
+        try (final PostController controller = new PostController()) {
 
             return Response.ok(controller.deletePost(id).dtoValues()).build();
 

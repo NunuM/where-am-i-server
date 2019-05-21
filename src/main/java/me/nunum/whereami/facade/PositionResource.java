@@ -86,6 +86,12 @@ public class PositionResource {
             LOGGER.log(Level.SEVERE, "Something went wrong", e);
 
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        } finally {
+            try {
+                this.controller.close();
+            } catch (Exception exception) {
+                LOGGER.log(Level.SEVERE, "Could not close entity manager", exception);
+            }
         }
     }
 
@@ -120,6 +126,12 @@ public class PositionResource {
             LOGGER.log(Level.SEVERE, "Something went wrong", e);
 
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        } finally {
+            try {
+                this.controller.close();
+            } catch (Exception exception) {
+                LOGGER.log(Level.SEVERE, "Could not close entity manager", exception);
+            }
         }
     }
 

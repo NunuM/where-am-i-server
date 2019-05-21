@@ -33,15 +33,14 @@ public class LocalizationResource {
 
     private static final Logger LOGGER = Logger.getLogger("LocalizationResource");
 
-    private final LocalizationController controller = new LocalizationController();
-
     @GET
     @ApiImplicitParams({
             @ApiImplicitParam(name = "X-APP", value = "App Instance", required = true, dataType = "string", paramType = "header")
     })
     @Produces({MediaType.APPLICATION_JSON})
     public Response retrieveLocalizations(@QueryParam("page") Integer page, @QueryParam("name") String localizationName) {
-        try {
+
+        try (final LocalizationController controller = new LocalizationController()) {
             final List<DTO> dtos = controller.localizations(securityContext.getUserPrincipal(),
                     Optional.ofNullable(page),
                     Optional.ofNullable(localizationName)
@@ -65,9 +64,10 @@ public class LocalizationResource {
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     public Response newLocalization(@Valid NewLocalizationRequest localizationRequest) {
-        try {
 
-            final DTO localization = this.controller.newLocalization(securityContext.getUserPrincipal(), localizationRequest);
+        try (final LocalizationController controller = new LocalizationController()) {
+
+            final DTO localization = controller.newLocalization(securityContext.getUserPrincipal(), localizationRequest);
 
             return Response.ok(localization.dtoValues()).build();
 
@@ -92,8 +92,10 @@ public class LocalizationResource {
     @Path("{id}")
     @Produces({MediaType.APPLICATION_JSON})
     public Response deleteLocalization(@PathParam("id") Long id) {
-        try {
-            final DTO localizationDto = this.controller.deleteLocalizationRequest(securityContext.getUserPrincipal(), id);
+
+        try (final LocalizationController controller = new LocalizationController()) {
+
+            final DTO localizationDto = controller.deleteLocalizationRequest(securityContext.getUserPrincipal(), id);
 
             return Response.ok(localizationDto.dtoValues()).build();
 
@@ -122,7 +124,7 @@ public class LocalizationResource {
     })
     @Path("{id}/spam")
     public LocalizationReportResource reportResource() {
-        return new LocalizationReportResource(controller, securityContext);
+        return new LocalizationReportResource(new LocalizationController(), securityContext);
     }
 
     @ApiImplicitParams({
@@ -130,7 +132,7 @@ public class LocalizationResource {
     })
     @Path("{id}/train")
     public TrainResource trainResource(@PathParam("id") Long id) {
-        return new TrainResource(this.controller.localization(id), securityContext);
+        return new TrainResource(new LocalizationController().localization(id), securityContext);
     }
 
     @ApiImplicitParams({
@@ -138,6 +140,6 @@ public class LocalizationResource {
     })
     @Path("{id}/position")
     public PositionResource positionResource(@PathParam("id") Long id) {
-        return new PositionResource(this.controller.localization(id), securityContext);
+        return new PositionResource(new LocalizationController().localization(id), securityContext);
     }
 }

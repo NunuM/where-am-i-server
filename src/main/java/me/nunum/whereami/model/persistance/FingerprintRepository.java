@@ -7,7 +7,7 @@ import me.nunum.whereami.model.Position;
 import java.util.List;
 
 public interface FingerprintRepository
-        extends Repository<Fingerprint,Long> {
+        extends Repository<Fingerprint,Long>, AutoCloseable {
 
     boolean bulkFingerprints(List<Fingerprint> fingerprints);
 

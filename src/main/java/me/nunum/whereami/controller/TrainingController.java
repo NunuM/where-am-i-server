@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public final class TrainingController {
+public final class TrainingController implements AutoCloseable {
 
     private final TrainingRepository repository;
     private final DeviceRepository deviceRepository;
@@ -105,5 +105,10 @@ public final class TrainingController {
         }
 
         throw new EntityNotFoundException(String.format("Training %d was not found requested by %s", trainingId, requester.instanceId()));
+    }
+
+    @Override
+    public void close() throws Exception {
+        this.repository.close();
     }
 }

@@ -8,11 +8,14 @@ import org.glassfish.grizzly.http.server.ServerConfiguration;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.logging.LoggingFeature;
 import org.glassfish.jersey.server.ResourceConfig;
+import org.glassfish.jersey.server.ServerProperties;
+import org.slf4j.bridge.SLF4JBridgeHandler;
 
 
 import java.io.IOException;
 import java.net.URI;
 import java.util.logging.Level;
+import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 /**
@@ -43,6 +46,7 @@ public class Main {
         rc.property(LoggingFeature.LOGGING_FEATURE_VERBOSITY, LoggingFeature.Verbosity.PAYLOAD_ANY);
         rc.property(LoggingFeature.LOGGING_FEATURE_LOGGER_LEVEL, Level.INFO.getName());
 
+        rc.property(ServerProperties.BV_SEND_ERROR_IN_RESPONSE, true);
 
         // create and start a new instance of grizzly http server
         // exposing the Jersey application at BASE_URI
@@ -56,6 +60,10 @@ public class Main {
      * @throws IOException
      */
     public static void main(String[] args) throws IOException {
+
+        LogManager.getLogManager().reset();
+        SLF4JBridgeHandler.install();
+
         final HttpServer server = startServer();
 
 

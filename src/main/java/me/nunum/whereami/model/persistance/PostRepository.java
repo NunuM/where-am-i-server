@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface PostRepository
-        extends Repository<Post, Long> {
+        extends Repository<Post, Long>, AutoCloseable {
 
     List<Post> paginate(Optional<Integer> page);
 

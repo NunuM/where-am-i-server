@@ -11,10 +11,13 @@
         <class>me.nunum.whereami.model.Position</class>
         <class>me.nunum.whereami.model.PositionSpamReport</class>
         <class>me.nunum.whereami.model.Algorithm</class>
+        <class>me.nunum.whereami.model.AlgorithmProvider</class>
         <class>me.nunum.whereami.model.Post</class>
         <class>me.nunum.whereami.model.Fingerprint</class>
         <class>me.nunum.whereami.model.Training</class>
         <class>me.nunum.whereami.model.TrainingStatus</class>
+
+        <class>me.nunum.whereami.model.Task</class>
 
         <properties>
             <property name="javax.persistence.jdbc.url" value="jdbc:h2:tcp://localhost/~/test"/>
@@ -22,6 +25,13 @@
             <property name="javax.persistence.jdbc.driver" value="org.h2.Driver"/>
             <property name="javax.persistence.jdbc.user" value="sa"/>
             <property name="javax.persistence.schema-generation.database.action" value="drop-and-create"/>
+
+            <property name="eclipselink.cache.shared.default" value="false"/>
+            <property name="eclipselink.cache.size.default" value="0"/>
+            <property name="eclipselink.cache.type.default" value="None"/>
+            <property name="eclipselink.logging.level" value="INFO"/>
+            <property name="eclipselink.logging.logger" value="JavaLogger"/>
+
         </properties>
     </persistence-unit>
 </persistence>

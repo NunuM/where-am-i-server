@@ -6,7 +6,7 @@ import me.nunum.whereami.model.Position;
 
 import java.util.List;
 
-public interface PositionRepository extends Repository<Position, Long> {
+public interface PositionRepository extends Repository<Position, Long>, AutoCloseable {
 
 
     List<Position> positionsByLocalization(Localization localization);

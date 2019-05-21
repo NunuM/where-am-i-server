@@ -12,7 +12,7 @@ public class NewAlgorithmRequest {
     private String name;
 
     @NotNull
-    @Size(min = 1, max = 255)
+    @Size(min = 1, max = 255, message = "Author name is missing or is invalid")
     private String authorName;
 
     @NotNull

@@ -12,8 +12,7 @@ public final class AlgorithmDTO implements DTO {
     public AlgorithmDTO(Long id,
                         String name,
                         String authorName,
-                        String paperURL,
-                        Float rating) {
+                        String paperURL) {
 
         this.objectMap = new HashMap<>(5);
 
@@ -21,7 +20,6 @@ public final class AlgorithmDTO implements DTO {
         objectMap.put("authorName", authorName);
         objectMap.put("name", name);
         objectMap.put("paperURL", paperURL);
-        objectMap.put("rating", rating);
 
     }
 

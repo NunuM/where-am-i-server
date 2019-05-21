@@ -9,18 +9,21 @@ import me.nunum.whereami.model.request.PostionSpamRequest;
 import javax.ws.rs.POST;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 @Api("spam")
 public class PositionReportResource {
 
+    private static final Logger LOGGER = Logger.getLogger(PositionReportResource.class.getSimpleName());
 
-    private final PositionsController positionsController;
+    private final PositionsController controller;
     private final SecurityContext securityContext;
 
-    public PositionReportResource(PositionsController positionsController,
+    public PositionReportResource(PositionsController controller,
                                   SecurityContext securityContext) {
-        this.positionsController = positionsController;
+        this.controller = controller;
         this.securityContext = securityContext;
     }
 
@@ -29,14 +32,19 @@ public class PositionReportResource {
 
         try {
             return Response
-                    .ok(positionsController.processSpamRequest(securityContext.getUserPrincipal(), request))
+                    .ok(controller.processSpamRequest(securityContext.getUserPrincipal(), request))
                     .build();
         } catch (EntityAlreadyExists e) {
             return Response.status(Response.Status.CONFLICT).build();
         } catch (EntityNotFoundException e) {
             return Response.status(Response.Status.NOT_FOUND).build();
+        } finally {
+            try {
+                this.controller.close();
+            } catch (Exception exception) {
+                LOGGER.log(Level.SEVERE, "Could not close entity manager", exception);
+            }
         }
 
     }
-
 }
