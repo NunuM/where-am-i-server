@@ -20,8 +20,8 @@ public class Task {
 
     private Long cursor;
 
-
-    private Long localizationId;
+    @ManyToOne
+    private Training training;
 
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -47,14 +47,15 @@ public class Task {
     public Task() {
     }
 
-    public Task(Long cursor, Long localizationId) {
-        this(100, cursor, localizationId);
+    public Task(Long cursor, Training training) {
+        this(100, cursor, training);
     }
 
-    public Task(int batchSize, Long cursor, Long localizationId) {
+    public Task(int batchSize, Long cursor, Training training) {
         this.batchSize = batchSize;
         this.cursor = cursor;
-        this.localizationId = localizationId;
+        this.training = training;
+        this.state = STATE.RUNNING;
     }
 
     public Long getId() {
@@ -81,12 +82,12 @@ public class Task {
         this.cursor = cursor;
     }
 
-    public Long getLocalizationId() {
-        return localizationId;
+    public Training getTraining() {
+        return training;
     }
 
-    public void setLocalizationId(Long localizationId) {
-        this.localizationId = localizationId;
+    public void setTraining(Training training) {
+        this.training = training;
     }
 
     public Date getCreated() {
@@ -110,6 +111,8 @@ public class Task {
     }
 
     public void setFinish(Date finish) {
+        this.getTraining().trainingIsFinish();
+        this.state = STATE.FINISH;
         this.finish = finish;
     }
 
@@ -131,23 +134,19 @@ public class Task {
         updated = new Date(System.currentTimeMillis());
     }
 
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof Task)) return false;
         Task task = (Task) o;
-        return batchSize == task.batchSize &&
-                Objects.equals(cursor, task.cursor) &&
-                Objects.equals(localizationId, task.localizationId);
+        return Objects.equals(getTraining(), task.getTraining()) &&
+                getState() == task.getState();
     }
 
     @Override
     public int hashCode() {
-
-        return Objects.hash(batchSize, cursor, localizationId);
+        return Objects.hash(getTraining(), getState());
     }
-
 
     @Override
     public String toString() {
@@ -155,7 +154,11 @@ public class Task {
                 "id=" + id +
                 ", batchSize=" + batchSize +
                 ", cursor=" + cursor +
-                ", localizationId=" + localizationId +
+                ", training=" + training +
+                ", created=" + created +
+                ", updated=" + updated +
+                ", finish=" + finish +
+                ", state=" + state +
                 '}';
     }
 }

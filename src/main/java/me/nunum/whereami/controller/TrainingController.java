@@ -1,18 +1,11 @@
 package me.nunum.whereami.controller;
 
 import me.nunum.whereami.framework.dto.DTO;
-import me.nunum.whereami.model.Algorithm;
-import me.nunum.whereami.model.Device;
-import me.nunum.whereami.model.Localization;
-import me.nunum.whereami.model.Training;
+import me.nunum.whereami.model.*;
 import me.nunum.whereami.model.exceptions.EntityNotFoundException;
 import me.nunum.whereami.model.exceptions.ForbiddenEntityAccessException;
-import me.nunum.whereami.model.persistance.AlgorithmRepository;
-import me.nunum.whereami.model.persistance.DeviceRepository;
-import me.nunum.whereami.model.persistance.TrainingRepository;
-import me.nunum.whereami.model.persistance.jpa.AlgorithmRepositoryJpa;
-import me.nunum.whereami.model.persistance.jpa.DeviceRepositoryJpa;
-import me.nunum.whereami.model.persistance.jpa.TrainingRepositoryJpa;
+import me.nunum.whereami.model.persistance.*;
+import me.nunum.whereami.model.persistance.jpa.*;
 import me.nunum.whereami.model.request.NewTrainingRequest;
 
 import java.security.Principal;
@@ -25,11 +18,15 @@ public final class TrainingController implements AutoCloseable {
     private final TrainingRepository repository;
     private final DeviceRepository deviceRepository;
     private final AlgorithmRepository algorithmRepository;
+    private final LocalizationRepository localizationRepository;
+    private final TaskRepository taskRepository;
 
     public TrainingController() {
         this.repository = new TrainingRepositoryJpa();
         this.deviceRepository = new DeviceRepositoryJpa();
         this.algorithmRepository = new AlgorithmRepositoryJpa();
+        this.localizationRepository = new LocalizationRepositoryJpa();
+        this.taskRepository = new TaskRepositoryJpa();
     }
 
 
@@ -47,7 +44,23 @@ public final class TrainingController implements AutoCloseable {
 
         final Algorithm algorithm = algorithmOptional.get();
 
-        return this.repository.save(new Training(algorithm, localization, requesterDevice)).toDTO();
+        final Optional<AlgorithmProvider> algorithmProvider = algorithm.algorithmProviderById(request.getProvider());
+
+        if (!algorithmProvider.isPresent()) {
+            throw new EntityNotFoundException(String
+                    .format("Algorithm Provider %d, requested by %s, was not found", request.getProvider(), principal.getName())
+            );
+        }
+
+        Training training = new Training(algorithm, algorithmProvider.get(), localization, requesterDevice);
+
+        localization.addTraining(training);
+
+        training = this.repository.save(training);
+
+        this.taskRepository.save(new Task(0L, training));
+
+        return training.toDTO();
     }
 
     public DTO trainingStatus(Principal userPrincipal, Long it) {

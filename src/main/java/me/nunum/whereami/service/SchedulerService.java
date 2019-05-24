@@ -1,16 +1,26 @@
 package me.nunum.whereami.service;
 
-
+import me.nunum.whereami.model.AlgorithmProvider;
+import me.nunum.whereami.model.Fingerprint;
 import me.nunum.whereami.model.Task;
+import me.nunum.whereami.model.persistance.FingerprintRepository;
 import me.nunum.whereami.model.persistance.TaskRepository;
+import me.nunum.whereami.model.persistance.TrainingRepository;
+import me.nunum.whereami.model.persistance.jpa.FingerprintRepositoryJpa;
 import me.nunum.whereami.model.persistance.jpa.TaskRepositoryJpa;
+import me.nunum.whereami.model.persistance.jpa.TrainingRepositoryJpa;
 
-import java.util.Iterator;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import java.time.Instant;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class SchedulerService implements Runnable {
 
@@ -19,32 +29,62 @@ public class SchedulerService implements Runnable {
     @Override
     public void run() {
 
-        int pageCounter = 0;
-
         final TaskRepository tasks = new TaskRepositoryJpa();
+        final TrainingRepository trainings = new TrainingRepositoryJpa();
+        final FingerprintRepository fingerprints = new FingerprintRepositoryJpa();
 
         LOGGER.log(Level.INFO, "Starting SchedulerService service");
 
-        ExecutorService service = Executors.newSingleThreadExecutor();
+        Stream<Task> openTasks = tasks.openTasks();
 
-        Iterator<Task> openTasks = tasks.openTasks(pageCounter);
+        openTasks.forEach(task -> {
 
-        while (!openTasks.hasNext()) {
+            if (task.getTraining().isHTTPProvider()) {
+                int currentPage = 1;
 
-            try {
+                trainings.save(task.getTraining());
 
-                CompletableFuture.runAsync(() -> {
+                List<Fingerprint> fingerprintList = fingerprints
+                        .fingerprintByLocalizationIdAndWithIdGreater(task.getTraining().localizationAssociated(), task.getCursor(), currentPage);
 
-                    Task next = openTasks.next();
+                long size = fingerprintList.size();
 
-                    Long cursor = next.getCursor();
+                while (size > 0) {
 
+                    this.flushPayload(fingerprintList, task.getTraining().providerProperties());
 
-                }, service).get();
+                    currentPage++;
 
-            } catch (Exception e) {
-                e.printStackTrace();
+                    fingerprintList = fingerprints
+                            .fingerprintByLocalizationIdAndWithIdGreater(task.getTraining().localizationAssociated(), task.getCursor(), currentPage);
+
+                    size = fingerprintList.size();
+                }
             }
-        }
+
+            task.setFinish(Date.from(Instant.now()));
+            tasks.save(task);
+
+        });
+
     }
+
+
+    private boolean flushPayload(List<Fingerprint> payload, Map<String, String> properties) {
+
+        final Client client = ClientBuilder.newClient();
+
+        final Response response = client.target(properties.get(AlgorithmProvider.HTTP_PROVIDER_INGESTION_URL_KEY))
+                .request(MediaType.APPLICATION_JSON)
+                .buildPost(Entity.entity(payload.stream().map(e->e.toDTO().dtoValues()).collect(Collectors.toList()), MediaType.APPLICATION_JSON))
+                .invoke();
+
+        return response.getStatus() < 300 && response.getStatus() > 199;
+
+    }
+
+    private void warningProviderForRequestFailure() {
+
+    }
+
 }

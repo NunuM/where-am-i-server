@@ -5,10 +5,12 @@ import me.nunum.whereami.model.Task;
 import me.nunum.whereami.model.persistance.TaskRepository;
 import me.nunum.whereami.utils.AppConfig;
 
+import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import java.util.Iterator;
+import java.util.stream.Stream;
 
 public class TaskRepositoryJpa
         extends JpaRepository<Task, Long>
@@ -21,7 +23,7 @@ public class TaskRepositoryJpa
 
 
     @Override
-    public Iterator<Task> openTasks(int page) {
+    public Stream<Task> openTasks() {
 
         final CriteriaBuilder criteriaBuilder = super.entityManager().getCriteriaBuilder();
 
@@ -31,6 +33,6 @@ public class TaskRepositoryJpa
 
         CriteriaQuery<Task> where = builderQuery.where(criteriaBuilder.equal(taskRoot.get("state"), Task.STATE.RUNNING));
 
-        return this.pageWithFiltering(where, page).iterator();
+        return entityManager().createQuery(where).getResultStream();
     }
 }

@@ -13,6 +13,10 @@ import java.util.Objects;
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = {"email", "method"}))
 public class AlgorithmProvider implements DTOable {
 
+    public static final String HTTP_PROVIDER_INGESTION_URL_KEY = "url_to_receive_data";
+    public static final String HTTP_PROVIDER_PREDICTION_URL_KEY = "url_to_predict";
+
+
     @Id
     @GeneratedValue
     private Long id;
@@ -36,6 +40,7 @@ public class AlgorithmProvider implements DTOable {
     private Map<String, String> properties;
 
     public static enum METHOD {
+
         HTTP {
             @Override
             public String toString() {
@@ -44,7 +49,7 @@ public class AlgorithmProvider implements DTOable {
 
             @Override
             public String[] requiredKeys() {
-                return new String[]{"url_to_receive_data", "url_to_predict"};
+                return new String[]{HTTP_PROVIDER_INGESTION_URL_KEY, HTTP_PROVIDER_PREDICTION_URL_KEY};
             }
         },
         GIT {
@@ -87,6 +92,22 @@ public class AlgorithmProvider implements DTOable {
         this.email = email;
         this.method = method;
         this.properties = properties;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public METHOD getMethod() {
+        return method;
+    }
+
+    public Map<String, String> getProperties() {
+        return properties;
     }
 
     @PrePersist

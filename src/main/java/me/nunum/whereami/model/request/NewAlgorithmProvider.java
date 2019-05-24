@@ -37,7 +37,7 @@ public class NewAlgorithmProvider {
         }
 
         if (method == AlgorithmProvider.METHOD.UNSUPPORTED) {
-            throw new IllegalArgumentException("");
+            throw new IllegalArgumentException("Unsupported provider type");
         }
 
         return new AlgorithmProvider(email, method, properties);

@@ -9,6 +9,7 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Entity
 public class Algorithm
@@ -18,6 +19,7 @@ public class Algorithm
 
     @Id
     @GeneratedValue
+    @Column(name="ALG_ID")
     private Long id;
 
     @Column(unique = true, nullable = false, length = 255)
@@ -39,6 +41,7 @@ public class Algorithm
 
 
     @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name="OWNER_ID", referencedColumnName="ALG_ID")
     private List<AlgorithmProvider> providers;
 
 
@@ -85,6 +88,10 @@ public class Algorithm
 
     public void removeProvider(AlgorithmProvider provider) {
         this.providers.remove(provider);
+    }
+
+    public Optional<AlgorithmProvider> algorithmProviderById(Long id){
+        return this.providers.stream().filter(e -> e.getId().equals(id)).findFirst();
     }
 
     @PrePersist

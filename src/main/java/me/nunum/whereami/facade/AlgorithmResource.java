@@ -94,7 +94,13 @@ public class AlgorithmResource {
 
             return Response.status(Response.Status.NOT_FOUND).build();
 
-        } catch (Exception e) {
+        } catch (IllegalArgumentException e){
+
+            LOGGER.log(Level.SEVERE, "Invalid request", e);
+
+            return Response.status(Response.Status.BAD_REQUEST).build();
+
+        }catch (Exception e) {
 
             LOGGER.log(Level.SEVERE, "Unable to retrieve algorithms", e);
 

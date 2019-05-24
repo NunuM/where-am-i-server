@@ -2,12 +2,20 @@ package me.nunum.whereami.model;
 
 import me.nunum.whereami.framework.dto.DTO;
 import me.nunum.whereami.framework.dto.DTOable;
+import me.nunum.whereami.model.dto.FingerprintDTO;
+import org.eclipse.persistence.annotations.Index;
 
 import javax.persistence.*;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Date;
 import java.util.UUID;
 
 @Entity
+@XmlRootElement(name = "fingerprint")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Fingerprint
         implements Comparable<Fingerprint>,
         DTOable {
@@ -16,6 +24,7 @@ public class Fingerprint
     @GeneratedValue
     private Long id;
 
+    @XmlElement
     private String uid;
 
     private String bssid;
@@ -34,6 +43,7 @@ public class Fingerprint
 
     private String timeStamp;
 
+    @Index
     private Integer localizationId;
 
     private Integer floorid;
@@ -77,6 +87,125 @@ public class Fingerprint
         this.positionId = position;
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+
+    public String getBssid() {
+        return bssid;
+    }
+
+    public void setBssid(String bssid) {
+        this.bssid = bssid;
+    }
+
+    public String getSsid() {
+        return ssid;
+    }
+
+    public void setSsid(String ssid) {
+        this.ssid = ssid;
+    }
+
+    public Integer getLevelDBM() {
+        return levelDBM;
+    }
+
+    public void setLevelDBM(Integer levelDBM) {
+        this.levelDBM = levelDBM;
+    }
+
+    public Integer getCenterFreq0() {
+        return centerFreq0;
+    }
+
+    public void setCenterFreq0(Integer centerFreq0) {
+        this.centerFreq0 = centerFreq0;
+    }
+
+    public Integer getCenterFreq1() {
+        return centerFreq1;
+    }
+
+    public void setCenterFreq1(Integer centerFreq1) {
+        this.centerFreq1 = centerFreq1;
+    }
+
+    public Integer getChannelWidth() {
+        return channelWidth;
+    }
+
+    public void setChannelWidth(Integer channelWidth) {
+        this.channelWidth = channelWidth;
+    }
+
+    public Integer getFrequency() {
+        return frequency;
+    }
+
+    public void setFrequency(Integer frequency) {
+        this.frequency = frequency;
+    }
+
+    public String getTimeStamp() {
+        return timeStamp;
+    }
+
+    public void setTimeStamp(String timeStamp) {
+        this.timeStamp = timeStamp;
+    }
+
+    public Integer getLocalizationId() {
+        return localizationId;
+    }
+
+    public void setLocalizationId(Integer localizationId) {
+        this.localizationId = localizationId;
+    }
+
+    public Integer getFloorid() {
+        return floorid;
+    }
+
+    public void setFloorid(Integer floorid) {
+        this.floorid = floorid;
+    }
+
+    public Integer getPositionId() {
+        return positionId;
+    }
+
+    public void setPositionId(Integer positionId) {
+        this.positionId = positionId;
+    }
+
+    public Date getCreated() {
+        return created;
+    }
+
+    public void setCreated(Date created) {
+        this.created = created;
+    }
+
+    public Date getUpdated() {
+        return updated;
+    }
+
+    public void setUpdated(Date updated) {
+        this.updated = updated;
+    }
 
     @Override
     public int compareTo(Fingerprint fingerprint) {
@@ -85,7 +214,7 @@ public class Fingerprint
 
     @Override
     public DTO toDTO() {
-        return null;
+        return new FingerprintDTO(this);
     }
 
     @Override

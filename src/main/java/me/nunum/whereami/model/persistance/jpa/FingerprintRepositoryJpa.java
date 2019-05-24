@@ -9,8 +9,14 @@ import me.nunum.whereami.utils.AppConfig;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.PersistenceException;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.logging.Level;
+import java.util.stream.Stream;
 
 public class FingerprintRepositoryJpa
         extends JpaRepository<Fingerprint, Long>
@@ -81,5 +87,22 @@ public class FingerprintRepositoryJpa
         }
 
         return true;
+    }
+
+    @Override
+    public List<Fingerprint> fingerprintByLocalizationIdAndWithIdGreater(Long localizationId, Long id, int page) {
+
+        final CriteriaBuilder criteriaBuilder = super.entityManager().getCriteriaBuilder();
+
+        CriteriaQuery<Fingerprint> builderQuery = criteriaBuilder.createQuery(Fingerprint.class);
+
+        final Root<Fingerprint> fingerprintRoot = builderQuery.from(Fingerprint.class);
+
+        CriteriaQuery<Fingerprint> where = builderQuery
+                .where(criteriaBuilder.equal(fingerprintRoot.get("localizationId"), localizationId))
+                .where(criteriaBuilder.ge(fingerprintRoot.get("id"), id))
+                .orderBy(criteriaBuilder.asc(fingerprintRoot.get("id")));
+
+        return this.pageWithFiltering(where, page);
     }
 }

@@ -10,6 +10,9 @@ import io.swagger.jaxrs.Reader;
 import io.swagger.jaxrs.config.JaxrsScanner;
 import io.swagger.jaxrs.config.ReaderConfig;
 import io.swagger.jaxrs.listing.SwaggerSerializers;
+import io.swagger.models.Info;
+import io.swagger.models.License;
+import io.swagger.models.Scheme;
 import io.swagger.models.Swagger;
 import io.swagger.util.Yaml;
 
@@ -42,6 +45,9 @@ public class ApiListingResource {
     public ApiListingResource() {
         mSwaggerConfig = new Swagger();
         mSwaggerConfig.setBasePath("/");
+        mSwaggerConfig.info(new Info().title("WhereAmI"));
+        mSwaggerConfig.setHost("localhost:8080");
+        mSwaggerConfig.setSchemes(Arrays.asList(Scheme.HTTP));
     }
 
     public ApiListingResource(Swagger swagger) {

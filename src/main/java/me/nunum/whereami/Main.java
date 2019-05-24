@@ -2,6 +2,7 @@ package me.nunum.whereami;
 
 import me.nunum.whereami.facade.ApiListingResource;
 import me.nunum.whereami.framework.interceptor.PrincipalInterceptor;
+import me.nunum.whereami.service.SchedulerService;
 import org.glassfish.grizzly.http.server.CLStaticHttpHandler;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.grizzly.http.server.ServerConfiguration;
@@ -14,6 +15,7 @@ import org.slf4j.bridge.SLF4JBridgeHandler;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
@@ -64,6 +66,14 @@ public class Main {
         LogManager.getLogManager().reset();
         SLF4JBridgeHandler.install();
 
+        try {
+            Executors.newSingleThreadExecutor().submit(new SchedulerService()).get();
+        } catch (Exception e){
+            LOGGER.log(Level.SEVERE, "ww", e);
+        }
+
+
+        /**
         final HttpServer server = startServer();
 
 
@@ -78,6 +88,7 @@ public class Main {
                 + "{0} \nHit enter to stop it...", BASE_URI);
         System.in.read();
         server.shutdown();
+ */
     }
 }
 

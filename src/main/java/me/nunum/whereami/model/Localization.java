@@ -6,7 +6,9 @@ import me.nunum.whereami.framework.dto.DTOable;
 import me.nunum.whereami.model.dto.LocalizationDTO;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -36,6 +38,8 @@ public class Localization implements DTOable, Identifiable<Long>,Comparable<Loca
     @ManyToOne
     private Device owner;
 
+    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "localization")
+    private List<Training> trainings;
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date created;
@@ -67,6 +71,7 @@ public class Localization implements DTOable, Identifiable<Long>,Comparable<Loca
         this.positions = 0;
         this.user = userLabel;
         this.owner = owner;
+        this.trainings = new ArrayList<>();
     }
 
 
@@ -117,7 +122,6 @@ public class Localization implements DTOable, Identifiable<Long>,Comparable<Loca
         return this.owner.equals(requester);
     }
 
-
     public void incrementSample() {
         this.samples += 1;
     }
@@ -128,6 +132,16 @@ public class Localization implements DTOable, Identifiable<Long>,Comparable<Loca
 
     public void decrementPosition() {
         this.positions -= 1;
+    }
+
+    public boolean addTraining(Training training){
+
+        this.trainings.add(training);
+        if(training.getLocalization().id() != this.id){
+            training.setLocalization(this);
+        }
+
+        return true;
     }
 
     @Override

@@ -5,11 +5,10 @@ import me.nunum.whereami.framework.dto.DTOable;
 import me.nunum.whereami.model.dto.TrainingDTO;
 
 import javax.persistence.*;
-import java.security.Principal;
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.Date;
+import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
 @Entity
@@ -25,15 +24,19 @@ public class Training implements DTOable {
 
     private String uid;
 
-    @OneToOne
+    @ManyToOne
     private Algorithm algorithm;
+
+    @ManyToOne
+    private AlgorithmProvider algorithmProvider;
 
     private TrainingStatus status;
 
     @OneToOne
     private Device requester;
 
-    @ManyToOne
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="LOCALIZATION_ID")
     private Localization localization;
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -47,14 +50,16 @@ public class Training implements DTOable {
         //JPA
     }
 
+
     public Training(Algorithm algorithm,
+                    AlgorithmProvider provider,
                     Localization localization,
                     Device requester) {
-        this(algorithm, TrainingStatus.REQUEST, localization, requester);
+        this(algorithm, provider, TrainingStatus.REQUEST, localization, requester);
     }
 
-
     public Training(Algorithm algorithm,
+                    AlgorithmProvider provider,
                     TrainingStatus status,
                     Localization localization,
                     Device requester) {
@@ -64,8 +69,36 @@ public class Training implements DTOable {
         this.status = status;
         this.requester = requester;
         this.localization = localization;
+        this.algorithmProvider = provider;
     }
 
+    public Long localizationAssociated(){
+        return localization.id();
+    }
+
+    public boolean isHTTPProvider(){
+        return this.algorithmProvider.getMethod().equals(AlgorithmProvider.METHOD.HTTP);
+    }
+
+    public void trainingInProgress(){
+        this.status = TrainingStatus.PROGRESS;
+    }
+
+    public Map<String, String> providerProperties(){
+        return this.algorithmProvider.getProperties();
+    }
+
+    public void trainingIsFinish(){
+        this.status = TrainingStatus.FINISHED;
+    }
+
+    public Localization getLocalization() {
+        return localization;
+    }
+
+    public void setLocalization(Localization localization) {
+        this.localization = localization;
+    }
 
     @PrePersist
     protected void onCreate() {
@@ -77,23 +110,17 @@ public class Training implements DTOable {
         updated = Date.from(Instant.now());
     }
 
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Training)) return false;
-
         Training training = (Training) o;
-
-        if (!uid.equals(training.uid)) return false;
-        return created.equals(training.created);
+        return uid.equals(training.uid);
     }
 
     @Override
     public int hashCode() {
-        int result = uid.hashCode();
-        result = 31 * result + created.hashCode();
-        return result;
+        return Objects.hash(uid);
     }
 
     @Override
