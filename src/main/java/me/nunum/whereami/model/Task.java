@@ -12,7 +12,7 @@ public class Task {
 
     @Id
     @GeneratedValue
-    public Long id;
+    private Long id;
 
 
     private int batchSize;
@@ -33,15 +33,14 @@ public class Task {
 
 
     @Temporal(TemporalType.TIMESTAMP)
-    private Date finish;
+    private Date finishSinkAt;
 
 
     @Index
     private STATE state;
 
-
     public static enum STATE {
-        RUNNING, FINISH
+        RUNNING, FINISH_SINK
     }
 
     public Task() {
@@ -82,7 +81,7 @@ public class Task {
         this.cursor = cursor;
     }
 
-    public Training getTraining() {
+    public Training trainingInfo() {
         return training;
     }
 
@@ -106,15 +105,16 @@ public class Task {
         this.updated = updated;
     }
 
-    public Date getFinish() {
-        return finish;
+    public Date getFinishSinkAt() {
+        return finishSinkAt;
     }
 
-    public void setFinish(Date finish) {
-        this.getTraining().trainingIsFinish();
-        this.state = STATE.FINISH;
-        this.finish = finish;
+
+    public void sinkFinish(Date when) {
+        this.state = STATE.FINISH_SINK;
+        this.finishSinkAt = finishSinkAt;
     }
+
 
     public STATE getState() {
         return state;
@@ -139,13 +139,13 @@ public class Task {
         if (this == o) return true;
         if (!(o instanceof Task)) return false;
         Task task = (Task) o;
-        return Objects.equals(getTraining(), task.getTraining()) &&
+        return Objects.equals(trainingInfo(), task.trainingInfo()) &&
                 getState() == task.getState();
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getTraining(), getState());
+        return Objects.hash(trainingInfo(), getState());
     }
 
     @Override
@@ -157,7 +157,7 @@ public class Task {
                 ", training=" + training +
                 ", created=" + created +
                 ", updated=" + updated +
-                ", finish=" + finish +
+                ", finish=" + finishSinkAt +
                 ", state=" + state +
                 '}';
     }

@@ -17,5 +17,5 @@ public interface FingerprintRepository
     boolean deleteByPosition(Position position);
 
 
-    List<Fingerprint> fingerprintByLocalizationIdAndWithIdGreater(Long localizationId, Long id, int page);
+    List<Fingerprint> fingerprintByLocalizationIdAndWithIdGreater(Long localizationId, Long id, int batchSize);
 }

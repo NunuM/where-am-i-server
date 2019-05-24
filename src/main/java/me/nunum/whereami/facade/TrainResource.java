@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import me.nunum.whereami.controller.TrainingController;
 import me.nunum.whereami.model.Localization;
+import me.nunum.whereami.model.exceptions.EntityAlreadyExists;
 import me.nunum.whereami.model.exceptions.EntityNotFoundException;
 import me.nunum.whereami.model.exceptions.ForbiddenEntityAccessException;
 import me.nunum.whereami.model.request.NewTrainingRequest;
@@ -51,6 +52,18 @@ public class TrainResource {
             LOGGER.log(Level.SEVERE, "Unable to find entity", e);
 
             return Response.status(Response.Status.NOT_FOUND).build();
+
+        } catch (EntityAlreadyExists e) {
+
+            LOGGER.log(Level.SEVERE, "Request already exists", e);
+
+            return Response.status(Response.Status.CONFLICT).build();
+
+        } catch (ForbiddenEntityAccessException e) {
+
+            LOGGER.log(Level.SEVERE, "Requester not have rights to perform this operation", e);
+
+            return Response.status(Response.Status.FORBIDDEN).build();
 
         } finally {
             try {

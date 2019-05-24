@@ -44,6 +44,10 @@ public final class TrainingController implements AutoCloseable {
 
         final Algorithm algorithm = algorithmOptional.get();
 
+        if (!localization.isOwner(requesterDevice)) {
+            throw new ForbiddenEntityAccessException(String.format("Requester %s is not allowed to request training on this localization %d.", requesterDevice.instanceId(), localization.id()));
+        }
+
         final Optional<AlgorithmProvider> algorithmProvider = algorithm.algorithmProviderById(request.getProvider());
 
         if (!algorithmProvider.isPresent()) {
@@ -52,7 +56,7 @@ public final class TrainingController implements AutoCloseable {
             );
         }
 
-        Training training = new Training(algorithm, algorithmProvider.get(), localization, requesterDevice);
+        Training training = new Training(algorithm, algorithmProvider.get(), localization);
 
         localization.addTraining(training);
 

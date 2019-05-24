@@ -90,7 +90,7 @@ public class FingerprintRepositoryJpa
     }
 
     @Override
-    public List<Fingerprint> fingerprintByLocalizationIdAndWithIdGreater(Long localizationId, Long id, int page) {
+    public List<Fingerprint> fingerprintByLocalizationIdAndWithIdGreater(Long localizationId, Long id, int batchSize) {
 
         final CriteriaBuilder criteriaBuilder = super.entityManager().getCriteriaBuilder();
 
@@ -100,9 +100,9 @@ public class FingerprintRepositoryJpa
 
         CriteriaQuery<Fingerprint> where = builderQuery
                 .where(criteriaBuilder.equal(fingerprintRoot.get("localizationId"), localizationId))
-                .where(criteriaBuilder.ge(fingerprintRoot.get("id"), id))
+                .where(criteriaBuilder.gt(fingerprintRoot.get("id"), id))
                 .orderBy(criteriaBuilder.asc(fingerprintRoot.get("id")));
 
-        return this.pageWithFiltering(where, page);
+        return this.entityManager().createQuery(where).setMaxResults(batchSize).getResultList();
     }
 }

@@ -27,7 +27,7 @@ public class Main {
     // Base URI the Grizzly HTTP server will listen on
     private static final String BASE_URI = "http://0.0.0.0:8080";
 
-    private static final  Logger LOGGER = Logger.getLogger("Main");
+    private static final Logger LOGGER = Logger.getLogger("Main");
 
     /**
      * Starts Grizzly HTTP server exposing JAX-RS resources defined in this application.
@@ -65,13 +65,7 @@ public class Main {
 
         LogManager.getLogManager().reset();
         SLF4JBridgeHandler.install();
-/**
-        try {
-            Executors.newSingleThreadExecutor().submit(new SchedulerService()).get();
-        } catch (Exception e){
-            LOGGER.log(Level.SEVERE, "ww", e);
-        }
- */
+
         final HttpServer server = startServer();
 
 

@@ -9,6 +9,7 @@ import me.nunum.whereami.model.persistance.TrainingRepository;
 import me.nunum.whereami.model.persistance.jpa.FingerprintRepositoryJpa;
 import me.nunum.whereami.model.persistance.jpa.TaskRepositoryJpa;
 import me.nunum.whereami.model.persistance.jpa.TrainingRepositoryJpa;
+import me.nunum.whereami.service.exceptions.HTTPRRequestError;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -26,6 +27,9 @@ public class SchedulerService implements Runnable {
 
     private static final Logger LOGGER = Logger.getLogger(SchedulerService.class.getSimpleName());
 
+    /**
+     *
+     */
     @Override
     public void run() {
 
@@ -35,56 +39,122 @@ public class SchedulerService implements Runnable {
 
         LOGGER.log(Level.INFO, "Starting SchedulerService service");
 
-        Stream<Task> openTasks = tasks.openTasks();
+        final Stream<Task> openTasks = tasks.openTasks();
 
         openTasks.forEach(task -> {
 
-            if (task.getTraining().isHTTPProvider()) {
-                int currentPage = 1;
+            boolean wasLoopExhausted = true;
 
-                trainings.save(task.getTraining());
+            if (task.trainingInfo().isHTTPProvider()) {
+
+                task.trainingInfo().trainingInProgress();
+
+                trainings.save(task.trainingInfo());
 
                 List<Fingerprint> fingerprintList = fingerprints
-                        .fingerprintByLocalizationIdAndWithIdGreater(task.getTraining().localizationAssociated(), task.getCursor(), currentPage);
+                        .fingerprintByLocalizationIdAndWithIdGreater(task.trainingInfo().localizationAssociated(), task.getCursor(), task.getBatchSize());
 
                 long size = fingerprintList.size();
 
                 while (size > 0) {
 
-                    this.flushPayload(fingerprintList, task.getTraining().providerProperties());
+                    LOGGER.log(Level.INFO, String.format("Processing task %d. Current cursor: %d. Provider %d", task.getId(), task.getCursor(), task.trainingInfo().getAlgorithmProvider().getId()));
 
-                    currentPage++;
+                    try {
+
+                        this.flushPayload(task.getId(), fingerprintList, task.trainingInfo().providerProperties());
+
+                    } catch (Exception e) {
+
+                        LOGGER.log(Level.SEVERE, String.format("Sink Request fail. Processing task %d. Current cursor: %d. Provider %d", task.getId(), task.getCursor(), task.trainingInfo().getAlgorithmProvider().getId()), e);
+
+                        if (e instanceof HTTPRRequestError) {
+                            this.warningProviderForRequestFailure(task.trainingInfo().getAlgorithmProvider().getEmail(), e.getMessage());
+                        }
+
+                        wasLoopExhausted = false;
+                        break;
+                    }
+
+                    fingerprintList
+                            .stream()
+                            .max(Comparator.comparing(Fingerprint::getId))
+                            .map(Fingerprint::getId)
+                            .ifPresent(e -> {
+                                task.setCursor(e);
+                                tasks.save(task);
+                            });
 
                     fingerprintList = fingerprints
-                            .fingerprintByLocalizationIdAndWithIdGreater(task.getTraining().localizationAssociated(), task.getCursor(), currentPage);
+                            .fingerprintByLocalizationIdAndWithIdGreater(task.trainingInfo().localizationAssociated(), task.getCursor(), task.getBatchSize());
 
                     size = fingerprintList.size();
                 }
             }
 
-            task.setFinish(Date.from(Instant.now()));
-            tasks.save(task);
+            if (wasLoopExhausted) {
+                task.sinkFinish(Date.from(Instant.now()));
+                tasks.save(task);
+            }
 
         });
 
     }
 
+    /**
+     * Send a batch of fingerprints to a HTTP server
+     *
+     * @param taskID
+     * @param fingerprints
+     * @param providerServiceProperties
+     * @return boolean
+     * @throws HTTPRRequestError
+     */
+    private boolean flushPayload(Long taskID, List<Fingerprint> fingerprints, Map<String, String> providerServiceProperties) {
 
-    private boolean flushPayload(List<Fingerprint> payload, Map<String, String> properties) {
-
+        final String url = providerServiceProperties.get(AlgorithmProvider.HTTP_PROVIDER_INGESTION_URL_KEY);
         final Client client = ClientBuilder.newClient();
 
-        final Response response = client.target(properties.get(AlgorithmProvider.HTTP_PROVIDER_INGESTION_URL_KEY))
-                .request(MediaType.APPLICATION_JSON)
-                .buildPost(Entity.entity(payload.stream().map(e->e.toDTO().dtoValues()).collect(Collectors.toList()), MediaType.APPLICATION_JSON))
-                .invoke();
+        HashMap<String, Object> payload = new HashMap<>(2);
 
-        return response.getStatus() < 300 && response.getStatus() > 199;
+        payload.put("id", taskID);
+        payload.put("fingerprints", fingerprints.stream().map(e -> e.toDTO().dtoValues()).collect(Collectors.toList()));
+
+        try (Response response = client.target(url)
+                .request(MediaType.APPLICATION_JSON)
+                .buildPost(Entity.entity(payload, MediaType.APPLICATION_JSON))
+                .invoke()) {
+
+            if (response.getStatus() < 300 && response.getStatus() > 199) {
+                return true;
+            }
+
+            final StringBuilder errorAsString = new StringBuilder();
+
+            errorAsString.append(String.format("Response to %s return with status code %s.\n", url, response.getStatus()));
+
+            errorAsString.append("Response headers:\n\n");
+
+            response.getHeaders().forEach((k, v) -> {
+                errorAsString.append(String.format("%-12s : %-5s \n", k, v.toString()));
+            });
+
+            if (response.hasEntity()) {
+                final String entity = response.readEntity(String.class);
+                errorAsString.append(String.format("\nThe server send this payload:\n %s\n", entity));
+            } else {
+                errorAsString.append("\nThe server not sent any payload\n");
+            }
+
+            throw new HTTPRRequestError(errorAsString.toString());
+        }
 
     }
 
-    private void warningProviderForRequestFailure() {
+    private void warningProviderForRequestFailure(final String mail, final String errorMesssage) {
 
+        LOGGER.log(Level.INFO, "Sending email" + mail + "\n");
+        LOGGER.log(Level.INFO, "Sending content" + errorMesssage + "\n");
     }
 
 }

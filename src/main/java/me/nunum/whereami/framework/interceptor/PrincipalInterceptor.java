@@ -18,7 +18,6 @@ public class PrincipalInterceptor implements ContainerRequestFilter {
             return;
         }
 
-
         final Optional<String> instanceHeader = Optional.ofNullable(requestContext.getHeaderString(AppConfig.X_APP_HEADER));
 
         instanceHeader.ifPresent(instance -> requestContext.setSecurityContext(new DeviceSecurityContext(instance)));

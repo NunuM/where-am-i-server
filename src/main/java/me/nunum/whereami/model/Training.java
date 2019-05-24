@@ -16,6 +16,7 @@ import java.util.UUID;
         name = "Training.findAllByLocalization",
         query = "SELECT OBJECT(u) FROM Training u where u.localization.id=:localizationId"
 )
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"ALGORITHM_ALG_ID", "ALGORITHMPROVIDER_ID"}))
 public class Training implements DTOable {
 
     @Id
@@ -32,11 +33,7 @@ public class Training implements DTOable {
 
     private TrainingStatus status;
 
-    @OneToOne
-    private Device requester;
-
-    @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="LOCALIZATION_ID")
+    @ManyToOne(fetch = FetchType.LAZY)
     private Localization localization;
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -53,47 +50,48 @@ public class Training implements DTOable {
 
     public Training(Algorithm algorithm,
                     AlgorithmProvider provider,
-                    Localization localization,
-                    Device requester) {
-        this(algorithm, provider, TrainingStatus.REQUEST, localization, requester);
+                    Localization localization) {
+        this(algorithm, provider, TrainingStatus.REQUEST, localization);
     }
 
     public Training(Algorithm algorithm,
                     AlgorithmProvider provider,
                     TrainingStatus status,
-                    Localization localization,
-                    Device requester) {
+                    Localization localization) {
 
         this.uid = UUID.randomUUID().toString();
         this.algorithm = algorithm;
         this.status = status;
-        this.requester = requester;
         this.localization = localization;
         this.algorithmProvider = provider;
     }
 
-    public Long localizationAssociated(){
+    public Long localizationAssociated() {
         return localization.id();
     }
 
-    public boolean isHTTPProvider(){
+    public boolean isHTTPProvider() {
         return this.algorithmProvider.getMethod().equals(AlgorithmProvider.METHOD.HTTP);
     }
 
-    public void trainingInProgress(){
+    public void trainingInProgress() {
         this.status = TrainingStatus.PROGRESS;
     }
 
-    public Map<String, String> providerProperties(){
+    public Map<String, String> providerProperties() {
         return this.algorithmProvider.getProperties();
     }
 
-    public void trainingIsFinish(){
+    public void trainingIsFinish() {
         this.status = TrainingStatus.FINISHED;
     }
 
     public Localization getLocalization() {
         return localization;
+    }
+
+    public AlgorithmProvider getAlgorithmProvider() {
+        return algorithmProvider;
     }
 
     public void setLocalization(Localization localization) {
@@ -130,7 +128,6 @@ public class Training implements DTOable {
                 ", uid='" + uid + '\'' +
                 ", algorithm=" + algorithm +
                 ", status=" + status +
-                ", requester=" + requester +
                 ", localization=" + localization +
                 ", created=" + created +
                 ", updated=" + updated +
@@ -138,8 +135,7 @@ public class Training implements DTOable {
     }
 
     public boolean isAllowedToCheckTheStatus(Device device) {
-        return this.requester.equals(device)
-                || this.localization.isOwner(device);
+        return this.localization.isOwner(device);
     }
 
     @Override

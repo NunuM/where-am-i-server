@@ -1,8 +1,8 @@
 package me.nunum.whereami.model;
 
-
 import me.nunum.whereami.framework.dto.DTO;
 import me.nunum.whereami.framework.dto.DTOable;
+import me.nunum.whereami.model.dto.AlgorithmProviderDTO;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -122,7 +122,7 @@ public class AlgorithmProvider implements DTOable {
 
     @Override
     public DTO toDTO() {
-        return null;
+        return new AlgorithmProviderDTO(this.id, this.email, this.method, this.properties);
     }
 
     @Override
