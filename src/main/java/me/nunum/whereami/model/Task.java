@@ -35,6 +35,9 @@ public class Task {
     @Temporal(TemporalType.TIMESTAMP)
     private Date finishSinkAt;
 
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date finishTraingAt;
+
 
     @Index
     private STATE state;

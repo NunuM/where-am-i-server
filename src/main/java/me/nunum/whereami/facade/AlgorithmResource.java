@@ -10,6 +10,7 @@ import me.nunum.whereami.model.exceptions.EntityNotFoundException;
 import me.nunum.whereami.model.request.NewAlgorithmProvider;
 import me.nunum.whereami.model.request.NewAlgorithmRequest;
 
+import javax.annotation.security.RolesAllowed;
 import javax.inject.Singleton;
 import javax.validation.Valid;
 import javax.ws.rs.*;
@@ -81,6 +82,7 @@ public class AlgorithmResource {
             @ApiImplicitParam(name = "X-APP", value = "App Instance", required = true, dataType = "string", paramType = "header")
     })
     @Path("{it}/provider")
+    @RolesAllowed({"provider"})
     @Produces({MediaType.APPLICATION_JSON})
     public Response addAlgorithmProvider(@PathParam("it") Long aId, NewAlgorithmProvider algorithmProvider) {
 

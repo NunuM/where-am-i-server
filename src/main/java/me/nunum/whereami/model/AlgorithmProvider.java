@@ -16,7 +16,6 @@ public class AlgorithmProvider implements DTOable {
     public static final String HTTP_PROVIDER_INGESTION_URL_KEY = "url_to_receive_data";
     public static final String HTTP_PROVIDER_PREDICTION_URL_KEY = "url_to_predict";
 
-
     @Id
     @GeneratedValue
     private Long id;
@@ -39,7 +38,7 @@ public class AlgorithmProvider implements DTOable {
     @ElementCollection
     private Map<String, String> properties;
 
-    public static enum METHOD {
+    public enum METHOD {
 
         HTTP {
             @Override

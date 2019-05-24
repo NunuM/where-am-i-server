@@ -68,7 +68,6 @@ public class Main {
 
         final HttpServer server = startServer();
 
-
         ClassLoader loader = Main.class.getClassLoader();
         CLStaticHttpHandler docsHandler = new CLStaticHttpHandler(loader, "swagger-ui/dist/");
         docsHandler.setFileCacheEnabled(false);
@@ -76,7 +75,7 @@ public class Main {
         ServerConfiguration cfg = server.getServerConfiguration();
         cfg.addHttpHandler(docsHandler, "/docs/");
 
-        Main.LOGGER.log(Level.INFO,"Jersey app started with WADL available at "
+        Main.LOGGER.log(Level.INFO, "Jersey app started with WADL available at "
                 + "{0} \nHit enter to stop it...", BASE_URI);
         System.in.read();
         server.shutdown();
