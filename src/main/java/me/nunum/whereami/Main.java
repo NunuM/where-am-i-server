@@ -65,15 +65,13 @@ public class Main {
 
         LogManager.getLogManager().reset();
         SLF4JBridgeHandler.install();
-
+/**
         try {
             Executors.newSingleThreadExecutor().submit(new SchedulerService()).get();
         } catch (Exception e){
             LOGGER.log(Level.SEVERE, "ww", e);
         }
-
-
-        /**
+ */
         final HttpServer server = startServer();
 
 
@@ -88,7 +86,7 @@ public class Main {
                 + "{0} \nHit enter to stop it...", BASE_URI);
         System.in.read();
         server.shutdown();
- */
+
     }
 }
 
