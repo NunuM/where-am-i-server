@@ -9,8 +9,7 @@ import me.nunum.whereami.model.dto.ErrorDTO;
 import me.nunum.whereami.model.exceptions.EntityAlreadyExists;
 import me.nunum.whereami.model.exceptions.EntityNotFoundException;
 import me.nunum.whereami.model.exceptions.ForbiddenEntityAccessException;
-import me.nunum.whereami.model.request.NewAlgorithmProvider;
-import me.nunum.whereami.model.request.NewAlgorithmRequest;
+import me.nunum.whereami.model.request.*;
 
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
@@ -84,6 +83,114 @@ public class AlgorithmResource {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
     }
+
+    @POST
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "X-APP", value = "App Instance", required = true, dataType = "string", paramType = "header")
+    })
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response newAlgorithm(@Valid NewAlgorithmRequest algorithmRequest) {
+
+        try (final AlgorithmController controller = new AlgorithmController()) {
+
+            return Response.ok(controller.addNewAlgorithm(securityContext.getUserPrincipal(), algorithmRequest).dtoValues()).build();
+
+        } catch (EntityAlreadyExists e) {
+
+            LOGGER.log(Level.SEVERE, "Entity already exists", e);
+
+            return Response.status(Response.Status.CONFLICT).build();
+
+        } catch (Exception e) {
+
+            LOGGER.log(Level.SEVERE, "Unable to retrieve algorithms", e);
+
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @PUT
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "X-APP", value = "App Instance", required = true, dataType = "string", paramType = "header")
+    })
+    @Path("{it}")
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response updateAlgorithm(@PathParam("it") Long aId, UpdateAlgorithmRequest request) {
+        try (final AlgorithmController controller = new AlgorithmController()) {
+
+            return Response.ok().entity(controller.updateAlgorithm(securityContext.getUserPrincipal(), aId, request)).build();
+
+        } catch (EntityNotFoundException e) {
+
+            LOGGER.log(Level.SEVERE, "Unable to find algorithm", e);
+
+            return Response.status(Response.Status.NOT_FOUND).build();
+        } catch (ForbiddenEntityAccessException e) {
+
+            return Response.status(Response.Status.FORBIDDEN).build();
+
+        } catch (Exception e) {
+
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+
+    @DELETE
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "X-APP", value = "App Instance", required = true, dataType = "string", paramType = "header")
+    })
+    @Path("{it}")
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
+    @RolesAllowed("admin")
+    public Response deleteAlgorithm(@PathParam("it") Long aId) {
+
+        try (final AlgorithmController controller = new AlgorithmController()) {
+
+            return Response.ok().entity(controller.deleteAlgorithm(aId).dtoValues()).build();
+
+        } catch (EntityNotFoundException e) {
+
+            LOGGER.log(Level.SEVERE, "Unable to find algorithm", e);
+
+            return Response.status(Response.Status.NOT_FOUND).build();
+
+        } catch (Exception e) {
+
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+
+    @PUT
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "X-APP", value = "App Instance", required = true, dataType = "string", paramType = "header")
+    })
+    @Path("{it}/approval")
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
+    @RolesAllowed("admin")
+    public Response approveAlgorithm(@PathParam("it") Long aId, ApprovalRequest request) {
+
+        try (final AlgorithmController controller = new AlgorithmController()) {
+
+            return Response.ok().entity(controller.updateEntityApproval(aId, request).dtoValues()).build();
+
+        } catch (EntityNotFoundException e) {
+
+            LOGGER.log(Level.SEVERE, "Unable to find algorithm", e);
+
+            return Response.status(Response.Status.NOT_FOUND).build();
+
+        } catch (Exception e) {
+
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
 
     @DELETE
     @ApiImplicitParams({
@@ -161,17 +268,30 @@ public class AlgorithmResource {
     }
 
 
-    @POST
+    @PUT
     @ApiImplicitParams({
             @ApiImplicitParam(name = "X-APP", value = "App Instance", required = true, dataType = "string", paramType = "header")
     })
-    @Consumes({MediaType.APPLICATION_JSON})
+    @Path("{it}/provider/{pr}")
     @Produces({MediaType.APPLICATION_JSON})
-    public Response newAlgorithm(@Valid NewAlgorithmRequest algorithmRequest) {
+    @RolesAllowed({"provider"})
+    public Response updateProvider(@PathParam("it") Long aId, @PathParam("pr") Long pId, UpdateAlgorithmProvider request) {
 
         try (final AlgorithmController controller = new AlgorithmController()) {
 
-            return Response.ok(controller.addNewAlgorithm(algorithmRequest).dtoValues()).build();
+            return Response.ok().entity(controller.updateProvider(securityContext.getUserPrincipal(), aId, pId, request).dtoValues()).build();
+
+        } catch (EntityNotFoundException e) {
+
+            LOGGER.log(Level.SEVERE, "Unable to retrieve algorithm", e);
+
+            return Response.status(Response.Status.NOT_FOUND).build();
+
+        } catch (IllegalArgumentException e) {
+
+            LOGGER.log(Level.SEVERE, "Invalid request", e);
+
+            return Response.status(Response.Status.BAD_REQUEST).entity(ErrorDTO.fromError(e)).build();
 
         } catch (EntityAlreadyExists e) {
 

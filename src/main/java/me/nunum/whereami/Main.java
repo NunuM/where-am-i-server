@@ -21,7 +21,7 @@ import java.util.logging.Logger;
 /**
  * Main class.
  */
-public class Main {
+public final class Main {
     // Base URI the Grizzly HTTP server will listen on
     private static final String BASE_URI = "http://0.0.0.0:8080";
 

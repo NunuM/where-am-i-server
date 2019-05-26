@@ -1,32 +1,23 @@
 package me.nunum.whereami.model.request;
 
 import me.nunum.whereami.model.Algorithm;
-import me.nunum.whereami.model.Device;
 import org.hibernate.validator.constraints.URL;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
-public class NewAlgorithmRequest {
+public class UpdateAlgorithmRequest {
 
-    @NotNull
-    @Size(min = 1, max = 255)
     private String name;
 
-    @NotNull
-    @Size(min = 1, max = 255, message = "Author name is missing or is invalid")
     private String authorName;
 
-    @NotNull
     @URL
     private String paperURL;
 
 
-    public NewAlgorithmRequest() {
-        this("", "", "");
+    public UpdateAlgorithmRequest() {
     }
 
-    public NewAlgorithmRequest(String name, String authorName, String paperURL) {
+    public UpdateAlgorithmRequest(String name, String authorName, String paperURL) {
         this.name = name;
         this.authorName = authorName;
         this.paperURL = paperURL;
@@ -56,17 +47,34 @@ public class NewAlgorithmRequest {
         this.paperURL = paperURL;
     }
 
+    public Algorithm upateAlgorithm(Algorithm algorithm) {
+        if (!(this.name == null
+                || this.name.isEmpty()
+                || this.name.length() < 4
+                || this.name.length() > 255)) {
+            algorithm.setName(this.name);
+        }
+
+        if (!(this.authorName == null
+                || this.authorName.isEmpty()
+                || this.authorName.length() < 4
+                || this.authorName.length() > 255)) {
+            algorithm.setAuthorName(this.authorName);
+        }
+
+        if (!(this.paperURL == null)) {
+            algorithm.setPaperURL(this.paperURL);
+        }
+
+        return algorithm;
+    }
 
     @Override
     public String toString() {
-        return "NewAlgorithmRequest{" +
+        return "UpdateAlgorithmRequest{" +
                 "name='" + name + '\'' +
                 ", authorName='" + authorName + '\'' +
                 ", paperURL='" + paperURL + '\'' +
                 '}';
-    }
-
-    public Algorithm build(Device device) {
-        return new Algorithm(name.trim(), authorName.trim(), paperURL.trim(), device);
     }
 }

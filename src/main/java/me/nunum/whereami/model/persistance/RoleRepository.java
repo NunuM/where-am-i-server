@@ -4,4 +4,5 @@ import me.nunum.whereami.framework.persistence.repositories.Repository;
 import me.nunum.whereami.model.Role;
 
 public interface RoleRepository extends Repository<Role, Long>, AutoCloseable {
+    Role findRole(String role);
 }

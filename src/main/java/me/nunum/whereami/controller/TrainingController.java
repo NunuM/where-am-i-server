@@ -61,11 +61,11 @@ public final class TrainingController implements AutoCloseable {
             throw new ForbiddenEntityAccessException(String.format("Requester %s is not allowed to request training on this localization %d.", requesterDevice.instanceId(), localization.id()));
         }
 
-        final Optional<AlgorithmProvider> algorithmProvider = algorithm.algorithmProviderById(request.getProvider());
+        final Optional<AlgorithmProvider> algorithmProvider = algorithm.algorithmProviderById(request.getProviderId());
 
         if (!algorithmProvider.isPresent()) {
             throw new EntityNotFoundException(String
-                    .format("Algorithm Provider %d, requested by %s, was not found", request.getProvider(), principal.getName())
+                    .format("Algorithm Provider %d, requested by %s, was not found", request.getProviderId(), principal.getName())
             );
         }
 

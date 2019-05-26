@@ -1,10 +1,7 @@
 package me.nunum.whereami.controller;
 
 import me.nunum.whereami.framework.dto.DTO;
-import me.nunum.whereami.model.Algorithm;
-import me.nunum.whereami.model.AlgorithmProvider;
-import me.nunum.whereami.model.Device;
-import me.nunum.whereami.model.Training;
+import me.nunum.whereami.model.*;
 import me.nunum.whereami.model.exceptions.EntityNotFoundException;
 import me.nunum.whereami.model.exceptions.ForbiddenEntityAccessException;
 import me.nunum.whereami.model.persistance.AlgorithmProviderRepository;
@@ -15,8 +12,7 @@ import me.nunum.whereami.model.persistance.jpa.AlgorithmProviderRepositoryJpa;
 import me.nunum.whereami.model.persistance.jpa.AlgorithmRepositoryJpa;
 import me.nunum.whereami.model.persistance.jpa.DeviceRepositoryJpa;
 import me.nunum.whereami.model.persistance.jpa.TrainingRepositoryJpa;
-import me.nunum.whereami.model.request.NewAlgorithmProvider;
-import me.nunum.whereami.model.request.NewAlgorithmRequest;
+import me.nunum.whereami.model.request.*;
 import me.nunum.whereami.service.NotifyService;
 
 import java.security.Principal;
@@ -45,7 +41,7 @@ public class AlgorithmController implements AutoCloseable {
     }
 
     /**
-     * Display a list of algorithm entities
+     * Display a list of approved algorithm entities
      *
      * @param page Page used for paginate algorithm
      * @return See {@link me.nunum.whereami.model.dto.AlgorithmDTO}
@@ -60,14 +56,100 @@ public class AlgorithmController implements AutoCloseable {
 
     }
 
+
+    /**
+     * Update algorithm instance
+     *
+     * @param userPrincipal See {@link Principal}
+     * @param aId           Algorithm Id
+     * @param request       See {@link UpdateAlgorithmRequest}
+     * @return See {@link me.nunum.whereami.model.dto.AlgorithmDTO}
+     * @throws EntityNotFoundException
+     */
+    public DTO updateAlgorithm(Principal userPrincipal, Long aId, UpdateAlgorithmRequest request) {
+
+        final Device device = this.deviceRepository.findOrPersist(userPrincipal);
+
+        final Algorithm algorithm = getAlgorithm(aId);
+
+        if (!algorithm.isPusblisher(device)) {
+            throw new ForbiddenEntityAccessException(String.format("Device %s not have update privileges to update algorithm %d", device.instanceId(), aId));
+        }
+
+        return this.repository.save(request.upateAlgorithm(algorithm)).toDTO();
+    }
+
+
+    /**
+     * Updates algorithm approval
+     *
+     * @param aId     Algorithm Id
+     * @param request See {@link ApprovalRequest}
+     * @return See {@link me.nunum.whereami.model.dto.AlgorithmDTO}
+     * @throws EntityNotFoundException
+     */
+    public DTO updateEntityApproval(Long aId, ApprovalRequest request) {
+
+        final Algorithm algorithm = getAlgorithm(aId);
+
+        final Algorithm toUpdate = request.updateAprroval(algorithm);
+
+        return this.repository.save(toUpdate).toDTO();
+    }
+
+
+    /**
+     * Deletes algorithm instance
+     *
+     * @param aId Algorithm Id
+     * @return See {@link me.nunum.whereami.model.dto.AlgorithmDTO}
+     * @throws EntityNotFoundException
+     */
+    public DTO deleteAlgorithm(Long aId) {
+
+        final Algorithm algorithm = getAlgorithm(aId);
+
+        this.repository.delete(algorithm);
+
+        return algorithm.toDTO();
+    }
+
+
+    /**
+     * Helper method to obtain an algorithm
+     *
+     * @param aId Algorithm Id
+     * @return Nullable {@link Algorithm}
+     * @throws EntityNotFoundException
+     */
+    private Algorithm getAlgorithm(Long aId) {
+        final Optional<Algorithm> algorithmOptional = this.repository.findById(aId);
+
+        if (!algorithmOptional.isPresent()) {
+            throw new EntityNotFoundException(String.format("Algorithm %s not found", aId));
+        }
+
+        return algorithmOptional.get();
+    }
+
+
     /**
      * Register new algorithm
      *
      * @param algorithmRequest New Algorithm Request
      * @return See {@link me.nunum.whereami.model.dto.AlgorithmProviderDTO}
      */
-    public DTO addNewAlgorithm(NewAlgorithmRequest algorithmRequest) {
-        return this.repository.save(algorithmRequest.build()).toDTO();
+    public DTO addNewAlgorithm(Principal principal, NewAlgorithmRequest algorithmRequest) {
+
+        final Device publisher = this.deviceRepository.findOrPersist(principal);
+
+        final Algorithm algorithm = this.repository.save(algorithmRequest.build(publisher));
+
+        Set<Device> devices = this.deviceRepository.findAllDevicesInRole(Role.ADMIN);
+
+        NotifyService.newAlgorithmNotification(devices);
+
+        return algorithm.toDTO();
     }
 
     /**
@@ -78,14 +160,7 @@ public class AlgorithmController implements AutoCloseable {
      * @throws EntityNotFoundException Algorithm ID does not exists in database
      */
     public DTO algorithm(Long aId) {
-
-        Optional<Algorithm> algorithmOptional = this.repository.findById(aId);
-
-        if (algorithmOptional.isPresent()) {
-            return algorithmOptional.get().toDTO();
-        }
-
-        throw new EntityNotFoundException(String.format("Algorithm with id:%d, was not found", aId));
+        return this.getAlgorithm(aId).toDTO();
     }
 
     /**
@@ -101,13 +176,7 @@ public class AlgorithmController implements AutoCloseable {
 
         final Device device = this.deviceRepository.findOrPersist(principal);
 
-        Optional<Algorithm> algorithmOptional = this.repository.findById(aId);
-
-        if (!algorithmOptional.isPresent()) {
-            throw new EntityNotFoundException(String.format("Algorithm with id:%d, was not found", aId));
-        }
-
-        Algorithm algorithm = algorithmOptional.get();
+        Algorithm algorithm = this.getAlgorithm(aId);
 
         AlgorithmProvider provider = algorithmProvider.build(device);
 
@@ -132,20 +201,7 @@ public class AlgorithmController implements AutoCloseable {
      */
     public DTO deleteProvider(Long aId, Long pId, Principal userPrincipal) {
 
-        Device device = this.deviceRepository.findOrPersist(userPrincipal);
-
-        Optional<AlgorithmProvider> algorithmProvider = this.providerRepository.findById(pId);
-
-        if (!algorithmProvider.isPresent()) {
-            throw new EntityNotFoundException(String.format("Provider %s not found", pId));
-        }
-
-        final AlgorithmProvider provider = algorithmProvider.get();
-
-        if (!provider.belongs(device)) {
-            throw new ForbiddenEntityAccessException(String
-                    .format("Device %s not has permissions to delete provider %d", userPrincipal.getName(), pId));
-        }
+        final AlgorithmProvider provider = this.getProvider(userPrincipal, pId);
 
         try {
             // Fast path, try to delete
@@ -177,6 +233,53 @@ public class AlgorithmController implements AutoCloseable {
         this.providerRepository.delete(provider);
 
         return provider.toDTO();
+    }
+
+
+    /**
+     * @param userPrincipal
+     * @param aId
+     * @param pId
+     * @param request
+     * @return See {@link me.nunum.whereami.model.dto.AlgorithmProviderDTO}
+     * @throws EntityNotFoundException        If entity is not present in persist layer
+     * @throws ForbiddenEntityAccessException If requester is not the owner of the instance
+     * @throws IllegalArgumentException       If the request not contain valid provider properties
+     */
+    public DTO updateProvider(Principal userPrincipal, Long aId, Long pId, UpdateAlgorithmProvider request) {
+
+        final AlgorithmProvider provider = this.getProvider(userPrincipal, pId);
+
+        return this.providerRepository.save(request.updateProvider(provider)).toDTO();
+    }
+
+
+    /**
+     * Helper method to obtain provider
+     *
+     * @param userPrincipal See {@link Principal}
+     * @param pId           Provider Id
+     * @return See {@link AlgorithmProvider}
+     * @throws EntityNotFoundException        If entity is not present in persist layer
+     * @throws ForbiddenEntityAccessException If requester is not the owner of the instance
+     */
+    private AlgorithmProvider getProvider(Principal userPrincipal, Long pId) {
+        Device device = this.deviceRepository.findOrPersist(userPrincipal);
+
+        Optional<AlgorithmProvider> algorithmProvider = this.providerRepository.findById(pId);
+
+        if (!algorithmProvider.isPresent()) {
+            throw new EntityNotFoundException(String.format("Provider %s not found", pId));
+        }
+
+        final AlgorithmProvider provider = algorithmProvider.get();
+
+        if (!provider.belongs(device)) {
+            throw new ForbiddenEntityAccessException(String
+                    .format("Device %s not has permissions to delete provider %d", userPrincipal.getName(), pId));
+        }
+
+        return provider;
     }
 
 

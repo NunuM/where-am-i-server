@@ -9,8 +9,11 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Table(name = "ROLE")
+@NamedQuery(name = "Role.findByRoleName", query = "SELECT OBJECT (u) FROM Role u WHERE u.role=:role")
 public class Role {
+
+    public static final String ADMIN = "admin";
+    public static final String PROVIDER = "provider";
 
     @Id
     @GeneratedValue

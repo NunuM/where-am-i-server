@@ -5,6 +5,9 @@ import me.nunum.whereami.model.Algorithm;
 import me.nunum.whereami.model.persistance.AlgorithmRepository;
 import me.nunum.whereami.utils.AppConfig;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -30,11 +33,16 @@ public class AlgorithmRepositoryJpa
             } else return p;
         }).orElse(1);
 
-        final Iterator<Algorithm> theAlgorithmIteratorIterator = this.iterator(currentPage);
 
-        theAlgorithmIteratorIterator.forEachRemaining(algorithms::add);
+        final CriteriaBuilder criteriaBuilder = super.entityManager().getCriteriaBuilder();
 
-        return algorithms;
+        CriteriaQuery<Algorithm> builderQuery = criteriaBuilder.createQuery(Algorithm.class);
+
+        final Root<Algorithm> algorithmRoot = builderQuery.from(Algorithm.class);
+
+        final CriteriaQuery<Algorithm> where = builderQuery.where(criteriaBuilder.equal(algorithmRoot.get("isApproved"), true));
+
+        return this.pageWithFiltering(where, currentPage);
     }
 
     @Override

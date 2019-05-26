@@ -28,11 +28,11 @@ public class NewTrainingRequest {
         this.algorithmId = algorithmId;
     }
 
-    public Long getProvider() {
+    public Long getProviderId() {
         return providerId;
     }
 
-    public void setProvider(Long provider) {
+    public void setProviderId(Long provider) {
         this.providerId = provider;
     }
 

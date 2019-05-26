@@ -10,7 +10,7 @@ import javax.persistence.Persistence;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class Migration1 implements Runnable {
+public final class Migration1 implements Runnable {
 
     private static final Logger LOGGER = Logger.getLogger(Migration1.class.getSimpleName());
 

@@ -6,10 +6,16 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-@NamedQuery(
-        name = "Device.findByInstance",
-        query = "SELECT OBJECT(u) FROM Device u where u.instanceId=:instance"
-)
+@NamedQueries({
+        @NamedQuery(
+                name = "Device.findByInstance",
+                query = "SELECT OBJECT(u) FROM Device u where u.instanceId=:instance"
+        ),
+        @NamedQuery(
+                name = "Device.findAllDevicesInRole",
+                query = "SELECT OBJECT(u) FROM Device u where u.roles IN(:role)"
+        )
+})
 public class Device implements Comparable<Device> {
 
     @Id
@@ -33,8 +39,13 @@ public class Device implements Comparable<Device> {
     }
 
     public Device(String instanceId) {
+        this(instanceId, new ArrayList<>(0));
+    }
+
+    public Device(String instanceId, List<Role> roles) {
         this.instanceId = instanceId;
-        this.roles = new ArrayList<>();
+        this.roles = roles;
+        this.onCreate();
     }
 
     public String instanceId() {

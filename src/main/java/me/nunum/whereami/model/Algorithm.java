@@ -4,6 +4,7 @@ import me.nunum.whereami.framework.domain.Identifiable;
 import me.nunum.whereami.framework.dto.DTO;
 import me.nunum.whereami.framework.dto.DTOable;
 import me.nunum.whereami.model.dto.AlgorithmDTO;
+import org.eclipse.persistence.annotations.Index;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -19,7 +20,7 @@ public class Algorithm
 
     @Id
     @GeneratedValue
-    @Column(name="ALG_ID")
+    @Column(name = "ALG_ID")
     private Long id;
 
     @Column(unique = true, nullable = false, length = 255)
@@ -32,6 +33,14 @@ public class Algorithm
     private String paperURL;
 
 
+    @Index
+    private boolean isApproved;
+
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Device publisher;
+
+
     @Temporal(TemporalType.TIMESTAMP)
     private Date created;
 
@@ -41,7 +50,7 @@ public class Algorithm
 
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name="ALG_OWNER_ID", referencedColumnName="ALG_ID")
+    @JoinColumn(name = "ALG_OWNER_ID", referencedColumnName = "ALG_ID")
     private List<AlgorithmProvider> providers;
 
 
@@ -49,11 +58,13 @@ public class Algorithm
         //JPA
     }
 
-    public Algorithm(String name, String authorName, String paperURL) {
+    public Algorithm(String name, String authorName, String paperURL, Device publisher) {
         this.name = name;
         this.authorName = authorName;
         this.paperURL = paperURL;
         this.providers = new ArrayList<>();
+        this.isApproved = false;
+        this.publisher = publisher;
     }
 
     @Override
@@ -74,12 +85,32 @@ public class Algorithm
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public String getAuthorName() {
         return authorName;
     }
 
+    public void setAuthorName(String authorName) {
+        this.authorName = authorName;
+    }
+
     public String getPaperURL() {
         return paperURL;
+    }
+
+    public void setPaperURL(String paperURL) {
+        this.paperURL = paperURL;
+    }
+
+    public boolean isApproved() {
+        return isApproved;
+    }
+
+    public void setApproved(boolean approved) {
+        isApproved = approved;
     }
 
     public void addProvider(AlgorithmProvider provider) {
@@ -90,8 +121,12 @@ public class Algorithm
         this.providers.remove(provider);
     }
 
-    public Optional<AlgorithmProvider> algorithmProviderById(Long id){
+    public Optional<AlgorithmProvider> algorithmProviderById(Long id) {
         return this.providers.stream().filter(e -> e.getId().equals(id)).findFirst();
+    }
+
+    public boolean isPusblisher(final Device publisher) {
+        return this.publisher.equals(publisher);
     }
 
     @PrePersist
@@ -135,13 +170,15 @@ public class Algorithm
                 ", name='" + name + '\'' +
                 ", authorName='" + authorName + '\'' +
                 ", paperURL='" + paperURL + '\'' +
+                ", isApproved=" + isApproved +
                 ", created=" + created +
                 ", updated=" + updated +
+                ", providers=" + providers +
                 '}';
     }
 
     @Override
     public DTO toDTO() {
-        return new AlgorithmDTO(id, name, authorName, paperURL);
+        return new AlgorithmDTO(id, name, authorName, paperURL, isApproved);
     }
 }

@@ -9,6 +9,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.NoResultException;
 import java.security.Principal;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class DeviceRepositoryJpa
         extends JpaRepository<Device, Long>
@@ -33,5 +35,16 @@ public class DeviceRepositoryJpa
 
             return this.save(new Device(principal.getName()));
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public Set<Device> findAllDevicesInRole(String role) {
+        final EntityManager entityManager = entityManager();
+        return (Set<Device>) entityManager.createNamedQuery("Device.findAllDevicesInRole")
+                .setParameter("role", role)
+                .getResultList()
+                .stream()
+                .collect(Collectors.toSet());
     }
 }

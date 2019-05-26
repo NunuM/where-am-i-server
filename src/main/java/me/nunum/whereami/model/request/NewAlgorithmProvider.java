@@ -14,6 +14,7 @@ public class NewAlgorithmProvider {
     @Email
     private String email;
 
+    @NotNull
     @Size(min = 3, max = 50)
     private String method;
 

@@ -114,6 +114,10 @@ public class AlgorithmProvider implements DTOable {
         return method;
     }
 
+    public void setMethod(METHOD method) {
+        this.method = method;
+    }
+
     public Map<String, String> getProperties() {
         return properties;
     }
