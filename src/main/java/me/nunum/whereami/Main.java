@@ -2,7 +2,6 @@ package me.nunum.whereami;
 
 import me.nunum.whereami.facade.ApiListingResource;
 import me.nunum.whereami.framework.interceptor.PrincipalInterceptor;
-import me.nunum.whereami.service.SchedulerService;
 import org.glassfish.grizzly.http.server.CLStaticHttpHandler;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.grizzly.http.server.ServerConfiguration;
@@ -10,12 +9,11 @@ import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.logging.LoggingFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.ServerProperties;
+import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
 import org.slf4j.bridge.SLF4JBridgeHandler;
-
 
 import java.io.IOException;
 import java.net.URI;
-import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
@@ -39,7 +37,7 @@ public class Main {
         // create a resource config that scans for JAX-RS resources and providers
         // in me.nunum.whereami.facade package
         final ResourceConfig rc = new ResourceConfig().packages("me.nunum.whereami.facade");
-        rc.setApplicationName("where");
+        rc.setApplicationName("WhereAmI");
 
         rc.register(PrincipalInterceptor.class);
         rc.register(ApiListingResource.class);
@@ -49,6 +47,9 @@ public class Main {
         rc.property(LoggingFeature.LOGGING_FEATURE_LOGGER_LEVEL, Level.INFO.getName());
 
         rc.property(ServerProperties.BV_SEND_ERROR_IN_RESPONSE, true);
+
+        rc.register(RolesAllowedDynamicFeature.class);
+
 
         // create and start a new instance of grizzly http server
         // exposing the Jersey application at BASE_URI

@@ -41,7 +41,7 @@ public class Algorithm
 
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name="OWNER_ID", referencedColumnName="ALG_ID")
+    @JoinColumn(name="ALG_OWNER_ID", referencedColumnName="ALG_ID")
     private List<AlgorithmProvider> providers;
 
 

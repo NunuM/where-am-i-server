@@ -10,6 +10,7 @@ import me.nunum.whereami.model.exceptions.EntityNotFoundException;
 import me.nunum.whereami.model.exceptions.ForbiddenEntityDeletionException;
 import me.nunum.whereami.model.request.NewLocalizationRequest;
 
+import javax.annotation.security.PermitAll;
 import javax.inject.Singleton;
 import javax.validation.Valid;
 import javax.ws.rs.*;
@@ -26,6 +27,7 @@ import java.util.stream.Collectors;
 @Api("localization")
 @Path("localization")
 @Singleton
+@PermitAll
 public class LocalizationResource {
 
     @Context

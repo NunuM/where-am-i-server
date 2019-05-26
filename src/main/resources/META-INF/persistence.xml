@@ -16,6 +16,8 @@
         <class>me.nunum.whereami.model.Fingerprint</class>
         <class>me.nunum.whereami.model.Training</class>
         <class>me.nunum.whereami.model.TrainingStatus</class>
+        <class>me.nunum.whereami.model.Role</class>
+
 
         <class>me.nunum.whereami.model.Task</class>
 

@@ -9,7 +9,7 @@ import me.nunum.whereami.model.persistance.TrainingRepository;
 import me.nunum.whereami.model.persistance.jpa.FingerprintRepositoryJpa;
 import me.nunum.whereami.model.persistance.jpa.TaskRepositoryJpa;
 import me.nunum.whereami.model.persistance.jpa.TrainingRepositoryJpa;
-import me.nunum.whereami.service.exceptions.HTTPRRequestError;
+import me.nunum.whereami.service.exceptions.HTTPRequestError;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -68,7 +68,7 @@ public class SchedulerService implements Runnable {
 
                         LOGGER.log(Level.SEVERE, String.format("Sink Request fail. Processing task %d. Current cursor: %d. Provider %d", task.getId(), task.getCursor(), task.trainingInfo().getAlgorithmProvider().getId()), e);
 
-                        if (e instanceof HTTPRRequestError) {
+                        if (e instanceof HTTPRequestError) {
                             this.warningProviderForRequestFailure(task.trainingInfo().getAlgorithmProvider().getEmail(), e.getMessage());
                         }
 
@@ -108,7 +108,7 @@ public class SchedulerService implements Runnable {
      * @param fingerprints
      * @param providerServiceProperties
      * @return boolean
-     * @throws HTTPRRequestError
+     * @throws HTTPRequestError
      */
     private boolean flushPayload(Long taskID, List<Fingerprint> fingerprints, Map<String, String> providerServiceProperties) {
 
@@ -146,7 +146,7 @@ public class SchedulerService implements Runnable {
                 errorAsString.append("\nThe server not sent any payload\n");
             }
 
-            throw new HTTPRRequestError(errorAsString.toString());
+            throw new HTTPRequestError(errorAsString.toString());
         }
 
     }

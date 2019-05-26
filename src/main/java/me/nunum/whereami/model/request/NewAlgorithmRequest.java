@@ -1,6 +1,7 @@
 package me.nunum.whereami.model.request;
 
 import me.nunum.whereami.model.Algorithm;
+import org.hibernate.validator.constraints.URL;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -16,7 +17,7 @@ public class NewAlgorithmRequest {
     private String authorName;
 
     @NotNull
-    @Size(min = 1, max = 255)
+    @URL
     private String paperURL;
 
 

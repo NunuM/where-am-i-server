@@ -10,6 +10,7 @@ import me.nunum.whereami.model.exceptions.EntityNotFoundException;
 import me.nunum.whereami.model.exceptions.ForbiddenEntityAccessException;
 import me.nunum.whereami.model.request.NewTrainingRequest;
 
+import javax.annotation.security.PermitAll;
 import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -20,6 +21,7 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 @Api(value = "train")
+@PermitAll
 public class TrainResource {
 
     private static final Logger LOGGER = Logger.getLogger("TrainResource");

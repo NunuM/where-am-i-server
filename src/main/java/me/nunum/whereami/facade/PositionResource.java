@@ -11,6 +11,7 @@ import me.nunum.whereami.model.exceptions.ForbiddenEntityDeletionException;
 import me.nunum.whereami.model.exceptions.ForbiddenEntityModificationException;
 import me.nunum.whereami.model.request.NewPositionRequest;
 
+import javax.annotation.security.PermitAll;
 import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -22,6 +23,7 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 @Api(value = "position")
+@PermitAll
 public class PositionResource {
 
     private static final Logger LOGGER = Logger.getLogger("PositionResource");

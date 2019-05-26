@@ -2,6 +2,7 @@ package me.nunum.whereami.controller;
 
 import me.nunum.whereami.framework.dto.DTO;
 import me.nunum.whereami.model.*;
+import me.nunum.whereami.model.exceptions.EntityAlreadyExists;
 import me.nunum.whereami.model.exceptions.EntityNotFoundException;
 import me.nunum.whereami.model.exceptions.ForbiddenEntityAccessException;
 import me.nunum.whereami.model.persistance.*;
@@ -11,25 +12,37 @@ import me.nunum.whereami.model.request.NewTrainingRequest;
 import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 public final class TrainingController implements AutoCloseable {
 
+    private static final Logger LOGGER = Logger.getLogger(TrainingController.class.getSimpleName());
+
     private final TrainingRepository repository;
     private final DeviceRepository deviceRepository;
     private final AlgorithmRepository algorithmRepository;
-    private final LocalizationRepository localizationRepository;
     private final TaskRepository taskRepository;
 
     public TrainingController() {
         this.repository = new TrainingRepositoryJpa();
         this.deviceRepository = new DeviceRepositoryJpa();
         this.algorithmRepository = new AlgorithmRepositoryJpa();
-        this.localizationRepository = new LocalizationRepositoryJpa();
         this.taskRepository = new TaskRepositoryJpa();
     }
 
 
+    /**
+     * Register new training for given localization
+     *
+     * @param principal    Device
+     * @param request      Information to create a new instance of Training
+     * @param localization Localization associated. See {@link Localization}
+     * @return See {@link me.nunum.whereami.model.dto.TrainingDTO}
+     * @throws EntityNotFoundException
+     * @throws ForbiddenEntityAccessException
+     */
     public DTO submitTrainingRequest(Principal principal, NewTrainingRequest request, Localization localization) {
 
         final Device requesterDevice = deviceRepository.findOrPersist(principal);
@@ -56,17 +69,61 @@ public final class TrainingController implements AutoCloseable {
             );
         }
 
-        Training training = new Training(algorithm, algorithmProvider.get(), localization);
+        final AlgorithmProvider provider = algorithmProvider.get();
 
-        localization.addTraining(training);
+        try {
+            Training training = new Training(algorithm, provider, localization);
 
-        training = this.repository.save(training);
+            localization.addTraining(training);
 
-        this.taskRepository.save(new Task(0L, training));
+            training = this.repository.save(training);
 
-        return training.toDTO();
+            this.taskRepository.save(new Task(0L, training));
+
+            return training.toDTO();
+
+        } catch (EntityAlreadyExists e) {
+
+            try {
+                this.close();
+            } catch (Exception e1) {
+                LOGGER.log(Level.FINE, "Could not close previous entity manager", e1);
+            }
+
+            LOGGER.log(Level.INFO, String
+                    .format("Training for algorithm %d and provider %d for localization %d already exists, reset task",
+                            algorithm.getId(),
+                            provider.getId(),
+                            localization.id()));
+
+            final Optional<Training> training = this.repository.findTrainingByLocalizationAlgorithmAndProviderId(localization, algorithm, provider);
+
+            if (!training.isPresent()) {
+                LOGGER.log(Level.SEVERE, "Database gives entity already exists, however the second query has failed");
+                throw new EntityNotFoundException("Training not found");
+            }
+
+            final Training training1 = training.get();
+
+            final Optional<Task> task = this.taskRepository.findTaskByTrainingId(training1);
+
+            task.ifPresent(t -> {
+                t.setState(Task.STATE.RUNNING);
+                this.taskRepository.save(t);
+            });
+
+            return training1.toDTO();
+        }
     }
 
+
+    /**
+     * Display the status for given training Id
+     *
+     * @param userPrincipal See {@link Device}
+     * @param it            Training Id
+     * @return See {@link me.nunum.whereami.model.dto.TrainingDTO}
+     */
     public DTO trainingStatus(Principal userPrincipal, Long it) {
 
         final Optional<Training> someTraining = this.repository.findById(it);
@@ -92,6 +149,13 @@ public final class TrainingController implements AutoCloseable {
     }
 
 
+    /**
+     * Display a list of training associated by their localization
+     *
+     * @param user         See {@link Device}
+     * @param localization See {@link Localization}
+     * @return List of {@link me.nunum.whereami.model.dto.TrainingDTO}
+     */
     public List<DTO> allTrainingStatus(final Principal user, final Localization localization) {
 
         List<Training> trainingList = this.repository.findByLocalization(localization);
@@ -99,6 +163,14 @@ public final class TrainingController implements AutoCloseable {
         return trainingList.stream().map(Training::toDTO).collect(Collectors.toList());
     }
 
+
+    /**
+     * Delete training given their id
+     *
+     * @param userPrincipal Device
+     * @param trainingId    Training Id
+     * @return See {@link me.nunum.whereami.model.dto.TrainingDTO}
+     */
     public DTO deleteTraining(final Principal userPrincipal, final Long trainingId) {
 
         final Device requester = this.deviceRepository.findOrPersist(userPrincipal);
@@ -124,6 +196,12 @@ public final class TrainingController implements AutoCloseable {
         throw new EntityNotFoundException(String.format("Training %d was not found requested by %s", trainingId, requester.instanceId()));
     }
 
+
+    /**
+     * Is never trowed, otherwise the client would get a 500 instead of the actual processed response
+     *
+     * @throws Exception It must never occur
+     */
     @Override
     public void close() throws Exception {
         this.repository.close();

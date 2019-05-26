@@ -16,7 +16,7 @@ public class NewLocalizationRequest {
     private boolean isVisible;
 
     @NotNull
-    @Size(min = 1, max = 255)
+    @Size(min = 3, max = 255)
     private String user;
 
     @NotNull

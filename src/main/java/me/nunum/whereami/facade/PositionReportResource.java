@@ -6,6 +6,7 @@ import me.nunum.whereami.model.exceptions.EntityAlreadyExists;
 import me.nunum.whereami.model.exceptions.EntityNotFoundException;
 import me.nunum.whereami.model.request.PostionSpamRequest;
 
+import javax.annotation.security.PermitAll;
 import javax.ws.rs.POST;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
@@ -14,6 +15,7 @@ import java.util.logging.Logger;
 
 
 @Api("spam")
+@PermitAll
 public class PositionReportResource {
 
     private static final Logger LOGGER = Logger.getLogger(PositionReportResource.class.getSimpleName());

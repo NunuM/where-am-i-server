@@ -1,7 +1,6 @@
 package me.nunum.whereami.model.persistance.jpa;
 
 import me.nunum.whereami.framework.persistence.repositories.impl.jpa.JpaRepository;
-import me.nunum.whereami.model.LocalizationSpamReport;
 import me.nunum.whereami.model.Position;
 import me.nunum.whereami.model.PositionSpamReport;
 import me.nunum.whereami.model.persistance.PositionSpamRepository;

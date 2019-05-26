@@ -1,7 +1,9 @@
 package me.nunum.whereami.model;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @NamedQuery(
@@ -23,12 +25,16 @@ public class Device implements Comparable<Device> {
     @Temporal(TemporalType.TIMESTAMP)
     private Date updated;
 
+    @ManyToMany(mappedBy = "devices")
+    private List<Role> roles;
+
     protected Device() {
         //JPA
     }
 
     public Device(String instanceId) {
         this.instanceId = instanceId;
+        this.roles = new ArrayList<>();
     }
 
     public String instanceId() {
@@ -73,5 +79,9 @@ public class Device implements Comparable<Device> {
     @Override
     public int hashCode() {
         return instanceId.hashCode();
+    }
+
+    public boolean isInRole(final String role) {
+        return this.roles.stream().anyMatch(e -> e.is(role));
     }
 }

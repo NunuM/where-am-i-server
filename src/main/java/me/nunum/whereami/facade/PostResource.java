@@ -8,6 +8,7 @@ import me.nunum.whereami.framework.dto.DTO;
 import me.nunum.whereami.model.exceptions.EntityNotFoundException;
 import me.nunum.whereami.model.request.PostRequest;
 
+import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Singleton;
 import javax.validation.Valid;
@@ -25,6 +26,7 @@ import java.util.stream.Collectors;
 @Api("post")
 @Path("post")
 @Singleton
+@PermitAll
 public class PostResource {
 
     private static final Logger LOGGER = Logger.getLogger("PostResource");

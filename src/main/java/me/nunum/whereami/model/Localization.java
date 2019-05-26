@@ -144,6 +144,10 @@ public class Localization implements DTOable, Identifiable<Long>,Comparable<Loca
         return true;
     }
 
+    public Device getOwner() {
+        return owner;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -7,7 +7,16 @@ import java.util.Date;
 import java.util.Objects;
 
 @Entity
-
+@NamedQueries({
+        @NamedQuery(
+                name = "Task.findTaskByTrainingId",
+                query = "SELECT OBJECT(t) FROM Task t WHERE t.training.id=:trainingId"
+        ),
+        @NamedQuery(
+                name = "Task.deleteAllByProviderId",
+                query = "DELETE FROM Task t WHERE t.training.algorithmProvider.id=:providerId"
+        )
+})
 public class Task {
 
     @Id
@@ -20,7 +29,7 @@ public class Task {
 
     private Long cursor;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.REMOVE)
     private Training training;
 
 

@@ -8,7 +8,7 @@ public class NewTrainingRequest {
     private Long algorithmId;
 
     @NotNull
-    private Long provider;
+    private Long providerId;
 
 
     public NewTrainingRequest() {
@@ -17,7 +17,7 @@ public class NewTrainingRequest {
 
     public NewTrainingRequest(Long algorithmId, Long provider) {
         this.algorithmId = algorithmId;
-        this.provider = provider;
+        this.providerId = provider;
     }
 
     public Long getAlgorithmId() {
@@ -29,18 +29,18 @@ public class NewTrainingRequest {
     }
 
     public Long getProvider() {
-        return provider;
+        return providerId;
     }
 
     public void setProvider(Long provider) {
-        this.provider = provider;
+        this.providerId = provider;
     }
 
     @Override
     public String toString() {
         return "NewTrainingRequest{" +
                 "algorithmId=" + algorithmId +
-                ", provider=" + provider +
+                ", provider=" + providerId +
                 '}';
     }
 }

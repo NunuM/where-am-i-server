@@ -8,15 +8,11 @@ import me.nunum.whereami.utils.AppConfig;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
-import javax.persistence.PersistenceException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.logging.Level;
-import java.util.stream.Stream;
 
 public class FingerprintRepositoryJpa
         extends JpaRepository<Fingerprint, Long>

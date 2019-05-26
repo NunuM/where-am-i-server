@@ -5,7 +5,7 @@ import me.nunum.whereami.model.Device;
 
 import java.security.Principal;
 
-public interface DeviceRepository extends Repository<Device, Long> {
+public interface DeviceRepository extends Repository<Device, Long>, AutoCloseable {
 
     Device findOrPersist(Principal principal);
 

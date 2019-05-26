@@ -5,17 +5,22 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import me.nunum.whereami.controller.AlgorithmController;
 import me.nunum.whereami.framework.dto.DTO;
+import me.nunum.whereami.model.dto.ErrorDTO;
 import me.nunum.whereami.model.exceptions.EntityAlreadyExists;
 import me.nunum.whereami.model.exceptions.EntityNotFoundException;
+import me.nunum.whereami.model.exceptions.ForbiddenEntityAccessException;
 import me.nunum.whereami.model.request.NewAlgorithmProvider;
 import me.nunum.whereami.model.request.NewAlgorithmRequest;
 
+import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Singleton;
 import javax.validation.Valid;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
@@ -25,7 +30,11 @@ import java.util.stream.Collectors;
 @Api(value = "algorithm")
 @Path("algorithm")
 @Singleton
+@PermitAll
 public class AlgorithmResource {
+
+    @Context
+    SecurityContext securityContext;
 
     private static final Logger LOGGER = Logger.getLogger("AlgorithmResource");
 
@@ -76,19 +85,54 @@ public class AlgorithmResource {
         }
     }
 
+    @DELETE
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "X-APP", value = "App Instance", required = true, dataType = "string", paramType = "header")
+    })
+    @Path("{it}/provider/{pr}")
+    @Produces({MediaType.APPLICATION_JSON})
+    @RolesAllowed({"provider"})
+    public Response deleteAlgorithmProvider(@PathParam("it") Long aId, @PathParam("pr") Long pId) {
+
+        try (final AlgorithmController controller = new AlgorithmController()) {
+
+            return Response.status(Response.Status.OK).entity(controller.deleteProvider(aId, pId, securityContext.getUserPrincipal()).dtoValues()).build();
+
+        } catch (EntityNotFoundException e) {
+
+            LOGGER.log(Level.SEVERE, "Unable to retrieve provider", e);
+
+            return Response.status(Response.Status.NOT_FOUND).build();
+
+        } catch (ForbiddenEntityAccessException e) {
+
+            return Response.status(Response.Status.FORBIDDEN).build();
+
+        } catch (IllegalStateException e) {
+
+            return Response.status(Response.Status.BAD_REQUEST).build();
+
+        } catch (Exception e) {
+
+            LOGGER.log(Level.SEVERE, "Something bad on delete provider", e);
+
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
+
+    }
 
     @POST
     @ApiImplicitParams({
             @ApiImplicitParam(name = "X-APP", value = "App Instance", required = true, dataType = "string", paramType = "header")
     })
     @Path("{it}/provider")
-    @RolesAllowed({"provider"})
     @Produces({MediaType.APPLICATION_JSON})
+    @RolesAllowed({"provider"})
     public Response addAlgorithmProvider(@PathParam("it") Long aId, NewAlgorithmProvider algorithmProvider) {
 
         try (final AlgorithmController controller = new AlgorithmController()) {
 
-            return Response.ok(controller.registerNewAlgorithmProvider(aId, algorithmProvider)).build();
+            return Response.ok(controller.registerNewAlgorithmProvider(aId, algorithmProvider, securityContext.getUserPrincipal()).dtoValues()).build();
 
         } catch (EntityNotFoundException e) {
 
@@ -100,7 +144,7 @@ public class AlgorithmResource {
 
             LOGGER.log(Level.SEVERE, "Invalid request", e);
 
-            return Response.status(Response.Status.BAD_REQUEST).build();
+            return Response.status(Response.Status.BAD_REQUEST).entity(ErrorDTO.fromError(e)).build();
 
         } catch (EntityAlreadyExists e) {
 

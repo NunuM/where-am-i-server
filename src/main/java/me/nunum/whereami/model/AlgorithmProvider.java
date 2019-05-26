@@ -35,8 +35,16 @@ public class AlgorithmProvider implements DTOable {
     private Date updated;
 
 
+    @ManyToOne
+    private Device owner;
+
+
     @ElementCollection
     private Map<String, String> properties;
+
+    public boolean belongs(final Device device) {
+        return this.owner.equals(device);
+    }
 
     public enum METHOD {
 
@@ -87,10 +95,11 @@ public class AlgorithmProvider implements DTOable {
     public AlgorithmProvider() {
     }
 
-    public AlgorithmProvider(String email, METHOD method, Map<String, String> properties) {
+    public AlgorithmProvider(String email, METHOD method, Map<String, String> properties, Device owner) {
         this.email = email;
         this.method = method;
         this.properties = properties;
+        this.owner = owner;
     }
 
     public Long getId() {

@@ -344,7 +344,7 @@ public abstract class JpaRepository<T, K extends Serializable>
      * Derived classes should implement this method to return the name of the
      * persistence unit
      *
-     * @return the name of the persistence unit
+     * @return Name of the persistence unit
      */
     protected abstract String persistenceUnitName();
 

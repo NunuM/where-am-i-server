@@ -9,6 +9,7 @@ import me.nunum.whereami.model.exceptions.EntityAlreadyExists;
 import me.nunum.whereami.model.exceptions.EntityNotFoundException;
 import me.nunum.whereami.model.request.LocalizationSpamRequest;
 
+import javax.annotation.security.PermitAll;
 import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -21,6 +22,7 @@ import java.util.logging.Logger;
 
 
 @Api("spam")
+@PermitAll
 public class LocalizationReportResource {
 
     private static final Logger LOGGER = Logger.getLogger(LocalizationReportResource.class.getSimpleName());

@@ -12,11 +12,24 @@ import java.util.Objects;
 import java.util.UUID;
 
 @Entity
-@NamedQuery(
-        name = "Training.findAllByLocalization",
-        query = "SELECT OBJECT(u) FROM Training u where u.localization.id=:localizationId"
-)
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"ALGORITHM_ALG_ID", "ALGORITHMPROVIDER_ID"}))
+@NamedQueries({
+        @NamedQuery(
+                name = "Training.findAllByLocalization",
+                query = "SELECT OBJECT(u) FROM Training u where u.localization.id=:localizationId"),
+        @NamedQuery(
+                name = "Training.findAllByProviderId",
+                query = "SELECT OBJECT(u) FROM Training u where u.algorithmProvider.id=:providerId"
+        ),
+        @NamedQuery(
+                name = "Training.findTrainingByProviderAndAlgorithmId",
+                query = "SELECT OBJECT(u) FROM Training u where u.algorithm.id=:algorithmId AND u.algorithmProvider.id=:algorithmProviderId AND u.localization.id=:localizationId"
+        ),
+        @NamedQuery(
+                name = "Training.deleteAllByProviderId",
+                query = "DELETE FROM Training u where u.algorithmProvider.id=:providerId"
+        )
+})
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"ALGORITHM_ALG_ID", "ALGORITHMPROVIDER_ID", "LOCALIZATION_ID"}))
 public class Training implements DTOable {
 
     @Id
@@ -64,6 +77,10 @@ public class Training implements DTOable {
         this.status = status;
         this.localization = localization;
         this.algorithmProvider = provider;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public Long localizationAssociated() {

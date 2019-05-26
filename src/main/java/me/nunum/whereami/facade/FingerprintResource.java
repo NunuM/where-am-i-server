@@ -7,6 +7,7 @@ import me.nunum.whereami.controller.FingerprintController;
 import me.nunum.whereami.framework.dto.DTO;
 import me.nunum.whereami.model.request.FingerprintRequest;
 
+import javax.annotation.security.PermitAll;
 import javax.inject.Singleton;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -21,6 +22,7 @@ import java.util.logging.Logger;
 @Api(value = "fingerprint")
 @Path("fingerprint")
 @Singleton
+@PermitAll
 public class FingerprintResource {
 
     private static final Logger LOGGER = Logger.getLogger("FingerprintResource");

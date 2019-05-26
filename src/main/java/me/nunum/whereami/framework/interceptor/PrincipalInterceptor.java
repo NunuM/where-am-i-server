@@ -1,20 +1,30 @@
 package me.nunum.whereami.framework.interceptor;
 
+import me.nunum.whereami.model.Device;
+import me.nunum.whereami.model.dto.ErrorDTO;
+import me.nunum.whereami.model.persistance.DeviceRepository;
+import me.nunum.whereami.model.persistance.jpa.DeviceRepositoryJpa;
 import me.nunum.whereami.utils.AppConfig;
 
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
+import javax.ws.rs.container.PreMatching;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
+import javax.ws.rs.ext.Provider;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.Optional;
 
+@Provider
+@PreMatching
 public class PrincipalInterceptor implements ContainerRequestFilter {
+
+
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
 
-        if(requestContext.getUriInfo().getPath().contains("swagger.json")){
+        if (requestContext.getUriInfo().getPath().contains("swagger.json")) {
             return;
         }
 
@@ -23,7 +33,8 @@ public class PrincipalInterceptor implements ContainerRequestFilter {
         instanceHeader.ifPresent(instance -> requestContext.setSecurityContext(new DeviceSecurityContext(instance)));
 
         if (!instanceHeader.isPresent()) {
-            requestContext.abortWith(Response.status(Response.Status.BAD_REQUEST).build());
+            requestContext.abortWith(Response.status(Response.Status.BAD_REQUEST)
+                    .entity(ErrorDTO.fromXAppMissingHeader()).build());
         }
     }
 
@@ -44,7 +55,11 @@ public class PrincipalInterceptor implements ContainerRequestFilter {
 
         @Override
         public boolean isUserInRole(String role) {
-            return false;
+            final DeviceRepository repository = new DeviceRepositoryJpa();
+
+            Device device = repository.findOrPersist(this);
+
+            return device.isInRole(role);
         }
 
         @Override

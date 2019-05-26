@@ -1,6 +1,7 @@
 package me.nunum.whereami.model.request;
 
 import me.nunum.whereami.model.Post;
+import org.hibernate.validator.constraints.URL;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -16,7 +17,7 @@ public class PostRequest {
     private String imageURL;
 
     @NotNull
-    @Size(min = 3, max = 255)
+    @URL
     private String sourceURL;
 
 
