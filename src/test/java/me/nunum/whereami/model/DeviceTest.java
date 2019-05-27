@@ -33,4 +33,13 @@ public class DeviceTest extends TestCase {
         assertFalse(device1.isInRole("Admin"));
         assertTrue(device2.isInRole("proviDer"));
     }
+
+    @Test
+    public void testEquals() {
+        final Device device1 = new Device("instance1");
+        final Device device2 = new Device("instance1");
+        final Device device3 = new Device("instance3");
+        assertTrue(device2.equals(device1));
+        assertFalse(device2.equals(device3));
+    }
 }

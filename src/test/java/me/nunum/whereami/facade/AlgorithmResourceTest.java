@@ -9,6 +9,7 @@ import me.nunum.whereami.model.persistance.jpa.DeviceRepositoryJpa;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import javax.ws.rs.core.Application;
@@ -21,11 +22,8 @@ import static org.junit.Assert.*;
 
 public class AlgorithmResourceTest extends JerseyTest {
 
-    @Override
-    @Before
-    public void setUp() throws Exception {
-        super.setUp();
-
+    @BeforeClass
+    public static void insertData(){
         final DeviceRepository deviceRepository = new DeviceRepositoryJpa();
 
         Device device = deviceRepository.findOrPersist(() -> "Test");
@@ -39,8 +37,17 @@ public class AlgorithmResourceTest extends JerseyTest {
 
 
         for (int j = 0; j < 40; j++) {
+            System.out.println(i+j);
             repository.save(new Algorithm("Name" + (i + j), "Author" + (i + j), "http://paper.com/paper" + (i + j), false, device));
         }
+
+    }
+
+
+    @Override
+    @Before
+    public void setUp() throws Exception {
+        super.setUp();
     }
 
     @Override
@@ -84,5 +91,25 @@ public class AlgorithmResourceTest extends JerseyTest {
         //Inserted 40 approved rows the subsequent pages must be empty
         Response response3 = makeRequest.apply(3);
         assertEquals("[]", response3.readEntity(String.class));
+    }
+
+    @Test
+    public void testGetAlgorithm() {
+
+        Function<String, Response> makeRequest = (aId) -> target("/algorithm/" + aId)
+                .request(MediaType.APPLICATION_JSON)
+                .header("X-APP", "Test")
+                .buildGet()
+                .invoke();
+
+
+        final Response response = makeRequest.apply("39");
+
+        assertTrue(response.getStatus() == 200);
+        assertTrue(response.readEntity(String.class).contains("39"));
+
+        final Response response1 = makeRequest.apply("1000");
+        assertTrue(response1.getStatus() == 404);
+
     }
 }

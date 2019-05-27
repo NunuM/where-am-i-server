@@ -32,10 +32,10 @@ import java.util.stream.Collectors;
 @PermitAll
 public class AlgorithmResource {
 
+    private static final Logger LOGGER = Logger.getLogger(AlgorithmResource.class.getSimpleName());
+
     @Context
     SecurityContext securityContext;
-
-    private static final Logger LOGGER = Logger.getLogger("AlgorithmResource");
 
     @GET
     @ApiImplicitParams({

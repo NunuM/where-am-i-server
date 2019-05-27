@@ -88,7 +88,7 @@ public class Device implements Comparable<Device> {
 
         Device device = (Device) o;
 
-        return instanceId.equals(device.instanceId);
+        return this.instanceId().equals(device.instanceId());
     }
 
     @Override
