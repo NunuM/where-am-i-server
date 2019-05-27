@@ -1,7 +1,7 @@
 /* eslint-env mocha */
 import React from "react"
-import expect, { createSpy } from "expect"
-import { shallow } from "enzyme"
+import expect, {createSpy} from "expect"
+import {shallow} from "enzyme"
 import Operation from "components/operation"
 
 describe("<Operation/>", function(){

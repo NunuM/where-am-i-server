@@ -2,8 +2,8 @@ import React from "react"
 import PropTypes from "prop-types"
 import cx from "classnames"
 import Remarkable from "remarkable"
-import { OAS3ComponentWrapFactory } from "../helpers"
-import { sanitizer } from "core/components/providers/markdown"
+import {OAS3ComponentWrapFactory} from "../helpers"
+import {sanitizer} from "core/components/providers/markdown"
 
 const parser = new Remarkable("commonmark")
 parser.block.ruler.enable(["table"])

@@ -32,6 +32,10 @@ public class NewProviderRequest {
         return new Provider(email, UUID.randomUUID().toString(), false, device);
     }
 
+    public Provider buildConfirmed(Device device) {
+        return new Provider(email, UUID.randomUUID().toString(), true, device);
+    }
+
     @Override
     public String toString() {
         return "NewProviderRequest{" +

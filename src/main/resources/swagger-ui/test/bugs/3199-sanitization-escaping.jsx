@@ -1,7 +1,7 @@
 /* eslint-env mocha */
 import React from "react"
 import expect from "expect"
-import { render } from "enzyme"
+import {render} from "enzyme"
 import Markdown from "components/providers/markdown"
 
 describe("UI-3199: Sanitized Markdown causing code examples to be double escaped", function(){

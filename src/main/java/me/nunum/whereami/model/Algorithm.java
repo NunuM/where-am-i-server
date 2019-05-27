@@ -58,13 +58,27 @@ public class Algorithm
         //JPA
     }
 
+    /**
+     * @param name
+     * @param authorName
+     * @param paperURL
+     * @param publisher
+     */
     public Algorithm(String name, String authorName, String paperURL, Device publisher) {
+        this(name, authorName, paperURL, false, publisher);
+    }
+
+    public Algorithm(String name,
+                     String authorName,
+                     String paperURL,
+                     boolean isApproved,
+                     Device publisher) {
         this.name = name;
         this.authorName = authorName;
         this.paperURL = paperURL;
-        this.providers = new ArrayList<>();
-        this.isApproved = false;
+        this.isApproved = isApproved;
         this.publisher = publisher;
+        this.providers = new ArrayList<>();
     }
 
     @Override

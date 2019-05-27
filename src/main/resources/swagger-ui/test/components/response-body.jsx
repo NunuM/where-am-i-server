@@ -1,8 +1,8 @@
 import React from "react"
 import expect from "expect"
-import { shallow } from "enzyme"
+import {shallow} from "enzyme"
 import ResponseBody from "components/response-body"
-import { inferSchema } from "corePlugins/samples/fn"
+import {inferSchema} from "corePlugins/samples/fn"
 
 describe("<ResponseBody />", function() {
     const highlightCodeComponent = () => null

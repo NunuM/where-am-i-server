@@ -1,6 +1,6 @@
-import React, { Component, } from "react"
+import React, {Component,} from "react"
 import PropTypes from "prop-types"
-import { List } from "immutable"
+import {List} from "immutable"
 import ImPropTypes from "react-immutable-proptypes"
 
 const braceOpen = "{"

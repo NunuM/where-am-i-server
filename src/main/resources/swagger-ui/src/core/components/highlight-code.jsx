@@ -1,6 +1,6 @@
-import React, { Component } from "react"
+import React, {Component} from "react"
 import PropTypes from "prop-types"
-import { highlight } from "core/utils"
+import {highlight} from "core/utils"
 import saveAs from "js-file-download"
 
 export default class HighlightCode extends Component {

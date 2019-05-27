@@ -1,12 +1,12 @@
 /* eslint-env mocha */
-import React, { PureComponent } from "react"
+import React, {PureComponent} from "react"
 import expect from "expect"
 import System from "core/system"
-import { fromJS } from "immutable"
-import { render } from "enzyme"
+import {fromJS} from "immutable"
+import {render} from "enzyme"
 import ViewPlugin from "core/plugins/view/index.js"
 import filterPlugin from "core/plugins/filter/index.js"
-import { connect, Provider } from "react-redux"
+import {connect, Provider} from "react-redux"
 
 describe("bound system", function(){
 

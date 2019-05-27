@@ -1,7 +1,7 @@
 import React from "react"
 import PropTypes from "prop-types"
 import ImPropTypes from "react-immutable-proptypes"
-import { fromJS } from "immutable"
+import {fromJS} from "immutable"
 
 const Callbacks = (props) => {
   let { callbacks, getComponent, specPath } = props

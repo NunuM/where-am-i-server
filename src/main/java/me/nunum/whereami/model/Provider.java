@@ -14,6 +14,10 @@ import java.util.Objects;
         @NamedQuery(
                 name = "Provider.findByToken",
                 query = "SELECT OBJECT(u) FROM Provider u WHERE u.token=:token"
+        ),
+        @NamedQuery(
+                name = "Provider.findByDevice",
+                query = "SELECT OBJECT(u) FROM Provider u WHERE u.requester.id=:deviceId"
         )
 })
 public class Provider implements DTOable {

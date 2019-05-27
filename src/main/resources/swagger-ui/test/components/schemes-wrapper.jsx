@@ -1,12 +1,11 @@
-
 /* eslint-env mocha */
 import React from "react"
 import expect from "expect"
-import { mount, render } from "enzyme"
-import { fromJS } from "immutable"
+import {mount, render} from "enzyme"
+import {fromJS} from "immutable"
 import SchemesContainer from "containers/schemes"
 import Schemes from "components/schemes"
-import { Col } from "components/layout-utils"
+import {Col} from "components/layout-utils"
 
 describe("<SchemesContainer/>", function(){
 

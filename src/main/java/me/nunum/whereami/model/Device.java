@@ -13,7 +13,7 @@ import java.util.List;
         ),
         @NamedQuery(
                 name = "Device.findAllDevicesInRole",
-                query = "SELECT OBJECT(u) FROM Device u where u.roles IN(:role)"
+                query = "SELECT OBJECT(u) FROM Device u JOIN Role r where r.role=:role "
         )
 })
 public class Device implements Comparable<Device> {
@@ -46,6 +46,10 @@ public class Device implements Comparable<Device> {
         this.instanceId = instanceId;
         this.roles = roles;
         this.onCreate();
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public String instanceId() {

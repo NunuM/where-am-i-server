@@ -1,10 +1,9 @@
-
 /* eslint-env mocha */
 import React from "react"
 import expect from "expect"
-import { mount } from "enzyme"
+import {mount} from "enzyme"
 import FilterContainer from "containers/filter"
-import { Col } from "components/layout-utils"
+import {Col} from "components/layout-utils"
 
 describe("<FilterContainer/>", function(){
 

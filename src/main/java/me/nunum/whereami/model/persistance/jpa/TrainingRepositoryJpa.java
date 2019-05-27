@@ -9,7 +9,6 @@ import me.nunum.whereami.model.persistance.TrainingRepository;
 import me.nunum.whereami.utils.AppConfig;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.RollbackException;
 import java.util.List;
 import java.util.Optional;

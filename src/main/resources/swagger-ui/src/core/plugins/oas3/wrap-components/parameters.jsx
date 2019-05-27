@@ -1,8 +1,8 @@
-import React, { Component } from "react"
+import React, {Component} from "react"
 import PropTypes from "prop-types"
-import Im, { Map, List } from "immutable"
+import Im, {List, Map} from "immutable"
 import ImPropTypes from "react-immutable-proptypes"
-import { OAS3ComponentWrapFactory } from "../helpers"
+import {OAS3ComponentWrapFactory} from "../helpers"
 
 // More readable, just iterate over maps, only
 const eachMap = (iterable, fn) => iterable.valueSeq().filter(Im.Map.isMap).map(fn)

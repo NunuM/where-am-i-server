@@ -1,10 +1,10 @@
 import React from "react"
 import expect from "expect"
-import { shallow } from "enzyme"
-import { fromJS } from "immutable"
+import {shallow} from "enzyme"
+import {fromJS} from "immutable"
 import Response from "components/response"
 import ModelExample from "components/model-example"
-import { inferSchema } from "corePlugins/samples/fn"
+import {inferSchema} from "corePlugins/samples/fn"
 
 describe("<Response />", function() {
     const dummyComponent = () => null

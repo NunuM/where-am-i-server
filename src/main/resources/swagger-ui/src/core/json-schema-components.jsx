@@ -1,10 +1,10 @@
-import React, { PureComponent, Component } from "react"
+import React, {Component, PureComponent} from "react"
 import PropTypes from "prop-types"
-import { List, fromJS } from "immutable"
+import {fromJS, List} from "immutable"
 import cx from "classnames"
 import ImPropTypes from "react-immutable-proptypes"
 import DebounceInput from "react-debounce-input"
-import { getSampleSchema } from "core/utils"
+import {getSampleSchema} from "core/utils"
 //import "less/json-schema-form"
 
 const noop = ()=> {}

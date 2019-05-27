@@ -1,8 +1,8 @@
 /* eslint-env mocha */
 import React from "react"
 import expect from "expect"
-import { render } from "enzyme"
-import { fromJS } from "immutable"
+import {render} from "enzyme"
+import {fromJS} from "immutable"
 import Info from "components/info"
 import Markdown from "components/providers/markdown"
 

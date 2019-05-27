@@ -2,7 +2,7 @@ import React from "react"
 import URL from "url-parse"
 
 import PropTypes from "prop-types"
-import { sanitizeUrl } from "core/utils"
+import {sanitizeUrl} from "core/utils"
 import win from "core/window"
 
 export default class OnlineValidatorBadge extends React.Component {

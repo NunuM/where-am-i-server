@@ -5,8 +5,10 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import me.nunum.whereami.controller.ProviderController;
+import me.nunum.whereami.model.dto.ErrorDTO;
 import me.nunum.whereami.model.exceptions.EntityAlreadyExists;
 import me.nunum.whereami.model.exceptions.EntityNotFoundException;
+import me.nunum.whereami.model.exceptions.ForbiddenEntityModificationException;
 import me.nunum.whereami.model.request.NewProviderRequest;
 
 import javax.annotation.security.PermitAll;
@@ -67,6 +69,9 @@ public class ProviderResource {
         } catch (EntityNotFoundException e) {
 
             return Response.status(Response.Status.NOT_FOUND).build();
+        } catch (ForbiddenEntityModificationException e) {
+
+            return Response.status(Response.Status.BAD_REQUEST).entity(ErrorDTO.fromError(e)).build();
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Unable to persist provider", e);
 

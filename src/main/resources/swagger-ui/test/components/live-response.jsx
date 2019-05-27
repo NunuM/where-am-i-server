@@ -1,8 +1,8 @@
 /* eslint-env mocha */
 import React from "react"
-import { fromJSOrdered } from "core/utils"
-import expect, { createSpy } from "expect"
-import { shallow } from "enzyme"
+import {fromJSOrdered} from "core/utils"
+import expect, {createSpy} from "expect"
+import {shallow} from "enzyme"
 import Curl from "components/curl"
 import LiveResponse from "components/live-response"
 import ResponseBody from "components/response-body"

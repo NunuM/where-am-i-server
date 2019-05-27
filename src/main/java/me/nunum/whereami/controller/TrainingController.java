@@ -5,8 +5,14 @@ import me.nunum.whereami.model.*;
 import me.nunum.whereami.model.exceptions.EntityAlreadyExists;
 import me.nunum.whereami.model.exceptions.EntityNotFoundException;
 import me.nunum.whereami.model.exceptions.ForbiddenEntityAccessException;
-import me.nunum.whereami.model.persistance.*;
-import me.nunum.whereami.model.persistance.jpa.*;
+import me.nunum.whereami.model.persistance.AlgorithmRepository;
+import me.nunum.whereami.model.persistance.DeviceRepository;
+import me.nunum.whereami.model.persistance.TaskRepository;
+import me.nunum.whereami.model.persistance.TrainingRepository;
+import me.nunum.whereami.model.persistance.jpa.AlgorithmRepositoryJpa;
+import me.nunum.whereami.model.persistance.jpa.DeviceRepositoryJpa;
+import me.nunum.whereami.model.persistance.jpa.TaskRepositoryJpa;
+import me.nunum.whereami.model.persistance.jpa.TrainingRepositoryJpa;
 import me.nunum.whereami.model.request.NewTrainingRequest;
 
 import java.security.Principal;

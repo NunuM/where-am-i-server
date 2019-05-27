@@ -1,6 +1,5 @@
-import React, { cloneElement } from "react"
+import React, {cloneElement} from "react"
 import PropTypes from "prop-types"
-
 //import "./topbar.less"
 import Logo from "./logo_small.svg"
 import {parseSearch, serializeSearch} from "../../core/utils"

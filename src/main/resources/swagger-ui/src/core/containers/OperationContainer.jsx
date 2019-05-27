@@ -1,8 +1,8 @@
-import React, { PureComponent } from "react"
+import React, {PureComponent} from "react"
 import PropTypes from "prop-types"
 import ImPropTypes from "react-immutable-proptypes"
-import { helpers } from "swagger-client"
-import { Iterable, fromJS, Map } from "immutable"
+import {helpers} from "swagger-client"
+import {fromJS, Iterable, Map} from "immutable"
 
 const { opId } = helpers
 

@@ -1,11 +1,11 @@
 /* eslint-env mocha */
 import React from "react"
-import { List } from "immutable"
-import expect, { createSpy } from "expect"
-import { Select, Input, TextArea } from "components/layout-utils"
-import { mount, render } from "enzyme"
+import {List} from "immutable"
+import expect, {createSpy} from "expect"
+import {Input, Select, TextArea} from "components/layout-utils"
+import {mount, render} from "enzyme"
 import * as JsonSchemaComponents from "core/json-schema-components"
-import { JsonSchemaForm } from "core/json-schema-components"
+import {JsonSchemaForm} from "core/json-schema-components"
 
 const components = {...JsonSchemaComponents, Select, Input, TextArea}
 

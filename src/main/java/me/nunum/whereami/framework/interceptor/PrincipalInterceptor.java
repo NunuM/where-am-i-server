@@ -9,6 +9,7 @@ import me.nunum.whereami.utils.AppConfig;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.container.PreMatching;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.ext.Provider;
@@ -34,6 +35,7 @@ public class PrincipalInterceptor implements ContainerRequestFilter {
 
         if (!instanceHeader.isPresent()) {
             requestContext.abortWith(Response.status(Response.Status.BAD_REQUEST)
+                    .type(MediaType.APPLICATION_JSON)
                     .entity(ErrorDTO.fromXAppMissingHeader()).build());
         }
     }

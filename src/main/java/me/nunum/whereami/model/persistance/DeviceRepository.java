@@ -4,7 +4,6 @@ import me.nunum.whereami.framework.persistence.repositories.Repository;
 import me.nunum.whereami.model.Device;
 
 import java.security.Principal;
-import java.util.List;
 import java.util.Set;
 
 public interface DeviceRepository extends Repository<Device, Long>, AutoCloseable {

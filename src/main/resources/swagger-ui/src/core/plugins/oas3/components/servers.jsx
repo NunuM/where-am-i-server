@@ -1,5 +1,5 @@
 import React from "react"
-import { OrderedMap } from "immutable"
+import {OrderedMap} from "immutable"
 import PropTypes from "prop-types"
 import ImPropTypes from "react-immutable-proptypes"
 

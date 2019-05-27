@@ -1,9 +1,9 @@
-import React, { Component } from "react"
-import { Map } from "immutable"
+import React, {Component} from "react"
+import {Map} from "immutable"
 import PropTypes from "prop-types"
 import ImPropTypes from "react-immutable-proptypes"
 import win from "core/window"
-import { getExtensions, getCommonExtensions, numberToString } from "core/utils"
+import {getCommonExtensions, getExtensions, numberToString} from "core/utils"
 
 export default class ParameterRow extends Component {
   static propTypes = {
@@ -63,7 +63,7 @@ export default class ParameterRow extends Component {
   onChangeWrapper = (value, isXml = false) => {
     let { onChange, rawParam } = this.props
     let valueForUpstream
-    
+
     // Coerce empty strings and empty Immutable objects to null
     if(value === "" || (value && value.size === 0)) {
       valueForUpstream = null
@@ -248,12 +248,12 @@ export default class ParameterRow extends Component {
           }
 
           {
-            !bodyParam && isExecute ? 
+            !bodyParam && isExecute ?
             <ParameterIncludeEmpty
               onChange={this.onChangeIncludeEmpty}
               isIncluded={specSelectors.parameterInclusionSettingFor(pathMethod, param.get("name"), param.get("in"))}
               isDisabled={value && value.size !== 0}
-              param={param} /> 
+              param={param} />
             : null
           }
 

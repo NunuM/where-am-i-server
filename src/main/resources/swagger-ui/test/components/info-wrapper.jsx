@@ -1,9 +1,8 @@
-
 /* eslint-env mocha */
 import React from "react"
 import expect from "expect"
-import { mount } from "enzyme"
-import { fromJS } from "immutable"
+import {mount} from "enzyme"
+import {fromJS} from "immutable"
 import InfoContainer from "containers/info"
 
 describe("<InfoContainer/>", function () {

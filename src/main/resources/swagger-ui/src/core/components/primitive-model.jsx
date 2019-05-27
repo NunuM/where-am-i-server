@@ -1,6 +1,6 @@
-import React, { Component } from "react"
+import React, {Component} from "react"
 import PropTypes from "prop-types"
-import { getExtensions } from "core/utils"
+import {getExtensions} from "core/utils"
 
 const propStyle = { color: "#6b6b6b", fontStyle: "italic" }
 

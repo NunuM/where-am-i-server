@@ -2,7 +2,6 @@ package me.nunum.whereami.model.request;
 
 import me.nunum.whereami.model.AlgorithmProvider;
 
-
 import javax.validation.constraints.Size;
 import java.util.Map;
 

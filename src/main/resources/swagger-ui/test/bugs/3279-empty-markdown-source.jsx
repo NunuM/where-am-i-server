@@ -1,7 +1,7 @@
 /* eslint-env mocha */
 import React from "react"
 import expect from "expect"
-import { render } from "enzyme"
+import {render} from "enzyme"
 import Markdown from "components/providers/markdown"
 
 describe("UI-3279: Empty Markdown inputs causing bare `undefined` in output", function(){

@@ -1,8 +1,8 @@
 /* eslint-env mocha */
 import React from "react"
-import expect, { createSpy } from "expect"
-import { shallow } from "enzyme"
-import { fromJS, Map } from "immutable"
+import expect, {createSpy} from "expect"
+import {shallow} from "enzyme"
+import {fromJS, Map} from "immutable"
 import Models from "components/models"
 import ModelCollpase from "components/model-collapse"
 import ModelComponent from "components/model-wrapper"

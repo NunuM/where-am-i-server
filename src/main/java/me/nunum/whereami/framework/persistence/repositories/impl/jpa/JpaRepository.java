@@ -253,7 +253,7 @@ public abstract class JpaRepository<T, K extends Serializable>
             } catch (final PersistenceException ex) {
 
                 if (ex.getMessage().contains("JdbcSQLIntegrityConstraintViolationException")) {
-                    throw new EntityAlreadyExists(ex);
+                    throw new EntityAlreadyExists("Entity already exists.", ex);
                 }
 
                 tx = em.getTransaction();

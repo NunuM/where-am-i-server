@@ -1,8 +1,8 @@
 /* eslint-env mocha */
 import React from "react"
 import expect from "expect"
-import { render } from "enzyme"
-import { fromJS } from "immutable"
+import {render} from "enzyme"
+import {fromJS} from "immutable"
 import DeepLink from "components/deep-link"
 import Operations from "components/operations"
 import {Collapse} from "components/layout-utils"

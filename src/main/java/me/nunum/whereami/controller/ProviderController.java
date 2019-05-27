@@ -4,12 +4,13 @@ import me.nunum.whereami.framework.dto.DTO;
 import me.nunum.whereami.model.Device;
 import me.nunum.whereami.model.Provider;
 import me.nunum.whereami.model.Role;
-import me.nunum.whereami.model.persistance.jpa.RoleRepositoryJpa;
+import me.nunum.whereami.model.exceptions.ForbiddenEntityModificationException;
 import me.nunum.whereami.model.persistance.DeviceRepository;
 import me.nunum.whereami.model.persistance.ProviderRepository;
 import me.nunum.whereami.model.persistance.RoleRepository;
 import me.nunum.whereami.model.persistance.jpa.DeviceRepositoryJpa;
 import me.nunum.whereami.model.persistance.jpa.ProviderRepositoryJpa;
+import me.nunum.whereami.model.persistance.jpa.RoleRepositoryJpa;
 import me.nunum.whereami.model.request.NewProviderRequest;
 import me.nunum.whereami.service.NotifyService;
 
@@ -33,6 +34,15 @@ public class ProviderController implements AutoCloseable {
 
         final Device device = this.deviceRepository.findOrPersist(principal);
 
+        if (device.isInRole(Role.PROVIDER)) {
+            Optional<Provider> providerOptional = this.providerRepository.findByDevice(device);
+            if (providerOptional.isPresent()) {
+                return providerOptional.get().toDTO();
+            } else {
+                return this.providerRepository.save(request.buildConfirmed(device)).toDTO();
+            }
+        }
+
         final Provider provider = request.build(device);
 
         NotifyService.newProviderRequest(provider).run();
@@ -48,13 +58,19 @@ public class ProviderController implements AutoCloseable {
 
     public DTO confirmNewProviderRequest(Principal userPrincipal, String token) {
 
+        final Device device = this.deviceRepository.findOrPersist(userPrincipal);
+
         Optional<Provider> optionalProvider = this.providerRepository.findByToken(token);
 
         if (!optionalProvider.isPresent()) {
-            throw new EntityNotFoundException("");
+            throw new EntityNotFoundException("We do not encounter a request with that token");
         }
 
         final Provider provider = optionalProvider.get();
+
+        if (!provider.getRequester().equals(device)) {
+            throw new ForbiddenEntityModificationException("The request must be from the original requester");
+        }
 
         provider.providerHasConfirmedEmail();
 

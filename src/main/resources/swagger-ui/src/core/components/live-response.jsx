@@ -1,7 +1,7 @@
 import React from "react"
 import PropTypes from "prop-types"
 import ImPropTypes from "react-immutable-proptypes"
-import { Iterable } from "immutable"
+import {Iterable} from "immutable"
 
 const Headers = ( { headers } )=>{
   return (

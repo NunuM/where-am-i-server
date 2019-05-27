@@ -1,6 +1,6 @@
 import React from "react"
 import PropTypes from "prop-types"
-import { presets } from "react-motion"
+import {presets} from "react-motion"
 import ObjectInspector from "react-inspector"
 
 export default class Debug extends React.Component {

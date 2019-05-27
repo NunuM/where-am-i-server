@@ -1,9 +1,9 @@
 /* eslint-env mocha */
 import React from "react"
 import expect from "expect"
-import { render } from "enzyme"
-import { fromJS } from "immutable"
-import { Link } from "components/layout-utils"
+import {render} from "enzyme"
+import {fromJS} from "immutable"
+import {Link} from "components/layout-utils"
 
 describe("<Link/> Anchor Target Safety", function () {
   const dummyComponent = () => null

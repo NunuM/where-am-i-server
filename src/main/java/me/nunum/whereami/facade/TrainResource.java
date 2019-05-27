@@ -67,6 +67,12 @@ public class TrainResource {
 
             return Response.status(Response.Status.FORBIDDEN).build();
 
+        } catch (Exception e) {
+
+            LOGGER.log(Level.SEVERE, "Something bas occurred at new training request", e);
+
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+
         } finally {
             try {
                 this.controller.close();

@@ -1,8 +1,8 @@
 import React from "react"
-import { fromJS, Iterable } from "immutable"
+import {fromJS, Iterable} from "immutable"
 import PropTypes from "prop-types"
 import ImPropTypes from "react-immutable-proptypes"
-import { defaultStatusCode, getAcceptControllingResponse } from "core/utils"
+import {defaultStatusCode, getAcceptControllingResponse} from "core/utils"
 
 export default class Responses extends React.Component {
   static propTypes = {

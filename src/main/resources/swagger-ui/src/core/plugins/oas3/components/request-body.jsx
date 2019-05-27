@@ -1,8 +1,8 @@
 import React from "react"
 import PropTypes from "prop-types"
 import ImPropTypes from "react-immutable-proptypes"
-import { Map, OrderedMap, List } from "immutable"
-import { getCommonExtensions, getSampleSchema, stringify } from "core/utils"
+import {List, Map, OrderedMap} from "immutable"
+import {getCommonExtensions, getSampleSchema, stringify} from "core/utils"
 
 const RequestBody = ({
   requestBody,
@@ -83,7 +83,7 @@ const RequestBody = ({
               const format = prop.get("format")
               const description = prop.get("description")
               const currentValue = requestBodyValue.get(key)
-              
+
               let initialValue = prop.get("default") || prop.get("example") || ""
 
               if (initialValue === "" && type === "object") {

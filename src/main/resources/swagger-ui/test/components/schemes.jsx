@@ -1,9 +1,8 @@
-
 /* eslint-env mocha */
 import React from "react"
-import expect, { createSpy } from "expect"
-import { shallow } from "enzyme"
-import { fromJS } from "immutable"
+import expect, {createSpy} from "expect"
+import {shallow} from "enzyme"
+import {fromJS} from "immutable"
 import Schemes from "components/schemes"
 
 describe("<Schemes/>", function(){
