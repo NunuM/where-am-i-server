@@ -4,23 +4,19 @@
 
 This is a free platform with the goal of helping researchers to test and develop indoor tracking algorithms using Wi-Fi signal information. Apart of the server, we also build an Android application to help user to collect raw data more easily.
 
-The platform only accepts labeled data and is provided by users like us.  
+### Table Of Contents
 
-###Table Of Contents
-
-* 
-* Data Model & Lifecycle 
-* How to become a Algorithm Provider
-* REST API Docs
-* Java API Docs
-* FAQ
+* [Data Model & Lifecycle](#data-model--lifecycle) 
+* [How to become a Algorithm Provider](#how-to-become-a-algorithm-provider)
+* [REST API Docs](https://whereami.nunum.me/docs/swagger)
+* [ava API Docs](https://whereami.nunum.me/docs/java)
+* [FAQ](#faq)
 
 ### Data Model & Lifecycle
 
 
 This is a brief summary of the entities. Let's begin with **Localization**. This entity represents a point on the map, like your home in a satellite view. Within your home, you have various rooms, there are **Positions**. With this, we have the relationship of **one localization** can have **zero or more positions**. The localizations can be private for the device that created it. In other words, you can share with other users your localizations. The privacy is declared at its creation.
 
-One localization, as mention, can have several positions, when they have hundreds of fingerprints you can **request to train** a model. So, one localization can have **zero or training requests**, however, it's only allowed for a given localization to have a training request for the **same algorithm and provider**. 
 
 A **Training** entity is created with the desired algorithm and the respective provider. An **Algorithm** can be proposed by everyone. This is because several people like more reading than implementing and vice versa, thus **the same algorithm** can be provided by several users and their results can be compared and competition may also be resulted by this design.
 
@@ -39,4 +35,10 @@ To conclude this chapter, the use case that this platform offers is the integrat
 
 ### How to become a Algorithm provider
 
+Open the swagger API, find the resource **provider**, make a POST request by filling your email and wait for it in your mailbox. click on the link and voila. You can use the **provider** sub-resource of **algorithm** to tell what implementations you have to offer.
 
+### FAQ
+
+What is a Wi-Fi fingerprint?
+
+[Wikipedia has better](https://en.wikipedia.org/wiki/Wi-Fi_positioning_system#Fingerprinting_based)
