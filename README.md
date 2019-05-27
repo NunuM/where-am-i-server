@@ -1,8 +1,8 @@
-## WhereAmI - JavaServer
+## WhereAmI
 
 ### Motivation
 
-This is a free platform with the goal of helping researchers to test and develop indoor tracking algorithms using Wi-Fi signal information. Apart of the server, we also build an Android application to help user to collect raw data more easily.
+This is a free, collaborative platform with the goal of helping researchers to test and develop indoor tracking algorithms using Wi-Fi signal information. Apart of the server, we also build an [Android application](https://github.com/NunuM/where-am-i-android-app) to help user to collect raw data more easily.
 
 ### Table Of Contents
 
@@ -41,4 +41,4 @@ Open the swagger API, find the resource **provider**, make a POST request by fil
 
 What is a Wi-Fi fingerprint?
 
-[Wikipedia has better](https://en.wikipedia.org/wiki/Wi-Fi_positioning_system#Fingerprinting_based)
+[Wikipedia knows better](https://en.wikipedia.org/wiki/Wi-Fi_positioning_system#Fingerprinting_based)
