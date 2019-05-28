@@ -3,6 +3,7 @@ package me.nunum.whereami.model;
 import me.nunum.whereami.framework.dto.DTO;
 import me.nunum.whereami.framework.dto.DTOable;
 import me.nunum.whereami.model.dto.ProviderDTO;
+import org.eclipse.persistence.annotations.Index;
 
 import javax.persistence.*;
 import java.time.Instant;
@@ -29,7 +30,7 @@ public class Provider implements DTOable {
 
     private String email;
 
-
+    @Index
     private String token;
 
 

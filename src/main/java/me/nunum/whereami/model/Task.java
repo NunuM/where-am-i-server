@@ -26,7 +26,7 @@ public class Task {
 
     private int batchSize;
 
-
+    @Index
     private Long cursor;
 
     @ManyToOne(cascade = CascadeType.REMOVE)

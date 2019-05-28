@@ -120,13 +120,14 @@ public class AlgorithmResource {
     public Response updateAlgorithm(@PathParam("it") Long aId, UpdateAlgorithmRequest request) {
         try (final AlgorithmController controller = new AlgorithmController()) {
 
-            return Response.ok().entity(controller.updateAlgorithm(securityContext.getUserPrincipal(), aId, request)).build();
+            return Response.ok().entity(controller.updateAlgorithm(securityContext.getUserPrincipal(), aId, request).dtoValues()).build();
 
         } catch (EntityNotFoundException e) {
 
             LOGGER.log(Level.SEVERE, "Unable to find algorithm", e);
 
             return Response.status(Response.Status.NOT_FOUND).build();
+
         } catch (ForbiddenEntityAccessException e) {
 
             return Response.status(Response.Status.FORBIDDEN).build();

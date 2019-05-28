@@ -252,7 +252,8 @@ public abstract class JpaRepository<T, K extends Serializable>
 
             } catch (final PersistenceException ex) {
 
-                if (ex.getMessage().contains("JdbcSQLIntegrityConstraintViolationException")) {
+                if (ex.getMessage().contains("JdbcSQLIntegrityConstraintViolationException")
+                        || ex.getMessage().contains("Unique index or primary key violation")) {
                     throw new EntityAlreadyExists("Entity already exists.", ex);
                 }
 
