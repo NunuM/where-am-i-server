@@ -5,6 +5,7 @@ import me.nunum.whereami.model.*;
 import me.nunum.whereami.model.exceptions.EntityAlreadyExists;
 import me.nunum.whereami.model.exceptions.EntityNotFoundException;
 import me.nunum.whereami.model.exceptions.ForbiddenEntityAccessException;
+import me.nunum.whereami.model.exceptions.ForbiddenEntityCreationException;
 import me.nunum.whereami.model.persistance.AlgorithmRepository;
 import me.nunum.whereami.model.persistance.DeviceRepository;
 import me.nunum.whereami.model.persistance.TaskRepository;
@@ -53,7 +54,7 @@ public final class TrainingController implements AutoCloseable {
 
         final Device requesterDevice = deviceRepository.findOrPersist(principal);
 
-        final Optional<Algorithm> algorithmOptional = algorithmRepository.findFirst();
+        final Optional<Algorithm> algorithmOptional = algorithmRepository.findById(request.getAlgorithmId());
 
         if (!algorithmOptional.isPresent()) {
             throw new EntityNotFoundException(String
@@ -62,6 +63,10 @@ public final class TrainingController implements AutoCloseable {
         }
 
         final Algorithm algorithm = algorithmOptional.get();
+
+        if (!algorithm.isApproved()) {
+            throw new ForbiddenEntityCreationException(String.format("Algorithm %d is not approved for use.", request.getAlgorithmId()));
+        }
 
         if (!localization.isOwner(requesterDevice)) {
             throw new ForbiddenEntityAccessException(String.format("Requester %s is not allowed to request training on this localization %d.", requesterDevice.instanceId(), localization.id()));
@@ -76,6 +81,10 @@ public final class TrainingController implements AutoCloseable {
         }
 
         final AlgorithmProvider provider = algorithmProvider.get();
+
+        if (!provider.wasVerified()) {
+            throw new ForbiddenEntityCreationException(String.format("Provider %s for this algorithm %d is not yet verified the account.", request.getProviderId(), request.getAlgorithmId()));
+        }
 
         try {
             Training training = new Training(algorithm, provider, localization);

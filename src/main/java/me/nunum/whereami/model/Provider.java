@@ -19,6 +19,10 @@ import java.util.Objects;
         @NamedQuery(
                 name = "Provider.findByDevice",
                 query = "SELECT OBJECT(u) FROM Provider u WHERE u.requester.id=:deviceId"
+        ),
+        @NamedQuery(
+                name = "Provider.findByEmail",
+                query = "SELECT OBJECT(u) FROM Provider u WHERE u.email=:email"
         )
 })
 public class Provider implements DTOable {
@@ -27,7 +31,7 @@ public class Provider implements DTOable {
     @GeneratedValue
     private Long id;
 
-
+    @Index(unique = true)
     private String email;
 
     @Index

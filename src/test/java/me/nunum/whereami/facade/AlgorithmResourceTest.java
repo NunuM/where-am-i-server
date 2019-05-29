@@ -224,7 +224,5 @@ public class AlgorithmResourceTest extends JerseyTest {
                 .invoke();
 
 
-
-
     }
 }

@@ -10,4 +10,5 @@ public interface ProviderRepository extends Repository<Provider, Long> {
     Optional<Provider> findByToken(String token);
 
     Optional<Provider> findByDevice(Device device);
+
 }

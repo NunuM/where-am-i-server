@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.Objects;
 
 @Entity
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"email", "method"}))
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"provider_id", "method","ALG_OWNER_ID"}))
 public class AlgorithmProvider implements DTOable {
 
     public static final String HTTP_PROVIDER_INGESTION_URL_KEY = "url_to_receive_data";
@@ -20,8 +20,8 @@ public class AlgorithmProvider implements DTOable {
     @GeneratedValue
     private Long id;
 
-
-    private String email;
+    @ManyToOne
+    private Provider provider;
 
 
     private METHOD method;
@@ -35,16 +35,13 @@ public class AlgorithmProvider implements DTOable {
     private Date updated;
 
 
-    @ManyToOne
-    private Device owner;
-
-
     @ElementCollection
     private Map<String, String> properties;
 
     public boolean belongs(final Device device) {
-        return this.owner.equals(device);
+        return this.provider.getRequester().equals(device);
     }
+
 
     public enum METHOD {
 
@@ -95,11 +92,10 @@ public class AlgorithmProvider implements DTOable {
     public AlgorithmProvider() {
     }
 
-    public AlgorithmProvider(String email, METHOD method, Map<String, String> properties, Device owner) {
-        this.email = email;
+    public AlgorithmProvider(Provider provider, METHOD method, Map<String, String> properties) {
+        this.provider = provider;
         this.method = method;
         this.properties = properties;
-        this.owner = owner;
     }
 
     public Long getId() {
@@ -107,7 +103,7 @@ public class AlgorithmProvider implements DTOable {
     }
 
     public String getEmail() {
-        return email;
+        return this.provider.getEmail();
     }
 
     public METHOD getMethod() {
@@ -122,6 +118,10 @@ public class AlgorithmProvider implements DTOable {
         return properties;
     }
 
+    public boolean wasVerified() {
+        return this.provider.isConfirmed();
+    }
+
     @PrePersist
     protected void onCreate() {
         updated = created = new Date(System.currentTimeMillis());
@@ -134,7 +134,7 @@ public class AlgorithmProvider implements DTOable {
 
     @Override
     public DTO toDTO() {
-        return new AlgorithmProviderDTO(this.id, this.email, this.method, this.properties);
+        return new AlgorithmProviderDTO(this.id, this.provider.getEmail(), this.method, this.properties);
     }
 
     @Override
@@ -142,21 +142,21 @@ public class AlgorithmProvider implements DTOable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         AlgorithmProvider that = (AlgorithmProvider) o;
-        return Objects.equals(email, that.email) &&
+        return Objects.equals(this.provider.getEmail(), that.provider.getEmail()) &&
                 method == that.method;
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(email, method);
+        return Objects.hash(this.provider.getEmail(), method);
     }
 
     @Override
     public String toString() {
         return "AlgorithmProvider{" +
                 "id=" + id +
-                ", email='" + email + '\'' +
+                ", provider='" + provider + '\'' +
                 ", method=" + method +
                 ", created=" + created +
                 ", updated=" + updated +

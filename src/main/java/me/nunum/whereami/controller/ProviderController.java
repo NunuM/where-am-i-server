@@ -12,7 +12,7 @@ import me.nunum.whereami.model.persistance.jpa.DeviceRepositoryJpa;
 import me.nunum.whereami.model.persistance.jpa.ProviderRepositoryJpa;
 import me.nunum.whereami.model.persistance.jpa.RoleRepositoryJpa;
 import me.nunum.whereami.model.request.NewProviderRequest;
-import me.nunum.whereami.service.NotifyService;
+import me.nunum.whereami.service.notification.NotifyService;
 
 import javax.persistence.EntityNotFoundException;
 import java.security.Principal;

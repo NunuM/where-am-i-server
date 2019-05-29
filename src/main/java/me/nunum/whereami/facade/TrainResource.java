@@ -5,9 +5,11 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import me.nunum.whereami.controller.TrainingController;
 import me.nunum.whereami.model.Localization;
+import me.nunum.whereami.model.dto.ErrorDTO;
 import me.nunum.whereami.model.exceptions.EntityAlreadyExists;
 import me.nunum.whereami.model.exceptions.EntityNotFoundException;
 import me.nunum.whereami.model.exceptions.ForbiddenEntityAccessException;
+import me.nunum.whereami.model.exceptions.ForbiddenEntityCreationException;
 import me.nunum.whereami.model.request.NewTrainingRequest;
 
 import javax.annotation.security.PermitAll;
@@ -61,11 +63,11 @@ public class TrainResource {
 
             return Response.status(Response.Status.CONFLICT).build();
 
-        } catch (ForbiddenEntityAccessException e) {
+        } catch (ForbiddenEntityAccessException|ForbiddenEntityCreationException e) {
 
             LOGGER.log(Level.SEVERE, "Requester not have rights to perform this operation", e);
 
-            return Response.status(Response.Status.FORBIDDEN).build();
+            return Response.status(Response.Status.FORBIDDEN).entity(ErrorDTO.fromError(e)).build();
 
         } catch (Exception e) {
 

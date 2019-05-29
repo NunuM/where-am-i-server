@@ -9,6 +9,7 @@ import me.nunum.whereami.model.dto.ErrorDTO;
 import me.nunum.whereami.model.exceptions.EntityAlreadyExists;
 import me.nunum.whereami.model.exceptions.EntityNotFoundException;
 import me.nunum.whereami.model.exceptions.ForbiddenEntityAccessException;
+import me.nunum.whereami.model.exceptions.ForbiddenEntityCreationException;
 import me.nunum.whereami.model.request.*;
 
 import javax.annotation.security.PermitAll;
@@ -208,13 +209,15 @@ public class AlgorithmResource {
 
         } catch (EntityNotFoundException e) {
 
-            LOGGER.log(Level.SEVERE, "Unable to retrieve provider", e);
+            LOGGER.log(Level.INFO, "Unable to retrieve provider", e);
 
             return Response.status(Response.Status.NOT_FOUND).build();
 
-        } catch (ForbiddenEntityAccessException e) {
+        } catch (ForbiddenEntityAccessException | ForbiddenEntityCreationException e) {
 
-            return Response.status(Response.Status.FORBIDDEN).build();
+            LOGGER.log(Level.SEVERE, "Forbidden action", e);
+
+            return Response.status(Response.Status.FORBIDDEN).entity(ErrorDTO.fromError(e)).build();
 
         } catch (IllegalStateException e) {
 
@@ -244,19 +247,25 @@ public class AlgorithmResource {
 
         } catch (EntityNotFoundException e) {
 
-            LOGGER.log(Level.SEVERE, "Unable to retrieve algorithm", e);
+            LOGGER.log(Level.INFO, "Unable to retrieve algorithm", e);
 
             return Response.status(Response.Status.NOT_FOUND).build();
 
+        } catch (ForbiddenEntityAccessException | ForbiddenEntityCreationException e) {
+
+            LOGGER.log(Level.SEVERE, "Forbidden action", e);
+
+            return Response.status(Response.Status.FORBIDDEN).entity(ErrorDTO.fromError(e)).build();
+
         } catch (IllegalArgumentException e) {
 
-            LOGGER.log(Level.SEVERE, "Invalid request", e);
+            LOGGER.log(Level.INFO, "Invalid request", e);
 
             return Response.status(Response.Status.BAD_REQUEST).entity(ErrorDTO.fromError(e)).build();
 
         } catch (EntityAlreadyExists e) {
 
-            LOGGER.log(Level.SEVERE, "Entity already exists", e);
+            LOGGER.log(Level.INFO, "Entity already exists", e);
 
             return Response.status(Response.Status.CONFLICT).build();
 
@@ -299,6 +308,12 @@ public class AlgorithmResource {
             LOGGER.log(Level.SEVERE, "Entity already exists", e);
 
             return Response.status(Response.Status.CONFLICT).build();
+
+        } catch (ForbiddenEntityAccessException | ForbiddenEntityCreationException e) {
+
+            LOGGER.log(Level.SEVERE, "Forbidden action", e);
+
+            return Response.status(Response.Status.FORBIDDEN).entity(ErrorDTO.fromError(e)).build();
 
         } catch (Exception e) {
 

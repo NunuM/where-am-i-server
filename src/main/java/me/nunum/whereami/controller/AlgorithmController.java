@@ -4,16 +4,11 @@ import me.nunum.whereami.framework.dto.DTO;
 import me.nunum.whereami.model.*;
 import me.nunum.whereami.model.exceptions.EntityNotFoundException;
 import me.nunum.whereami.model.exceptions.ForbiddenEntityAccessException;
-import me.nunum.whereami.model.persistance.AlgorithmProviderRepository;
-import me.nunum.whereami.model.persistance.AlgorithmRepository;
-import me.nunum.whereami.model.persistance.DeviceRepository;
-import me.nunum.whereami.model.persistance.TrainingRepository;
-import me.nunum.whereami.model.persistance.jpa.AlgorithmProviderRepositoryJpa;
-import me.nunum.whereami.model.persistance.jpa.AlgorithmRepositoryJpa;
-import me.nunum.whereami.model.persistance.jpa.DeviceRepositoryJpa;
-import me.nunum.whereami.model.persistance.jpa.TrainingRepositoryJpa;
+import me.nunum.whereami.model.exceptions.ForbiddenEntityCreationException;
+import me.nunum.whereami.model.persistance.*;
+import me.nunum.whereami.model.persistance.jpa.*;
 import me.nunum.whereami.model.request.*;
-import me.nunum.whereami.service.NotifyService;
+import me.nunum.whereami.service.notification.NotifyService;
 
 import java.security.Principal;
 import java.util.List;
@@ -169,27 +164,41 @@ public class AlgorithmController implements AutoCloseable {
     /**
      * Register new algorithm provider
      *
-     * @param aId               Algorithm ID
-     * @param algorithmProvider Algorithm Provider Request
-     * @param principal         Device
+     * @param aId                      Algorithm ID
+     * @param algorithmProviderRequest Algorithm Provider Request
+     * @param principal                Device
      * @return See {@link me.nunum.whereami.model.dto.AlgorithmProviderDTO}
      * @throws EntityNotFoundException Algorithm ID does not exists in database
      */
-    public DTO registerNewAlgorithmProvider(Long aId, NewAlgorithmProvider algorithmProvider, Principal principal) {
+    public DTO registerNewAlgorithmProvider(Long aId, NewAlgorithmProvider algorithmProviderRequest, Principal principal) {
 
         final Device device = this.deviceRepository.findOrPersist(principal);
 
         Algorithm algorithm = this.getAlgorithm(aId);
 
-        AlgorithmProvider provider = algorithmProvider.build(device);
+        final ProviderRepository providerRepository = new ProviderRepositoryJpa();
 
-        provider = this.providerRepository.save(provider);
+        Optional<Provider> optionalProvider = providerRepository.findByDevice(device);
 
-        algorithm.addProvider(provider);
+        if (!optionalProvider.isPresent()) {
+            throw new ForbiddenEntityCreationException("The requester is not a provider");
+        }
+
+        Provider provider = optionalProvider.get();
+
+        if (!provider.isConfirmed()) {
+            throw new ForbiddenEntityCreationException("You must confirm your email");
+        }
+
+        AlgorithmProvider algorithmProvider = algorithmProviderRequest.build(provider);
+
+        algorithmProvider = this.providerRepository.save(algorithmProvider);
+
+        algorithm.addProvider(algorithmProvider);
 
         this.repository.save(algorithm);
 
-        return provider.toDTO();
+        return algorithmProvider.toDTO();
     }
 
     /**
@@ -207,7 +216,7 @@ public class AlgorithmController implements AutoCloseable {
         final AlgorithmProvider provider = this.getProvider(userPrincipal, pId);
 
         try {
-            // Fast path, try to delete
+            /** Fast path, try to delete */
             this.providerRepository.delete(provider);
             return provider.toDTO();
         } catch (Exception e) {
@@ -269,20 +278,34 @@ public class AlgorithmController implements AutoCloseable {
     private AlgorithmProvider getProvider(Principal userPrincipal, Long pId) {
         Device device = this.deviceRepository.findOrPersist(userPrincipal);
 
+        final ProviderRepository providerRepository = new ProviderRepositoryJpa();
+
+        Optional<Provider> optionalProvider = providerRepository.findByDevice(device);
+
+        if (!optionalProvider.isPresent()) {
+            throw new ForbiddenEntityAccessException("The requester is not a provider");
+        }
+
+        Provider provider = optionalProvider.get();
+
+        if (!provider.isConfirmed()) {
+            throw new ForbiddenEntityAccessException("You must confirm your email");
+        }
+
         Optional<AlgorithmProvider> algorithmProvider = this.providerRepository.findById(pId);
 
         if (!algorithmProvider.isPresent()) {
             throw new EntityNotFoundException(String.format("Provider %s not found", pId));
         }
 
-        final AlgorithmProvider provider = algorithmProvider.get();
+        final AlgorithmProvider aProvider = algorithmProvider.get();
 
-        if (!provider.belongs(device)) {
+        if (!aProvider.belongs(device)) {
             throw new ForbiddenEntityAccessException(String
                     .format("Device %s not has permissions to delete provider %d", userPrincipal.getName(), pId));
         }
 
-        return provider;
+        return aProvider;
     }
 
 

@@ -2,6 +2,7 @@ package me.nunum.whereami.model.request;
 
 import me.nunum.whereami.model.AlgorithmProvider;
 import me.nunum.whereami.model.Device;
+import me.nunum.whereami.model.Provider;
 import org.hibernate.validator.constraints.Email;
 
 import javax.validation.constraints.NotNull;
@@ -10,9 +11,6 @@ import java.util.Map;
 
 public class NewAlgorithmProvider {
 
-    @NotNull
-    @Email
-    private String email;
 
     @NotNull
     @Size(min = 3, max = 50)
@@ -23,13 +21,12 @@ public class NewAlgorithmProvider {
     public NewAlgorithmProvider() {
     }
 
-    public NewAlgorithmProvider(String email, String method, Map<String, String> properties) {
-        this.email = email;
+    public NewAlgorithmProvider(String method, Map<String, String> properties) {
         this.method = method;
         this.properties = properties;
     }
 
-    public AlgorithmProvider build(Device device) {
+    public AlgorithmProvider build(Provider provider) {
 
         AlgorithmProvider.METHOD method = AlgorithmProvider.METHOD.parse(this.method);
 
@@ -43,16 +40,7 @@ public class NewAlgorithmProvider {
             throw new IllegalArgumentException("Unsupported provider type");
         }
 
-        return new AlgorithmProvider(email, method, properties, device);
-    }
-
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
+        return new AlgorithmProvider(provider, method, properties);
     }
 
     public String getMethod() {
@@ -74,7 +62,6 @@ public class NewAlgorithmProvider {
     @Override
     public String toString() {
         return "NewAlgorithmProvider{" +
-                "email='" + email + '\'' +
                 ", method='" + method + '\'' +
                 ", properties=" + properties +
                 '}';

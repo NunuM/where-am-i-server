@@ -3,7 +3,6 @@ package me.nunum.whereami.model.dto;
 import me.nunum.whereami.framework.dto.DTO;
 
 import java.util.HashMap;
-import java.util.Map;
 
 public class ErrorDTO implements DTO {
 
