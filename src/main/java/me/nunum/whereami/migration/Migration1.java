@@ -24,7 +24,6 @@ public final class Migration1 implements Runnable {
             entityManager.persist(new Role("provider"));
             entityManager.getTransaction().commit();
             entityManager.close();
-
         } catch (Throwable e) {
             LOGGER.log(Level.SEVERE, "Error on running migration1", e);
         }

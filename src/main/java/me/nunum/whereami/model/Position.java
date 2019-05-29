@@ -37,7 +37,7 @@ public class Position
     @Column(length = 100)
     private String strongestSignal;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Localization localization;
 
 

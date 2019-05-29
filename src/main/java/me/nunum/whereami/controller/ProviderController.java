@@ -72,6 +72,10 @@ public class ProviderController implements AutoCloseable {
             throw new ForbiddenEntityModificationException("The request must be from the original requester");
         }
 
+        if(provider.isConfirmed()){
+            return provider.toDTO();
+        }
+
         provider.providerHasConfirmedEmail();
 
         final Role role = this.roleRepository.findRole(Role.PROVIDER);

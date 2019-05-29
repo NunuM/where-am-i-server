@@ -93,8 +93,6 @@ public final class TrainingController implements AutoCloseable {
 
             training = this.repository.save(training);
 
-            this.taskRepository.save(new Task(0L, training));
-
             return training.toDTO();
 
         } catch (EntityAlreadyExists e) {

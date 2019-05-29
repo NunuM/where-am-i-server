@@ -26,7 +26,7 @@ public class Localization implements DTOable, Identifiable<Long>,Comparable<Loca
 
     private Float accuracy;
 
-    private Integer positions;
+    private Integer numberOfPositions;
 
     private Double latitude;
 
@@ -38,7 +38,10 @@ public class Localization implements DTOable, Identifiable<Long>,Comparable<Loca
     @ManyToOne
     private Device owner;
 
-    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "localization")
+    @OneToMany(orphanRemoval = true, cascade = CascadeType.REMOVE, mappedBy = "localization")
+    private List<Position> positionList;
+
+    @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, mappedBy = "localization")
     private List<Training> trainings;
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -68,10 +71,11 @@ public class Localization implements DTOable, Identifiable<Long>,Comparable<Loca
         this.longitude = longitude;
         this.samples = 0L;
         this.accuracy = 0.0f;
-        this.positions = 0;
+        this.numberOfPositions = 0;
         this.user = userLabel;
         this.owner = owner;
         this.trainings = new ArrayList<>();
+        this.positionList = new ArrayList<>();
     }
 
 
@@ -92,7 +96,7 @@ public class Localization implements DTOable, Identifiable<Long>,Comparable<Loca
                 this.user,
                 this.samples,
                 this.accuracy,
-                this.positions,
+                this.numberOfPositions,
                 false
         );
     }
@@ -103,7 +107,7 @@ public class Localization implements DTOable, Identifiable<Long>,Comparable<Loca
                 this.user,
                 this.samples,
                 this.accuracy,
-                this.positions,
+                this.numberOfPositions,
                 this.owner.equals(requester)
         );
     }
@@ -127,11 +131,11 @@ public class Localization implements DTOable, Identifiable<Long>,Comparable<Loca
     }
 
     public void incrementPosition() {
-        this.positions += 1;
+        this.numberOfPositions += 1;
     }
 
     public void decrementPosition() {
-        this.positions -= 1;
+        this.numberOfPositions -= 1;
     }
 
     public boolean addTraining(Training training){
@@ -156,7 +160,7 @@ public class Localization implements DTOable, Identifiable<Long>,Comparable<Loca
         return Objects.equals(label, that.label) &&
                 Objects.equals(samples, that.samples) &&
                 Objects.equals(accuracy, that.accuracy) &&
-                Objects.equals(positions, that.positions) &&
+                Objects.equals(numberOfPositions, that.numberOfPositions) &&
                 Objects.equals(latitude, that.latitude) &&
                 Objects.equals(longitude, that.longitude) &&
                 Objects.equals(user, that.user) &&
@@ -165,7 +169,7 @@ public class Localization implements DTOable, Identifiable<Long>,Comparable<Loca
 
     @Override
     public int hashCode() {
-        return Objects.hash(label, samples, accuracy, positions, latitude, longitude, user, owner);
+        return Objects.hash(label, samples, accuracy, numberOfPositions, latitude, longitude, user, owner);
     }
 
     @Override
@@ -175,11 +179,13 @@ public class Localization implements DTOable, Identifiable<Long>,Comparable<Loca
                 ", label='" + label + '\'' +
                 ", samples=" + samples +
                 ", accuracy=" + accuracy +
-                ", positions=" + positions +
+                ", numberOfPositions=" + numberOfPositions +
                 ", latitude=" + latitude +
                 ", longitude=" + longitude +
                 ", user='" + user + '\'' +
                 ", owner=" + owner +
+                ", positionList=" + positionList +
+                ", trainings=" + trainings +
                 ", created=" + created +
                 ", updated=" + updated +
                 '}';

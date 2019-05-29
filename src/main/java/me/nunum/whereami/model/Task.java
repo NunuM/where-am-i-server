@@ -29,7 +29,7 @@ public class Task {
     @Index
     private Long cursor;
 
-    @ManyToOne(cascade = CascadeType.REMOVE)
+    @OneToOne(fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.REMOVE)
     private Training training;
 
 

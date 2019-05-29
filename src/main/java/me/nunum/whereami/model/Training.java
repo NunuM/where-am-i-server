@@ -46,8 +46,12 @@ public class Training implements DTOable {
 
     private TrainingStatus status;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch=FetchType.LAZY)
     private Localization localization;
+
+    @OneToOne(orphanRemoval = true, cascade = CascadeType.ALL, mappedBy = "training")
+    @JoinColumn(name="TASK_ID")
+    private Task task;
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date created;
@@ -77,6 +81,7 @@ public class Training implements DTOable {
         this.status = status;
         this.localization = localization;
         this.algorithmProvider = provider;
+        this.task = new Task(0L, this);
     }
 
     public Long getId() {
@@ -113,6 +118,14 @@ public class Training implements DTOable {
 
     public void setLocalization(Localization localization) {
         this.localization = localization;
+    }
+
+    public Task getTask() {
+        return task;
+    }
+
+    public void setTask(Task task) {
+        this.task = task;
     }
 
     @PrePersist

@@ -267,7 +267,7 @@ public class AlgorithmResource {
 
             LOGGER.log(Level.INFO, "Entity already exists", e);
 
-            return Response.status(Response.Status.CONFLICT).build();
+            return Response.status(Response.Status.CONFLICT).entity(ErrorDTO.fromError(e)).build();
 
         } catch (Exception e) {
 

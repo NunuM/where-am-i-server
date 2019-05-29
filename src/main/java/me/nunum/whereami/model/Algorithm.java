@@ -7,10 +7,8 @@ import me.nunum.whereami.model.dto.AlgorithmDTO;
 import org.eclipse.persistence.annotations.Index;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Entity
 public class Algorithm
@@ -37,7 +35,7 @@ public class Algorithm
     private boolean isApproved;
 
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     private Device publisher;
 
 
@@ -193,6 +191,17 @@ public class Algorithm
 
     @Override
     public DTO toDTO() {
-        return new AlgorithmDTO(id, name, authorName, paperURL, isApproved);
+        return new AlgorithmDTO(id,
+                name,
+                authorName,
+                paperURL,
+                isApproved,
+                providers.stream().map(e-> {
+                    final HashMap<String, Object> map = new HashMap<>(2);
+                    map.put("id", e.getId());
+                    map.put("method", e.getMethod().toString());
+
+                    return map;
+                }).collect(Collectors.toList()));
     }
 }
