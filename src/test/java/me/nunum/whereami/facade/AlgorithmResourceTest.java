@@ -82,7 +82,7 @@ public class AlgorithmResourceTest extends JerseyTest {
 
         //Inserted 40 approved rows the last of the first page must be the row with 19
         final String page1 = response.readEntity(String.class);
-        assertTrue(page1.endsWith("Author19\"}]"));
+        assertTrue(page1.endsWith("Author19\",\"providers\":[]}]"));
         assertEquals(page1, response1.readEntity(String.class));
 
         //Inserted 40 approved rows the first of the second page must be the row with 19
@@ -111,7 +111,7 @@ public class AlgorithmResourceTest extends JerseyTest {
         assertTrue(response.getStatus() == 200);
         assertTrue(response.readEntity(String.class).contains("39"));
 
-        final Response response1 = makeRequest.apply("1000");
+        final Response response1 = makeRequest.apply("1000000");
         assertTrue(response1.getStatus() == 404);
 
     }
@@ -159,8 +159,8 @@ public class AlgorithmResourceTest extends JerseyTest {
 
         //Create new valid entity
         HashMap<String, Object> payload = new HashMap<>();
-        payload.put("name", "NameTest");
-        payload.put("authorName", "AuthorTest");
+        payload.put("name", "NameTest5");
+        payload.put("authorName", "AuthorTest4");
         payload.put("paperURL", "http://google.pt");
         HashMap<String, Object> response = makeRequest.apply(payload);
         assertTrue(response.containsKey("id"));
@@ -211,18 +211,48 @@ public class AlgorithmResourceTest extends JerseyTest {
 
         //Create new valid entity
         HashMap<String, Object> payload = new HashMap<>();
-        payload.put("name", "NameTest");
+        payload.put("name", "NameTest1");
         payload.put("authorName", "AuthorTest");
         payload.put("paperURL", "http://google.pt");
         HashMap<String, Object> response = makeRequest.apply(payload);
         assertTrue(response.containsKey("id"));
 
-        target("/algorithm/" + response.get("id"))
+        final Response response1 = target("/algorithm/" + response.get("id"))
                 .request(MediaType.APPLICATION_JSON)
                 .header("X-APP", "APP-TEST")
-                .buildPut(Entity.json(response))
+                .buildDelete()
                 .invoke();
+        assertTrue("We must delete entity",response1.getStatus() == 200);
+    }
 
+    @Test
+    public void approveAlgorithm() {
+
+        Function<HashMap<String, Object>, HashMap<String, Object>> makeRequest = (payload) -> target("/algorithm")
+                .request(MediaType.APPLICATION_JSON)
+                .header("X-APP", "Test")
+                .buildPost(Entity.json(payload))
+                .invoke(HashMap.class);
+
+        //Create new valid entity
+        HashMap<String, Object> payload = new HashMap<>();
+        payload.put("name", "ZName1Test");
+        payload.put("authorName", "AuthorTest");
+        payload.put("paperURL", "http://google.pt");
+        HashMap<String, Object> response = makeRequest.apply(payload);
+        assertTrue(response.containsKey("id"));
+
+        HashMap<String, Object> approvePayload = new HashMap<>(1);
+        approvePayload.put("approved", true);
+
+        final HashMap<String, Object> result = target("/algorithm/" + response.get("id") + "/approval")
+                .request(MediaType.APPLICATION_JSON)
+                .header("X-APP", "APP-TEST")
+                .buildPut(Entity.json(approvePayload))
+                .invoke(HashMap.class);
+
+        assertTrue("Same id", response.get("id").equals(result.get("id")));
+        assertTrue("But Approved", result.get("isApproved").toString().equals("true"));
 
     }
 }
