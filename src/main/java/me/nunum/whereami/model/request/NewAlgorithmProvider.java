@@ -16,6 +16,7 @@ public class NewAlgorithmProvider {
     @Size(min = 3, max = 50)
     private String method;
 
+    @NotNull
     private Map<String, String> properties;
 
     public NewAlgorithmProvider() {
@@ -29,6 +30,10 @@ public class NewAlgorithmProvider {
     public AlgorithmProvider build(Provider provider) {
 
         AlgorithmProvider.METHOD method = AlgorithmProvider.METHOD.parse(this.method);
+
+        if (this.properties == null) {
+            throw new IllegalArgumentException(String.format("Expecting properties key to be set"));
+        }
 
         for (String key : method.requiredKeys()) {
             if (!this.properties.containsKey(key)) {

@@ -16,6 +16,8 @@ public class AlgorithmProvider implements DTOable {
     public static final String HTTP_PROVIDER_INGESTION_URL_KEY = "url_to_receive_data";
     public static final String HTTP_PROVIDER_PREDICTION_URL_KEY = "url_to_predict";
 
+    public static final String GIT_PROVIDER_URL_KEY = "repository_url";
+
     @Id
     @GeneratedValue
     private Long id;
