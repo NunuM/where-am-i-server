@@ -266,8 +266,68 @@ public class AlgorithmResourceTest extends JerseyTest {
     @Test
     public void deleteAlgorithmProvider() {
 
+        Function<HashMap<String, Object>, HashMap<String, Object>> makeRequest = (payload) -> target("/algorithm")
+                .request(MediaType.APPLICATION_JSON)
+                .header("X-APP", "Test")
+                .buildPost(Entity.json(payload))
+                .invoke(HashMap.class);
 
+        //Create new valid algorithm entity
+        HashMap<String, Object> payload = new HashMap<>();
+        payload.put("name", "ZDeleteAlgorithmProvider");
+        payload.put("authorName", "AuthorTest");
+        payload.put("paperURL", "http://example.com");
+        HashMap<String, Object> response = makeRequest.apply(payload);
+        assertTrue(response.containsKey("id"));
 
+        DeviceRepository deviceRepository = new DeviceRepositoryJpa();
+        Device device = deviceRepository.findOrPersist(() -> "deleteAlgorithmProvider");
+        Device device2 = deviceRepository.findOrPersist(() -> "deleteProvider");
+
+        ProviderRepository providerRepository = new ProviderRepositoryJpa();
+        providerRepository.save(new Provider("test@nunum.me", "", true, device));
+        providerRepository.save(new Provider("tesdelt@nunum.me", "", true, device2));
+
+        // Create algorithm provider entity
+        HashMap<String, Object> validValidPayload = new HashMap<>(2);
+        validValidPayload.put("method", "git");
+        HashMap<String, Object> properies = new HashMap<>(1);
+        properies.put(AlgorithmProvider.GIT_PROVIDER_URL_KEY, "http://example.com");
+        validValidPayload.put("properties", properies);
+
+        Response response2 = target("/algorithm/" + response.get("id") + "/provider/")
+                .request(MediaType.APPLICATION_JSON)
+                .header("X-APP", "deleteAlgorithmProvider")
+                .buildPost(Entity.json(validValidPayload))
+                .invoke();
+
+        assertTrue("A valid provider", response2.getStatus() == 200);
+        final HashMap entity = response2.readEntity(HashMap.class);
+        assertTrue("Must have an ID", entity.containsKey("id"));
+
+        // Provider without ownership
+        Response response5 = target("/algorithm/" + response.get("id") + "/provider/" + entity.get("id"))
+                .request(MediaType.APPLICATION_JSON)
+                .header("X-APP", "deleteProvider")
+                .buildDelete()
+                .invoke();
+        assertTrue("Not owner", response5.getStatus() == 403);
+
+        // Delete algorithm provider
+        Response response3 = target("/algorithm/" + response.get("id") + "/provider/" + entity.get("id"))
+                .request(MediaType.APPLICATION_JSON)
+                .header("X-APP", "deleteAlgorithmProvider")
+                .buildDelete()
+                .invoke();
+        assertTrue("Delete success", response3.getStatus() == 200);
+
+        // Not found
+        Response response4 = target("/algorithm/" + response.get("id") + "/provider/" +"-1")
+                .request(MediaType.APPLICATION_JSON)
+                .header("X-APP", "deleteAlgorithmProvider")
+                .buildDelete()
+                .invoke();
+        assertTrue("Non existing entity", response4.getStatus() == 404);
 
     }
 
@@ -308,7 +368,7 @@ public class AlgorithmResourceTest extends JerseyTest {
         Device device = deviceRepository.findOrPersist(() -> "provider");
 
         ProviderRepository providerRepository = new ProviderRepositoryJpa();
-        Provider provider = providerRepository.save(new Provider("test@nunum.me", "", false, device));
+        Provider provider = providerRepository.save(new Provider("teste12345@nunum.me", "", false, device));
 
 
         Response response2 = target("algorithm/" + response.get("id") + "/provider")
