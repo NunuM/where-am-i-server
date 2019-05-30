@@ -35,7 +35,7 @@ public class ApiListingResource {
     Logger LOGGER = Logger.getLogger(ApiListingResource.class.getSimpleName());
 
 
-    public Swagger mSwaggerConfig;
+    private Swagger mSwaggerConfig;
 
     public ApiListingResource() {
         mSwaggerConfig = new Swagger();
@@ -181,7 +181,7 @@ public class ApiListingResource {
                 return Response.ok().entity(b.toString()).type("application/yaml").build();
             }
         } catch (Exception var16) {
-            var16.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Error listing swagger", var16);
         }
 
         return Response.status(404).build();

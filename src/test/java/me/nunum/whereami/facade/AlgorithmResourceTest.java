@@ -366,7 +366,7 @@ public class AlgorithmResourceTest extends JerseyTest {
                 .buildPost(Entity.json(validValidPayload))
                 .invoke();
 
-        assertTrue("Algorithm not found provider", response6.getStatus() == 404);
+        assertTrue("Algorithm not found", response6.getStatus() == 404);
 
     }
 
