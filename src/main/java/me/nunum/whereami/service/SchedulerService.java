@@ -27,15 +27,22 @@ public class SchedulerService implements Runnable {
 
     private static final Logger LOGGER = Logger.getLogger(SchedulerService.class.getSimpleName());
 
+    private final TaskRepository tasks;
+    private final TrainingRepository trainings;
+    private final FingerprintRepository fingerprints;
+
+    public SchedulerService() {
+        this.tasks = new TaskRepositoryJpa();
+        this.trainings = new TrainingRepositoryJpa();
+        this.fingerprints = new FingerprintRepositoryJpa();
+    }
+
     /**
      *
      */
     @Override
     public void run() {
 
-        final TaskRepository tasks = new TaskRepositoryJpa();
-        final TrainingRepository trainings = new TrainingRepositoryJpa();
-        final FingerprintRepository fingerprints = new FingerprintRepositoryJpa();
 
         LOGGER.log(Level.INFO, "Starting SchedulerService service");
 

@@ -15,6 +15,7 @@ public class UpdateAlgorithmRequest {
 
 
     public UpdateAlgorithmRequest() {
+        this("", "", "");
     }
 
     public UpdateAlgorithmRequest(String name, String authorName, String paperURL) {

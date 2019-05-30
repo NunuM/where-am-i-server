@@ -31,8 +31,7 @@ import java.util.logging.Logger;
 public class ApiListingResource {
     static boolean initialized = false;
 
-
-    Logger LOGGER = Logger.getLogger(ApiListingResource.class.getSimpleName());
+    private static final Logger LOGGER = Logger.getLogger(ApiListingResource.class.getSimpleName());
 
 
     private Swagger mSwaggerConfig;
@@ -67,7 +66,7 @@ public class ApiListingResource {
 
             }
         };
-        this.LOGGER.log(Level.FINE, "using scanner " + scanner);
+        LOGGER.log(Level.FINE, "using scanner " + scanner);
         SwaggerSerializers.setPrettyPrint(scanner.getPrettyPrint());
         swagger = this.mSwaggerConfig;
         new HashSet();
@@ -106,7 +105,7 @@ public class ApiListingResource {
                         return "";
                     }
                 };
-                this.LOGGER.log(Level.FINE, "configuring swagger with " + configurator);
+                LOGGER.log(Level.FINE, "configuring swagger with " + configurator);
                 configurator.configure(swagger);
             }
 

@@ -4,7 +4,7 @@ import io.swagger.annotations.Api;
 import me.nunum.whereami.controller.PositionsController;
 import me.nunum.whereami.model.exceptions.EntityAlreadyExists;
 import me.nunum.whereami.model.exceptions.EntityNotFoundException;
-import me.nunum.whereami.model.request.PostionSpamRequest;
+import me.nunum.whereami.model.request.PositionSpamRequest;
 
 import javax.annotation.security.PermitAll;
 import javax.ws.rs.POST;
@@ -30,7 +30,7 @@ public class PositionReportResource {
     }
 
     @POST
-    public Response positionSpam(PostionSpamRequest request) {
+    public Response positionSpam(PositionSpamRequest request) {
 
         try {
             return Response

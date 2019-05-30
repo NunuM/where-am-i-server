@@ -12,12 +12,13 @@ public class LocalizationSpamRequest {
     @Size(min = 1, max = 255)
     private String className;
 
-    public LocalizationSpamRequest() {
-        this.id = 0L;
+    protected LocalizationSpamRequest() {
+        this(0L);
     }
 
     public LocalizationSpamRequest(Long id) {
         this.id = id;
+        this.className = "";
     }
 
     public Long getId() {

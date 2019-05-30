@@ -14,6 +14,7 @@ public class NewProviderRequest {
     public String email;
 
     public NewProviderRequest() {
+        this("");
     }
 
     public NewProviderRequest(String email) {

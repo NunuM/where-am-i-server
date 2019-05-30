@@ -6,6 +6,7 @@ import me.nunum.whereami.model.persistance.DeviceRepository;
 import me.nunum.whereami.model.persistance.jpa.DeviceRepositoryJpa;
 import me.nunum.whereami.utils.AppConfig;
 
+import javax.inject.Singleton;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.container.PreMatching;
@@ -57,11 +58,13 @@ public class PrincipalInterceptor implements ContainerRequestFilter {
 
         @Override
         public boolean isUserInRole(String role) {
-            final DeviceRepository repository = new DeviceRepositoryJpa();
 
-            Device device = repository.findOrPersist(this);
-
-            return device.isInRole(role);
+            try (final DeviceRepository deviceRepository = new DeviceRepositoryJpa()) {
+                Device device = deviceRepository.findOrPersist(this);
+                return device.isInRole(role);
+            } catch (Exception e) {
+                return false;
+            }
         }
 
         @Override

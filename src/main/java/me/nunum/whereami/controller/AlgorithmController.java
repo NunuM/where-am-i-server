@@ -24,7 +24,9 @@ public class AlgorithmController implements AutoCloseable {
 
     private final AlgorithmRepository repository;
     private final DeviceRepository deviceRepository;
-    private final AlgorithmProviderRepository providerRepository;
+    private final AlgorithmProviderRepository algorithmProviderRepository;
+    private final ProviderRepository providerRepository;
+    private final TrainingRepository trainingRepository;
 
     /**
      * constructor
@@ -32,7 +34,9 @@ public class AlgorithmController implements AutoCloseable {
     public AlgorithmController() {
         this.repository = new AlgorithmRepositoryJpa();
         this.deviceRepository = new DeviceRepositoryJpa();
-        this.providerRepository = new AlgorithmProviderRepositoryJpa();
+        this.providerRepository = new ProviderRepositoryJpa();
+        this.algorithmProviderRepository = new AlgorithmProviderRepositoryJpa();
+        this.trainingRepository = new TrainingRepositoryJpa();
     }
 
     /**
@@ -176,9 +180,7 @@ public class AlgorithmController implements AutoCloseable {
 
         Algorithm algorithm = this.getAlgorithm(aId);
 
-        final ProviderRepository providerRepository = new ProviderRepositoryJpa();
-
-        Optional<Provider> optionalProvider = providerRepository.findByDevice(device);
+        Optional<Provider> optionalProvider = this.providerRepository.findByDevice(device);
 
         if (!optionalProvider.isPresent()) {
             throw new ForbiddenEntityCreationException("The requester is not a provider");
@@ -192,7 +194,7 @@ public class AlgorithmController implements AutoCloseable {
 
         AlgorithmProvider algorithmProvider = algorithmProviderRequest.build(provider);
 
-        algorithmProvider = this.providerRepository.save(algorithmProvider);
+        algorithmProvider = this.algorithmProviderRepository.save(algorithmProvider);
 
         algorithm.addProvider(algorithmProvider);
 
@@ -217,7 +219,7 @@ public class AlgorithmController implements AutoCloseable {
 
         try {
             /** Fast path, try to delete */
-            this.providerRepository.delete(provider);
+            this.algorithmProviderRepository.delete(provider);
             return provider.toDTO();
         } catch (Exception e) {
             LOGGER.log(Level.FINE, String.format("Fast path for provider %d deletion as fail. Calculate damage", pId), e);
@@ -225,13 +227,12 @@ public class AlgorithmController implements AutoCloseable {
 
         try {
             /** Close previous transactions */
-            this.providerRepository.close();
+            this.algorithmProviderRepository.close();
         } catch (Exception e) {
             LOGGER.log(Level.FINE, String.format("Could not close transactions in provider %d deletion process", pId), e);
         }
 
         /** Notify affected devices */
-        final TrainingRepository trainingRepository = new TrainingRepositoryJpa();
         List<Training> trainings = trainingRepository.findAllTrainingWithProvider(provider);
         final Set<Device> devices = trainings.stream().map(e -> e.getLocalization().getOwner()).collect(Collectors.toSet());
         final NotifyService notifyService = NotifyService.providerDeletionNotification(devices);
@@ -242,7 +243,7 @@ public class AlgorithmController implements AutoCloseable {
 
         LOGGER.log(Level.INFO, String.format("Provider %d deletion affected %d training", pId, affectedDevices));
 
-        this.providerRepository.delete(provider);
+        this.algorithmProviderRepository.delete(provider);
 
         return provider.toDTO();
     }
@@ -262,7 +263,7 @@ public class AlgorithmController implements AutoCloseable {
 
         final AlgorithmProvider provider = this.getProvider(userPrincipal, pId);
 
-        return this.providerRepository.save(request.updateProvider(provider)).toDTO();
+        return this.algorithmProviderRepository.save(request.updateProvider(provider)).toDTO();
     }
 
 
@@ -278,9 +279,7 @@ public class AlgorithmController implements AutoCloseable {
     private AlgorithmProvider getProvider(Principal userPrincipal, Long pId) {
         Device device = this.deviceRepository.findOrPersist(userPrincipal);
 
-        final ProviderRepository providerRepository = new ProviderRepositoryJpa();
-
-        Optional<Provider> optionalProvider = providerRepository.findByDevice(device);
+        Optional<Provider> optionalProvider = this.providerRepository.findByDevice(device);
 
         if (!optionalProvider.isPresent()) {
             throw new ForbiddenEntityAccessException("The requester is not a provider");
@@ -292,7 +291,7 @@ public class AlgorithmController implements AutoCloseable {
             throw new ForbiddenEntityAccessException("You must confirm your email");
         }
 
-        Optional<AlgorithmProvider> algorithmProvider = this.providerRepository.findById(pId);
+        Optional<AlgorithmProvider> algorithmProvider = this.algorithmProviderRepository.findById(pId);
 
         if (!algorithmProvider.isPresent()) {
             throw new EntityNotFoundException(String.format("Provider %s not found", pId));

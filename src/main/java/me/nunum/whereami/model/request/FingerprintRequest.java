@@ -112,7 +112,7 @@ public class FingerprintRequest {
     }
 
     public int getLocalization() {
-        return position;
+        return localization;
     }
 
     public void setBuildid(int buildid) {

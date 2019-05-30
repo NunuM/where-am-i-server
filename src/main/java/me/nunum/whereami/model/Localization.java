@@ -141,7 +141,7 @@ public class Localization implements DTOable, Identifiable<Long>,Comparable<Loca
     public boolean addTraining(Training training){
 
         this.trainings.add(training);
-        if(training.getLocalization().id() != this.id){
+        if(!Objects.equals(training.getLocalization().id(), this.id)){
             training.setLocalization(this);
         }
 

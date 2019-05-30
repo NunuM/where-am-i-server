@@ -3,6 +3,7 @@ package me.nunum.whereami.model.request;
 import me.nunum.whereami.model.AlgorithmProvider;
 
 import javax.validation.constraints.Size;
+import java.util.HashMap;
 import java.util.Map;
 
 public class UpdateAlgorithmProvider {
@@ -14,6 +15,7 @@ public class UpdateAlgorithmProvider {
     private Map<String, String> properties;
 
     public UpdateAlgorithmProvider() {
+        this("", new HashMap<>());
     }
 
     public UpdateAlgorithmProvider(String method, Map<String, String> properties) {

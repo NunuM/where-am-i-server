@@ -265,6 +265,10 @@ public class AlgorithmResourceTest extends JerseyTest {
 
     @Test
     public void deleteAlgorithmProvider() {
+
+
+
+
     }
 
     @Test

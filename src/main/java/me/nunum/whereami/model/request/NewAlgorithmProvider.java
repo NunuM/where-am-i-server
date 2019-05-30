@@ -7,6 +7,7 @@ import org.hibernate.validator.constraints.Email;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.HashMap;
 import java.util.Map;
 
 public class NewAlgorithmProvider {
@@ -20,6 +21,7 @@ public class NewAlgorithmProvider {
     private Map<String, String> properties;
 
     public NewAlgorithmProvider() {
+        this("", new HashMap<>());
     }
 
     public NewAlgorithmProvider(String method, Map<String, String> properties) {

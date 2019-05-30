@@ -10,7 +10,7 @@ import me.nunum.whereami.model.exceptions.ForbiddenEntityModificationException;
 import me.nunum.whereami.model.persistance.*;
 import me.nunum.whereami.model.persistance.jpa.*;
 import me.nunum.whereami.model.request.NewPositionRequest;
-import me.nunum.whereami.model.request.PostionSpamRequest;
+import me.nunum.whereami.model.request.PositionSpamRequest;
 
 import javax.ws.rs.core.SecurityContext;
 import java.security.Principal;
@@ -100,7 +100,7 @@ public class PositionsController implements AutoCloseable {
         return position.toDTO();
     }
 
-    public DTO processSpamRequest(Principal userPrincipal, PostionSpamRequest request) {
+    public DTO processSpamRequest(Principal userPrincipal, PositionSpamRequest request) {
 
         Optional<Position> optionalPosition = this.repository.findById(request.getId());
 

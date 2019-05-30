@@ -2,19 +2,20 @@ package me.nunum.whereami.model.request;
 
 import javax.validation.constraints.NotNull;
 
-public class PostionSpamRequest {
+public class PositionSpamRequest {
 
     @NotNull
     private Long id;
 
     private String className;
 
-    public PostionSpamRequest() {
-        this.id = 0L;
+    public PositionSpamRequest() {
+        this(0L);
     }
 
-    public PostionSpamRequest(Long id) {
+    public PositionSpamRequest(Long id) {
         this.id = id;
+        this.className = "";
     }
 
     public Long getId() {
@@ -35,7 +36,7 @@ public class PostionSpamRequest {
 
     @Override
     public String toString() {
-        return "PostionSpamRequest{" +
+        return "PositionSpamRequest{" +
                 "id=" + id +
                 ", className='" + className + '\'' +
                 '}';

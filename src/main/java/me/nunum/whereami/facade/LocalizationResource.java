@@ -133,15 +133,19 @@ public class LocalizationResource {
             @ApiImplicitParam(name = "X-APP", value = "App Instance", required = true, dataType = "string", paramType = "header")
     })
     @Path("{id}/train")
-    public TrainResource trainResource(@PathParam("id") Long id) {
-        return new TrainResource(new LocalizationController().localization(id), securityContext);
+    public TrainResource trainResource(@PathParam("id") Long id) throws Exception {
+        try (final LocalizationController controller = new LocalizationController()) {
+            return new TrainResource(controller.localization(id), securityContext);
+        }
     }
 
     @ApiImplicitParams({
             @ApiImplicitParam(name = "X-APP", value = "App Instance", required = true, dataType = "string", paramType = "header")
     })
     @Path("{id}/position")
-    public PositionResource positionResource(@PathParam("id") Long id) {
-        return new PositionResource(new LocalizationController().localization(id), securityContext);
+    public PositionResource positionResource(@PathParam("id") Long id) throws Exception {
+        try (final LocalizationController controller = new LocalizationController()) {
+            return new PositionResource(controller.localization(id), securityContext);
+        }
     }
 }

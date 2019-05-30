@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 @PermitAll
 public class PositionResource {
 
-    private static final Logger LOGGER = Logger.getLogger("PositionResource");
+    private static final Logger LOGGER = Logger.getLogger(PositionResource.class.getSimpleName());
 
     private final Localization localization;
     private final SecurityContext securityContext;
