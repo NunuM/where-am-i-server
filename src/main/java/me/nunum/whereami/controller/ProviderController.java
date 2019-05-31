@@ -33,7 +33,13 @@ public class ProviderController implements AutoCloseable {
         this.providerRepository = new ProviderRepositoryJpa();
     }
 
-
+    /**
+     * Register device intention of having a Provider role
+     *
+     * @param principal See {@link Principal}
+     * @param request   See {@link NewProviderRequest}
+     * @return See {@link me.nunum.whereami.model.dto.ProviderDTO}
+     */
     public DTO registerNewProviderRequest(Principal principal, NewProviderRequest request) {
 
         final Device device = this.deviceRepository.findOrPersist(principal);
@@ -54,12 +60,18 @@ public class ProviderController implements AutoCloseable {
         return this.providerRepository.save(provider).toDTO();
     }
 
-    @Override
-    public void close() throws Exception {
-        this.deviceRepository.close();
-    }
 
-
+    /**
+     * Confirmed the requester email address, then will be added
+     * this device to a Provider role list.
+     *
+     * @param userPrincipal See {@link Principal}
+     * @param token         Opaque string
+     * @return See {@link me.nunum.whereami.model.dto.ProviderDTO}
+     * @throws EntityNotFoundException              Token does not belongs to any provider
+     * @throws ForbiddenEntityModificationException The device that request the validation
+     *                                              must be the same that make the verification
+     */
     public DTO confirmNewProviderRequest(Principal userPrincipal, String token) {
 
         final Device device = this.deviceRepository.findOrPersist(userPrincipal);
@@ -76,7 +88,7 @@ public class ProviderController implements AutoCloseable {
             throw new ForbiddenEntityModificationException("The request must be from the original requester");
         }
 
-        if(provider.isConfirmed()){
+        if (provider.isConfirmed()) {
             return provider.toDTO();
         }
 
@@ -90,4 +102,11 @@ public class ProviderController implements AutoCloseable {
 
         return this.providerRepository.save(provider).toDTO();
     }
+
+
+    @Override
+    public void close() throws Exception {
+        this.deviceRepository.close();
+    }
+
 }
