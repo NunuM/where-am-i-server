@@ -22,7 +22,7 @@ public class Role {
     @Index(unique = true)
     private String name;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     private List<Device> devices;
 
     @Temporal(TemporalType.TIMESTAMP)

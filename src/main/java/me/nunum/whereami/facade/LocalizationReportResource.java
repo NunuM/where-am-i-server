@@ -43,15 +43,20 @@ public class LocalizationReportResource {
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     public Response localizationSpam(@Valid LocalizationSpamRequest spamRequest) {
-        try {
 
+        try {
             final DTO reportDto = this.controller.newSpamReport(securityContext.getUserPrincipal(), spamRequest);
 
             return Response.ok(reportDto.dtoValues()).build();
+
         } catch (EntityAlreadyExists e) {
+
             return Response.status(Response.Status.CONFLICT).build();
+
         } catch (EntityNotFoundException e) {
+
             return Response.status(Response.Status.NOT_FOUND).build();
+
         } finally {
             try {
                 this.controller.close();

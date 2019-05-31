@@ -12,7 +12,7 @@ public class LocalizationSpamRequest {
     @Size(min = 1, max = 255)
     private String className;
 
-    protected LocalizationSpamRequest() {
+    public LocalizationSpamRequest() {
         this(0L);
     }
 

@@ -95,6 +95,15 @@ public class AlgorithmResourceTest extends JerseyTest {
     @Test
     public void testGetAlgorithm() {
 
+        final DeviceRepository deviceRepository = new DeviceRepositoryJpa();
+
+        Device device = deviceRepository.findOrPersist(() -> "testGetAlgorithm");
+
+        final AlgorithmRepository repository = new AlgorithmRepositoryJpa();
+
+        Algorithm algorithm = repository.save(new Algorithm("testGetAlgorithm", "testGetAlgorithm", "http://paper.com/paper", true, device));
+
+
         Function<String, Response> makeRequest = (aId) -> target("/algorithm/" + aId)
                 .request(MediaType.APPLICATION_JSON)
                 .header("X-APP", "Test")
@@ -102,13 +111,12 @@ public class AlgorithmResourceTest extends JerseyTest {
                 .invoke();
 
 
-        final Response response = makeRequest.apply("39");
+        final Response response = makeRequest.apply(algorithm.getId().toString()    );
 
-        assertTrue(response.getStatus() == 200);
-        assertTrue(response.readEntity(String.class).contains("39"));
+        assertEquals(200, response.getStatus());
 
-        final Response response1 = makeRequest.apply("1000000");
-        assertTrue(response1.getStatus() == 404);
+        final Response response1 = makeRequest.apply("-1");
+        assertEquals(404, response1.getStatus());
 
     }
 
@@ -593,7 +601,7 @@ public class AlgorithmResourceTest extends JerseyTest {
                 .header("X-APP", "updateProvider")
                 .buildPut(Entity.json(entityToUpdate1))
                 .invoke();
-        assertTrue("Bad request",updateResponse3.getStatus() == 400);
+        assertTrue("Bad request", updateResponse3.getStatus() == 400);
 
 
         // Unsupported method
@@ -603,7 +611,7 @@ public class AlgorithmResourceTest extends JerseyTest {
                 .header("X-APP", "updateProvider2")
                 .buildPut(Entity.json(entityToUpdate1))
                 .invoke();
-        assertTrue("Forbidden",updateResponse4.getStatus() == 403);
+        assertTrue("Forbidden", updateResponse4.getStatus() == 403);
 
 
         // Change method missing one key
@@ -613,7 +621,7 @@ public class AlgorithmResourceTest extends JerseyTest {
                 .header("X-APP", "updateProvider")
                 .buildPut(Entity.json(entityToUpdate1))
                 .invoke();
-        assertTrue("Change method but missing key",updateResponse5.getStatus() == 400);
+        assertTrue("Change method but missing key", updateResponse5.getStatus() == 400);
 
 
         // Change method with all keys
@@ -624,7 +632,7 @@ public class AlgorithmResourceTest extends JerseyTest {
                 .header("X-APP", "updateProvider")
                 .buildPut(Entity.json(entityToUpdate1))
                 .invoke();
-        assertTrue("Change method",updateResponse6.getStatus() == 200);
+        assertTrue("Change method", updateResponse6.getStatus() == 200);
 
     }
 }

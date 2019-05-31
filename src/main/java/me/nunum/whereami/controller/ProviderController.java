@@ -24,11 +24,15 @@ public class ProviderController implements AutoCloseable {
     private final DeviceRepository deviceRepository;
     private final ProviderRepository providerRepository;
 
+    /**
+     * Constructor
+     */
     public ProviderController() {
         this.roleRepository = new RoleRepositoryJpa();
         this.deviceRepository = new DeviceRepositoryJpa();
         this.providerRepository = new ProviderRepositoryJpa();
     }
+
 
     public DTO registerNewProviderRequest(Principal principal, NewProviderRequest request) {
 
