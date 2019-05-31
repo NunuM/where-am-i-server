@@ -1,9 +1,7 @@
 package me.nunum.whereami.model.request;
 
 import me.nunum.whereami.model.AlgorithmProvider;
-import me.nunum.whereami.model.Device;
 import me.nunum.whereami.model.Provider;
-import org.hibernate.validator.constraints.Email;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;

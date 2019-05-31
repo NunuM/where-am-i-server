@@ -6,7 +6,6 @@ import me.nunum.whereami.model.persistance.DeviceRepository;
 import me.nunum.whereami.model.persistance.jpa.DeviceRepositoryJpa;
 import me.nunum.whereami.utils.AppConfig;
 
-import javax.inject.Singleton;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.container.PreMatching;

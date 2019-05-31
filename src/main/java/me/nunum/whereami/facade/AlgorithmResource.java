@@ -303,12 +303,6 @@ public class AlgorithmResource {
 
             return Response.status(Response.Status.BAD_REQUEST).entity(ErrorDTO.fromError(e)).build();
 
-        } catch (EntityAlreadyExists e) {
-
-            LOGGER.log(Level.SEVERE, "Entity already exists", e);
-
-            return Response.status(Response.Status.CONFLICT).build();
-
         } catch (ForbiddenEntityAccessException | ForbiddenEntityCreationException e) {
 
             LOGGER.log(Level.SEVERE, "Forbidden action", e);

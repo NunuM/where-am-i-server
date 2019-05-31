@@ -25,6 +25,7 @@ import java.util.Objects;
                 query = "SELECT OBJECT(u) FROM Provider u WHERE u.email=:email"
         )
 })
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"REQUESTER_ID"}))
 public class Provider implements DTOable {
 
     @Id
@@ -42,6 +43,7 @@ public class Provider implements DTOable {
 
 
     @OneToOne
+    @JoinColumn(name="REQUESTER_ID")
     private Device requester;
 
 

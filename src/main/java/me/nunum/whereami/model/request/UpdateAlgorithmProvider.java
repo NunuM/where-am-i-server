@@ -27,7 +27,8 @@ public class UpdateAlgorithmProvider {
 
         AlgorithmProvider.METHOD method = null;
 
-        if (this.method != null) {
+        if (!(this.method == null || this.method.isEmpty())) {
+
             method = AlgorithmProvider.METHOD.parse(this.method);
 
             if (method == AlgorithmProvider.METHOD.UNSUPPORTED) {

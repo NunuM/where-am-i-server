@@ -1,18 +1,9 @@
 package me.nunum.whereami.facade;
 
 import me.nunum.whereami.framework.interceptor.PrincipalInterceptor;
-import me.nunum.whereami.model.Algorithm;
-import me.nunum.whereami.model.AlgorithmProvider;
-import me.nunum.whereami.model.Device;
-import me.nunum.whereami.model.Provider;
-import me.nunum.whereami.model.persistance.AlgorithmRepository;
-import me.nunum.whereami.model.persistance.DeviceRepository;
-import me.nunum.whereami.model.persistance.ProviderRepository;
-import me.nunum.whereami.model.persistance.jpa.AlgorithmRepositoryJpa;
-import me.nunum.whereami.model.persistance.jpa.DeviceRepositoryJpa;
-import me.nunum.whereami.model.persistance.jpa.ProviderRepositoryJpa;
-import me.nunum.whereami.model.request.NewAlgorithmRequest;
-import me.nunum.whereami.model.request.NewProviderRequest;
+import me.nunum.whereami.model.*;
+import me.nunum.whereami.model.persistance.*;
+import me.nunum.whereami.model.persistance.jpa.*;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.junit.Before;
@@ -23,8 +14,6 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
-import java.security.Principal;
 import java.util.HashMap;
 import java.util.function.Function;
 
@@ -262,6 +251,72 @@ public class AlgorithmResourceTest extends JerseyTest {
 
     }
 
+    @Test
+    public void deleteAlgorithmProviderWithQueuedTask() {
+
+        Function<HashMap<String, Object>, HashMap<String, Object>> makeRequest = (payload) -> target("/algorithm")
+                .request(MediaType.APPLICATION_JSON)
+                .header("X-APP", "Test")
+                .buildPost(Entity.json(payload))
+                .invoke(HashMap.class);
+
+        //Create new valid algorithm entity
+        HashMap<String, Object> payload = new HashMap<>();
+        payload.put("name", "ZDeleteAlgorithmProviderDeleteAlgorithmProviderWithQueuedTask");
+        payload.put("authorName", "AuthorTest");
+        payload.put("paperURL", "http://example.com");
+        HashMap<String, Object> response = makeRequest.apply(payload);
+        assertTrue(response.containsKey("id"));
+
+        // Register a device as provider
+        DeviceRepository deviceRepository = new DeviceRepositoryJpa();
+        Device device = deviceRepository.findOrPersist(() -> "deleteAlgorithmProviderWithQueuedTask");
+
+        // Activate provider
+        ProviderRepository providerRepository = new ProviderRepositoryJpa();
+        providerRepository.save(new Provider("deleteAlgorithmProviderWithQueuedTask@nunum.me", "", true, device));
+
+
+        // Create algorithm provider entity
+        HashMap<String, Object> validValidPayload = new HashMap<>(2);
+        validValidPayload.put("method", "git");
+        HashMap<String, Object> properies = new HashMap<>(1);
+        properies.put(AlgorithmProvider.GIT_PROVIDER_URL_KEY, "http://example.com");
+        validValidPayload.put("properties", properies);
+
+        HashMap<String, Object> response1 = target("/algorithm/" + response.get("id") + "/provider/")
+                .request(MediaType.APPLICATION_JSON)
+                .header("X-APP", "deleteAlgorithmProviderWithQueuedTask")
+                .buildPost(Entity.json(validValidPayload))
+                .invoke(HashMap.class);
+        assertTrue("A valid provider", response1.containsKey("id"));
+
+
+        // Find recently created provider
+        AlgorithmProviderRepository algorithmProviderRepository = new AlgorithmProviderRepositoryJpa();
+        final AlgorithmProvider provider = algorithmProviderRepository.findById(Long.valueOf(response1.get("id").toString())).get();
+
+        // Create new localization
+        LocalizationRepository localizationRepository = new LocalizationRepositoryJpa();
+        final Localization localization = localizationRepository.save(new Localization("deleteAlgorithmProviderWithQueuedTask", "deleteAlgorithmProviderWithQueuedTask", device));
+
+        // Find algorithm previously created
+        AlgorithmRepository algorithmRepository = new AlgorithmRepositoryJpa();
+        final Algorithm algorithm = algorithmRepository.findById(Long.valueOf(response.get("id").toString())).get();
+
+        // Add a new training task to a given provider that implements a specific algorithm
+        localization.addTraining(new Training(algorithm, provider, localization));
+        localizationRepository.save(localization);
+
+        // Delete algorithm provider
+        Response response3 = target("/algorithm/" + response.get("id") + "/provider/" + provider.getId())
+                .request(MediaType.APPLICATION_JSON)
+                .header("X-APP", "deleteAlgorithmProviderWithQueuedTask")
+                .buildDelete()
+                .invoke();
+        assertTrue("Delete success", response3.getStatus() == 200);
+
+    }
 
     @Test
     public void deleteAlgorithmProvider() {
@@ -322,7 +377,7 @@ public class AlgorithmResourceTest extends JerseyTest {
         assertTrue("Delete success", response3.getStatus() == 200);
 
         // Not found
-        Response response4 = target("/algorithm/" + response.get("id") + "/provider/" +"-1")
+        Response response4 = target("/algorithm/" + response.get("id") + "/provider/" + "-1")
                 .request(MediaType.APPLICATION_JSON)
                 .header("X-APP", "deleteAlgorithmProvider")
                 .buildDelete()
@@ -434,7 +489,141 @@ public class AlgorithmResourceTest extends JerseyTest {
 
     }
 
+
     @Test
-    public void updateProvider() {
+    public void updateProvider() throws Exception {
+
+        Function<HashMap<String, Object>, HashMap<String, Object>> makeRequest = (payload) -> target("/algorithm")
+                .request(MediaType.APPLICATION_JSON)
+                .header("X-APP", "Test")
+                .buildPost(Entity.json(payload))
+                .invoke(HashMap.class);
+
+        //Create new valid algorithm entity
+        HashMap<String, Object> payload = new HashMap<>();
+        payload.put("name", "ZDeleteAlgorithmProviderUpdateProvider");
+        payload.put("authorName", "AuthorTest");
+        payload.put("paperURL", "http://example.com");
+        HashMap<String, Object> response = makeRequest.apply(payload);
+        assertTrue(response.containsKey("id"));
+
+        DeviceRepository deviceRepository = new DeviceRepositoryJpa();
+        Device device = deviceRepository.findOrPersist(() -> "updateProvider");
+        Device device2 = deviceRepository.findOrPersist(() -> "updateProvider2");
+
+        ProviderRepository providerRepository = new ProviderRepositoryJpa();
+        providerRepository.save(new Provider("updateProvider@nunum.me", "", true, device));
+        providerRepository.save(new Provider("updateProvider2@nunum.me", "", true, device2));
+
+        // Create algorithm provider entity
+        HashMap<String, Object> validValidPayload = new HashMap<>(2);
+        validValidPayload.put("method", "git");
+        HashMap<String, Object> properies = new HashMap<>(1);
+        properies.put(AlgorithmProvider.GIT_PROVIDER_URL_KEY, "http://example.com");
+        validValidPayload.put("properties", properies);
+
+        Response response2 = target("/algorithm/" + response.get("id") + "/provider/")
+                .request(MediaType.APPLICATION_JSON)
+                .header("X-APP", "updateProvider")
+                .buildPost(Entity.json(validValidPayload))
+                .invoke();
+
+        assertTrue("A valid provider", response2.getStatus() == 200);
+        final HashMap entity = response2.readEntity(HashMap.class);
+        assertTrue("Must have an ID", entity.containsKey("id"));
+        final HashMap<String, Object> persistedProperties = (HashMap<String, Object>) entity.get("properties");
+        assertTrue("Same url", persistedProperties.get(AlgorithmProvider.GIT_PROVIDER_URL_KEY).toString().equals("http://example.com"));
+
+        // Add new property and change previous url without specify method
+        HashMap<String, Object> entityToUpdate = new HashMap<>();
+        HashMap<String, Object> entityPropertiesToUpdate = new HashMap<>();
+        entityPropertiesToUpdate.put("new", "new");
+        entityPropertiesToUpdate.put(AlgorithmProvider.GIT_PROVIDER_URL_KEY, "http://example.net");
+        entityToUpdate.put("properties", entityPropertiesToUpdate);
+
+        HashMap<String, Object> updateResponse = target("/algorithm/" + response.get("id") + "/provider/" + entity.get("id").toString())
+                .request(MediaType.APPLICATION_JSON)
+                .header("X-APP", "updateProvider")
+                .buildPut(Entity.json(entityToUpdate))
+                .invoke(HashMap.class);
+
+        AlgorithmProviderRepository algorithmProviderRepository = new AlgorithmProviderRepositoryJpa();
+        final AlgorithmProvider provider = algorithmProviderRepository.findById(Long.valueOf(updateResponse.get("id").toString())).get();
+        algorithmProviderRepository.close();
+
+        assertTrue("Must have new key", provider.getProperties().containsKey("new"));
+        assertTrue("Url must be different", provider.getProperties().get(AlgorithmProvider.GIT_PROVIDER_URL_KEY).toString().equals("http://example.net"));
+
+
+        // Add new property and change previous url specifying the method
+        HashMap<String, Object> entityToUpdate1 = new HashMap<>();
+        HashMap<String, Object> entityPropertiesToUpdate1 = new HashMap<>();
+        entityPropertiesToUpdate1.put("old", "old");
+        entityPropertiesToUpdate1.put(AlgorithmProvider.GIT_PROVIDER_URL_KEY, "http://example.pt");
+        entityToUpdate1.put("properties", entityPropertiesToUpdate1);
+        entityToUpdate1.put("method", "git");
+
+
+        HashMap<String, Object> updateResponse1 = target("/algorithm/" + response.get("id") + "/provider/" + entity.get("id").toString())
+                .request(MediaType.APPLICATION_JSON)
+                .header("X-APP", "updateProvider")
+                .buildPut(Entity.json(entityToUpdate1))
+                .invoke(HashMap.class);
+
+        AlgorithmProviderRepository algorithmProviderRepository1 = new AlgorithmProviderRepositoryJpa();
+        final AlgorithmProvider provider1 = algorithmProviderRepository1.findById(Long.valueOf(updateResponse.get("id").toString())).get();
+
+        assertTrue("Must have new key", provider1.getProperties().containsKey("new"));
+        assertTrue("Must have old key", provider1.getProperties().containsKey("old"));
+        assertTrue("Url must be different", provider1.getProperties().get(AlgorithmProvider.GIT_PROVIDER_URL_KEY).toString().equals("http://example.pt"));
+
+        // Not Found
+        Response updateResponse2 = target("/algorithm/" + response.get("id") + "/provider/-1")
+                .request(MediaType.APPLICATION_JSON)
+                .header("X-APP", "updateProvider")
+                .buildPut(Entity.json(entityToUpdate1))
+                .invoke();
+        assertTrue("Not found", updateResponse2.getStatus() == 404);
+
+        // Unsupported method
+        entityToUpdate1.put("method", "ftp");
+        Response updateResponse3 = target("/algorithm/" + response.get("id") + "/provider/" + entity.get("id").toString())
+                .request(MediaType.APPLICATION_JSON)
+                .header("X-APP", "updateProvider")
+                .buildPut(Entity.json(entityToUpdate1))
+                .invoke();
+        assertTrue("Bad request",updateResponse3.getStatus() == 400);
+
+
+        // Unsupported method
+        entityToUpdate1.put("method", "ftp");
+        Response updateResponse4 = target("/algorithm/" + response.get("id") + "/provider/" + entity.get("id").toString())
+                .request(MediaType.APPLICATION_JSON)
+                .header("X-APP", "updateProvider2")
+                .buildPut(Entity.json(entityToUpdate1))
+                .invoke();
+        assertTrue("Forbidden",updateResponse4.getStatus() == 403);
+
+
+        // Change method missing one key
+        entityToUpdate1.put("method", "http");
+        Response updateResponse5 = target("/algorithm/" + response.get("id") + "/provider/" + entity.get("id").toString())
+                .request(MediaType.APPLICATION_JSON)
+                .header("X-APP", "updateProvider")
+                .buildPut(Entity.json(entityToUpdate1))
+                .invoke();
+        assertTrue("Change method but missing key",updateResponse5.getStatus() == 400);
+
+
+        // Change method with all keys
+        entityPropertiesToUpdate1.put(AlgorithmProvider.HTTP_PROVIDER_INGESTION_URL_KEY, "http://example.com");
+        entityPropertiesToUpdate1.put(AlgorithmProvider.HTTP_PROVIDER_PREDICTION_URL_KEY, "http://example.com");
+        Response updateResponse6 = target("/algorithm/" + response.get("id") + "/provider/" + entity.get("id").toString())
+                .request(MediaType.APPLICATION_JSON)
+                .header("X-APP", "updateProvider")
+                .buildPut(Entity.json(entityToUpdate1))
+                .invoke();
+        assertTrue("Change method",updateResponse6.getStatus() == 200);
+
     }
 }
