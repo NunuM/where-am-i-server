@@ -68,6 +68,7 @@ public class Localization implements DTOable, Identifiable<Long>, Comparable<Loc
         //JPA
     }
 
+
     public Localization(String label,
                         String userLabel, Device owner) {
         this(label, userLabel, 0.0, 0.0, false, owner);
@@ -174,18 +175,13 @@ public class Localization implements DTOable, Identifiable<Long>, Comparable<Loc
         if (o == null || getClass() != o.getClass()) return false;
         Localization that = (Localization) o;
         return Objects.equals(label, that.label) &&
-                Objects.equals(samples, that.samples) &&
-                Objects.equals(accuracy, that.accuracy) &&
-                Objects.equals(numberOfPositions, that.numberOfPositions) &&
-                Objects.equals(latitude, that.latitude) &&
-                Objects.equals(longitude, that.longitude) &&
-                Objects.equals(user, that.user) &&
                 Objects.equals(owner, that.owner);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(label, samples, accuracy, numberOfPositions, latitude, longitude, user, owner);
+
+        return Objects.hash(label, owner);
     }
 
     @Override

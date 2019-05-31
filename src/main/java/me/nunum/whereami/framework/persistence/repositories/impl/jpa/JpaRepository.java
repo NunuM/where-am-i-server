@@ -39,7 +39,7 @@ public abstract class JpaRepository<T, K extends Serializable>
 
     @PersistenceUnit
     private static EntityManagerFactory emFactory;
-    protected static int DEFAULT_PAGESIZE = 20;
+    protected static final int DEFAULT_PAGE_SIZE = 20;
     private final Class<T> entityClass;
 
     private ConcurrentHashMap<String, EntityManager> manager = new ConcurrentHashMap<>();
@@ -321,15 +321,15 @@ public abstract class JpaRepository<T, K extends Serializable>
     @SuppressWarnings("unchecked")
     public List<T> pageWithFiltering(CriteriaQuery<T> query, int pageNumber) {
         final Query q = entityManager().createQuery(query);
-        q.setMaxResults(DEFAULT_PAGESIZE);
-        q.setFirstResult((pageNumber - 1) * DEFAULT_PAGESIZE);
+        q.setMaxResults(DEFAULT_PAGE_SIZE);
+        q.setFirstResult((pageNumber - 1) * DEFAULT_PAGE_SIZE);
 
         return q.getResultList();
     }
 
     @Override
     public Iterator<T> iterator() {
-        return new JpaPagedIterator(this, DEFAULT_PAGESIZE);
+        return new JpaPagedIterator(this, DEFAULT_PAGE_SIZE);
     }
 
     @Override

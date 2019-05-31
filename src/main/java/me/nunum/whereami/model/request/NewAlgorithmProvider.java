@@ -29,23 +29,23 @@ public class NewAlgorithmProvider {
 
     public AlgorithmProvider build(Provider provider) {
 
-        AlgorithmProvider.METHOD method = AlgorithmProvider.METHOD.parse(this.method);
+        AlgorithmProvider.METHOD selectedMethod = AlgorithmProvider.METHOD.parse(this.method);
 
         if (this.properties == null) {
             throw new IllegalArgumentException(String.format("Expecting properties key to be set"));
         }
 
-        for (String key : method.requiredKeys()) {
+        for (String key : selectedMethod.requiredKeys()) {
             if (!this.properties.containsKey(key)) {
                 throw new IllegalArgumentException(String.format("Key %s is required on properties object", key));
             }
         }
 
-        if (method == AlgorithmProvider.METHOD.UNSUPPORTED) {
+        if (selectedMethod == AlgorithmProvider.METHOD.UNSUPPORTED) {
             throw new IllegalArgumentException("Unsupported provider type");
         }
 
-        return new AlgorithmProvider(provider, method, properties);
+        return new AlgorithmProvider(provider, selectedMethod, properties);
     }
 
     public String getMethod() {

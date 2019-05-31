@@ -222,14 +222,15 @@ public class AlgorithmController implements AutoCloseable {
             this.algorithmProviderRepository.delete(provider);
             return provider.toDTO();
         } catch (Exception e) {
-            LOGGER.log(Level.FINE, String.format("Fast path for provider %d deletion as fail. Calculate damage", pId), e);
+
+            LOGGER.log(Level.FINE, e, () -> String.format("Fast path for provider %d deletion as fail. Calculate damage", pId));
         }
 
         try {
             /** Close previous transactions */
             this.algorithmProviderRepository.close();
         } catch (Exception e) {
-            LOGGER.log(Level.FINE, String.format("Could not close transactions in provider %d deletion process", pId), e);
+            LOGGER.log(Level.FINE, e, () -> String.format("Could not close transactions in provider %d deletion process", pId));
         }
 
         /** Notify affected devices */
@@ -241,7 +242,7 @@ public class AlgorithmController implements AutoCloseable {
         /**  Delete provider */
         int affectedDevices = trainingRepository.deleteTrainingsAffectedBy(provider);
 
-        LOGGER.log(Level.INFO, String.format("Provider %d deletion affected %d training", pId, affectedDevices));
+        LOGGER.info(() -> String.format("Provider %d deletion affected %d training", pId, affectedDevices));
 
         this.algorithmProviderRepository.delete(provider);
 

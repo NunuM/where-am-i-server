@@ -25,18 +25,18 @@ public class UpdateAlgorithmProvider {
 
     public AlgorithmProvider updateProvider(AlgorithmProvider provider) {
 
-        AlgorithmProvider.METHOD method = null;
+        AlgorithmProvider.METHOD selectedMethod = null;
 
         if (!(this.method == null || this.method.isEmpty())) {
 
-            method = AlgorithmProvider.METHOD.parse(this.method);
+            selectedMethod = AlgorithmProvider.METHOD.parse(this.method);
 
-            if (method == AlgorithmProvider.METHOD.UNSUPPORTED) {
+            if (selectedMethod == AlgorithmProvider.METHOD.UNSUPPORTED) {
                 throw new IllegalArgumentException("Unsupported provider type");
             }
 
-            if (!provider.getMethod().equals(method)) {
-                for (String key : method.requiredKeys()) {
+            if (!provider.getMethod().equals(selectedMethod)) {
+                for (String key : selectedMethod.requiredKeys()) {
                     if (!this.properties.containsKey(key)) {
                         throw new IllegalArgumentException(String.format("Key %s is required on properties object", key));
                     }
@@ -45,9 +45,9 @@ public class UpdateAlgorithmProvider {
             }
         }
 
-        this.properties.forEach((k, v) -> {
-            provider.getProperties().put(k, v);
-        });
+        this.properties.forEach((k, v) ->
+            provider.getProperties().put(k, v)
+        );
 
         return provider;
     }

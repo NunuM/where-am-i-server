@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.Objects;
 
 @Entity
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"provider_id", "method","ALG_OWNER_ID"}))
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"provider_id", "method", "ALG_OWNER_ID"}))
 public class AlgorithmProvider implements DTOable {
 
     public static final String HTTP_PROVIDER_INGESTION_URL_KEY = "url_to_receive_data";
@@ -66,7 +66,7 @@ public class AlgorithmProvider implements DTOable {
 
             @Override
             public String[] requiredKeys() {
-                return new String[]{"repository_url"};
+                return new String[]{GIT_PROVIDER_URL_KEY};
             }
         },
         UNSUPPORTED {

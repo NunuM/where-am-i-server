@@ -138,19 +138,19 @@ public class SchedulerService implements Runnable {
 
             final StringBuilder errorAsString = new StringBuilder();
 
-            errorAsString.append(String.format("Response to %s return with status code %s.\n", url, response.getStatus()));
+            errorAsString.append(String.format("Response to %s return with status code %s.%n", url, response.getStatus()));
 
-            errorAsString.append("Response headers:\n\n");
+            errorAsString.append("Response headers:%n%n");
 
-            response.getHeaders().forEach((k, v) -> {
-                errorAsString.append(String.format("%-12s : %-5s \n", k, v.toString()));
-            });
+            response.getHeaders().forEach((k, v) ->
+                    errorAsString.append(String.format("%-12s : %-5s %n", k, v.toString()))
+            );
 
             if (response.hasEntity()) {
                 final String entity = response.readEntity(String.class);
-                errorAsString.append(String.format("\nThe server send this payload:\n %s\n", entity));
+                errorAsString.append(String.format("%nThe server send this payload:%n %s%n", entity));
             } else {
-                errorAsString.append("\nThe server not sent any payload\n");
+                errorAsString.append("%nThe server not sent any payload%n");
             }
 
             throw new HTTPRequestError(errorAsString.toString());
@@ -158,10 +158,10 @@ public class SchedulerService implements Runnable {
 
     }
 
-    private void warningProviderForRequestFailure(final String mail, final String errorMesssage) {
+    private void warningProviderForRequestFailure(final String mail, final String errorMessage) {
 
-        LOGGER.log(Level.INFO, "Sending email" + mail + "\n");
-        LOGGER.log(Level.INFO, "Sending content" + errorMesssage + "\n");
+        LOGGER.log(Level.INFO, "Sending email: {0}", mail);
+        LOGGER.log(Level.INFO, "Sending content: {0}", errorMessage);
     }
 
 }

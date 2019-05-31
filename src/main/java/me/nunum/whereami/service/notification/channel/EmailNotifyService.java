@@ -75,7 +75,7 @@ public class EmailNotifyService implements Callable<Boolean> {
             msg.setSubject("Provider email confirmation");
             msg.setSentDate(new Date());
 
-            msg.setContent(String.format("Hi,\n\nTanks for your registration. You can complete by clicking https://whereami.nunum.me/provider?token=%s", token), "text/plain");
+            msg.setContent(String.format("Hi,%n%nTanks for your registration. You can complete by clicking https://whereami.nunum.me/provider?token=%s", token), "text/plain");
 
             return msg;
         }

@@ -51,7 +51,7 @@ public class Task {
     @Index
     private STATE state;
 
-    public static enum STATE {
+    public enum STATE {
         RUNNING, FINISH_SINK
     }
 
@@ -122,7 +122,7 @@ public class Task {
     }
 
 
-    public void sinkFinish(Date when) {
+    public void sinkFinish(Date finishSinkAt) {
         this.state = STATE.FINISH_SINK;
         this.finishSinkAt = finishSinkAt;
     }

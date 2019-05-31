@@ -66,7 +66,7 @@ public class ApiListingResource {
 
             }
         };
-        LOGGER.log(Level.FINE, "using scanner " + scanner);
+        LOGGER.log(Level.FINE, "using scanner {0}", scanner);
         SwaggerSerializers.setPrettyPrint(scanner.getPrettyPrint());
         swagger = this.mSwaggerConfig;
         new HashSet();
@@ -105,7 +105,7 @@ public class ApiListingResource {
                         return "";
                     }
                 };
-                LOGGER.log(Level.FINE, "configuring swagger with " + configurator);
+                LOGGER.log(Level.FINE, "configuring swagger with {0}", configurator);
                 configurator.configure(swagger);
             }
 
@@ -157,7 +157,7 @@ public class ApiListingResource {
         try {
             if (swagger != null) {
                 SwaggerSpecFilter filterImpl = FilterFactory.getFilter();
-                this.LOGGER.log(Level.FINE, "using filter " + filterImpl);
+                LOGGER.log(Level.FINE, "using filter {0}", filterImpl);
                 if (filterImpl != null) {
                     SpecFilter f = new SpecFilter();
                     swagger = f.filter(swagger, filterImpl, this.getQueryParams(uriInfo.getQueryParameters()), this.getCookies(headers), this.getHeaders(headers));

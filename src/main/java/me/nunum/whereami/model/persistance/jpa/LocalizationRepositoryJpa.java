@@ -7,9 +7,6 @@ import me.nunum.whereami.model.persistance.LocalizationRepository;
 import me.nunum.whereami.utils.AppConfig;
 
 import javax.persistence.EntityManager;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 import java.util.*;
 
 public class LocalizationRepositoryJpa
@@ -58,8 +55,8 @@ public class LocalizationRepositoryJpa
         if (!(localizationName.isPresent())) {
             return (List<Localization>) manager.createNamedQuery("Localization.allVisibleLocalizations")
                     .setParameter("ownerId", device.getId())
-                    .setMaxResults(DEFAULT_PAGESIZE)
-                    .setFirstResult((currentPage - 1) * DEFAULT_PAGESIZE)
+                    .setMaxResults(DEFAULT_PAGE_SIZE)
+                    .setFirstResult((currentPage - 1) * DEFAULT_PAGE_SIZE)
                     .getResultList();
         } else {
             final String lName = localizationName.get();
@@ -67,8 +64,8 @@ public class LocalizationRepositoryJpa
             return (List<Localization>) manager.createNamedQuery("Localization.allVisibleLocalizationsFilterByName")
                     .setParameter("ownerId", device.getId())
                     .setParameter("name", lName)
-                    .setMaxResults(DEFAULT_PAGESIZE)
-                    .setFirstResult((currentPage - 1) * DEFAULT_PAGESIZE)
+                    .setMaxResults(DEFAULT_PAGE_SIZE)
+                    .setFirstResult((currentPage - 1) * DEFAULT_PAGE_SIZE)
                     .getResultList();
         }
     }

@@ -8,7 +8,6 @@ import me.nunum.whereami.utils.AppConfig;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,8 +22,6 @@ public class AlgorithmRepositoryJpa
 
     @Override
     public List<Algorithm> paginate(Optional<Integer> page) {
-
-        List<Algorithm> algorithms = new ArrayList<>();
 
         final Integer currentPage = page.map(p -> {
             if (p < 1) {

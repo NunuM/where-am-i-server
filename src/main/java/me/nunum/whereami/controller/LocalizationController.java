@@ -26,15 +26,26 @@ public class LocalizationController implements AutoCloseable {
     private final DeviceRepository deviceRepository;
     private final LocalizationSpamRepository spamRepository;
 
+    /**
+     * Constructor
+     */
     public LocalizationController() {
         this.repository = new LocalizationRepositoryJpa();
         this.deviceRepository = new DeviceRepositoryJpa();
         this.spamRepository = new LocalizationSpamRepositoryJpa();
     }
 
+    /**
+     * Paginate localizations
+     *
+     * @param principal        See {@link Principal}
+     * @param page             Nullable Page
+     * @param localizationName Nullable name for search
+     * @return List of {@link me.nunum.whereami.model.dto.LocalizationDTO}
+     */
     public List<DTO> localizations(final Principal principal,
-                                   Optional<Integer> page,
-                                   Optional<String> localizationName) {
+                                   final Optional<Integer> page,
+                                   final Optional<String> localizationName) {
 
         final Device requester = this.deviceRepository.findOrPersist(principal);
 
@@ -45,6 +56,15 @@ public class LocalizationController implements AutoCloseable {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Create new localization
+     *
+     * @param principal See {@link Principal}
+     * @param request   See {@link NewLocalizationRequest}
+     * @return See  {@link me.nunum.whereami.model.dto.LocalizationDTO}
+     * @throws me.nunum.whereami.model.exceptions.EntityAlreadyExists Try to persist the same localization name
+     *                                                                for a given user
+     */
     public DTO newLocalization(final Principal principal,
                                final NewLocalizationRequest request) {
 
@@ -53,29 +73,18 @@ public class LocalizationController implements AutoCloseable {
         return this.repository.save(request.buildLocalization(device)).toDTO(device);
     }
 
-    public DTO newSpamReport(Principal userPrincipal,
-                             LocalizationSpamRequest spamRequest) {
 
-        final Optional<Localization> someLocalization = this.repository.findById(spamRequest.getId());
-
-        if (!someLocalization.isPresent()) {
-            throw new EntityNotFoundException(
-                    String.format("Spam report for localization %d requested by %s does not exists",
-                            spamRequest.getId(),
-                            userPrincipal.getName())
-            );
-        }
-
-        final Localization theLocalization = someLocalization.get();
-
-        final LocalizationSpamReport localizationSpamReport = this.spamRepository.findOrCreateByLocalization(theLocalization);
-
-        localizationSpamReport.newReport(this.deviceRepository.findOrPersist(userPrincipal));
-
-        return this.spamRepository.save(localizationSpamReport).toDTO();
-    }
-
-    public DTO deleteLocalizationRequest(Principal userPrincipal, Long localizationId) {
+    /**
+     * Delete a specific localization, this will cascade, meaning, all associated positions
+     * and training requests will be deleted.
+     *
+     * @param userPrincipal  See {@link Principal}
+     * @param localizationId Id of the localization
+     * @return See  {@link me.nunum.whereami.model.dto.LocalizationDTO}
+     * @throws EntityNotFoundException          Localization does not exists
+     * @throws ForbiddenEntityDeletionException Requester is not the owner of entity
+     */
+    public DTO deleteLocalizationRequest(final Principal userPrincipal, final Long localizationId) {
 
         final Optional<Localization> someLocalization = this.repository.findById(localizationId);
 
@@ -105,7 +114,45 @@ public class LocalizationController implements AutoCloseable {
     }
 
 
-    public Localization localization(Long localizationId) {
+    /**
+     * Report a specific localization
+     *
+     * @param userPrincipal See {@link Principal}
+     * @param spamRequest   See {@link LocalizationSpamRequest}
+     * @return See {@link me.nunum.whereami.model.dto.LocalizationReportDTO}
+     * @throws EntityNotFoundException Localization does not exists
+     */
+    public DTO newSpamReport(final Principal userPrincipal,
+                             final LocalizationSpamRequest spamRequest) {
+
+        final Optional<Localization> someLocalization = this.repository.findById(spamRequest.getId());
+
+        if (!someLocalization.isPresent()) {
+            throw new EntityNotFoundException(
+                    String.format("Spam report for localization %d requested by %s does not exists",
+                            spamRequest.getId(),
+                            userPrincipal.getName())
+            );
+        }
+
+        final Localization theLocalization = someLocalization.get();
+
+        final LocalizationSpamReport localizationSpamReport = this.spamRepository.findOrCreateByLocalization(theLocalization);
+
+        localizationSpamReport.newReport(this.deviceRepository.findOrPersist(userPrincipal));
+
+        return this.spamRepository.save(localizationSpamReport).toDTO();
+    }
+
+
+    /**
+     * Retrieve localization by their Id
+     *
+     * @param localizationId Localization Id
+     * @return see {@link Localization}
+     * @throws EntityNotFoundException If localization not exists
+     */
+    public Localization localization(final Long localizationId) {
         final Optional<Localization> someLocalization = this.repository.findById(localizationId);
 
         if (!someLocalization.isPresent()) {
