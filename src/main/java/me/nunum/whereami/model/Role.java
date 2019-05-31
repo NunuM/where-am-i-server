@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
-@NamedQuery(name = "Role.findByRoleName", query = "SELECT OBJECT (u) FROM Role u WHERE u.role=:role")
+@NamedQuery(name = "Role.findByRoleName", query = "SELECT OBJECT (u) FROM Role u WHERE u.name=:role")
 public class Role {
 
     public static final String ADMIN = "admin";
@@ -20,7 +20,7 @@ public class Role {
     private Long id;
 
     @Index(unique = true)
-    private String role;
+    private String name;
 
     @ManyToMany
     private List<Device> devices;
@@ -36,7 +36,7 @@ public class Role {
     }
 
     public Role(String role) {
-        this.role = role;
+        this.name = role;
         this.devices = new ArrayList<>();
     }
 
@@ -45,7 +45,7 @@ public class Role {
     }
 
     public boolean is(String role) {
-        return this.role.equalsIgnoreCase(role);
+        return this.name.equalsIgnoreCase(role);
     }
 
     @PrePersist
@@ -63,19 +63,19 @@ public class Role {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Role roles = (Role) o;
-        return role.equals(roles.role);
+        return name.equals(roles.name);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(role);
+        return Objects.hash(name);
     }
 
     @Override
     public String toString() {
         return "Role{" +
                 "id=" + id +
-                ", role='" + role + '\'' +
+                ", name='" + name + '\'' +
                 ", devices=" + devices +
                 ", created=" + created +
                 ", updated=" + updated +
