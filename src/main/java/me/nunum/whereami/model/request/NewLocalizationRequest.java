@@ -13,7 +13,7 @@ public class NewLocalizationRequest {
     private String label;
 
     @NotNull
-    private boolean isVisible;
+    private boolean isPublic;
 
     @NotNull
     @Size(min = 3, max = 255)
@@ -30,12 +30,12 @@ public class NewLocalizationRequest {
     }
 
     public NewLocalizationRequest(String label,
-                                  boolean isVisible,
+                                  boolean isPublic,
                                   String user,
                                   double latitude,
                                   double longitude) {
         this.label = label;
-        this.isVisible = isVisible;
+        this.isPublic = isPublic;
         this.user = user;
         this.latitude = latitude;
         this.longitude = longitude;
@@ -49,12 +49,12 @@ public class NewLocalizationRequest {
         this.label = label;
     }
 
-    public boolean isVisible() {
-        return isVisible;
+    public boolean isPublic() {
+        return isPublic;
     }
 
-    public void setVisible(boolean visible) {
-        isVisible = visible;
+    public void setPublic(boolean isPublic) {
+        this.isPublic = isPublic;
     }
 
     public String getUser() {
@@ -82,6 +82,6 @@ public class NewLocalizationRequest {
     }
 
     public Localization buildLocalization(final Device owner) {
-        return new Localization(this.label.trim().toLowerCase(), this.user.trim().toLowerCase(), latitude, longitude, owner);
+        return new Localization(this.label.trim().toLowerCase(), this.user.trim().toLowerCase(), latitude, longitude, isPublic, owner);
     }
 }

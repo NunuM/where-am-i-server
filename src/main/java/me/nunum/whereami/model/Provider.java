@@ -35,7 +35,8 @@ public class Provider implements DTOable {
     @Index(unique = true)
     private String email;
 
-    @Index
+
+    @Index(unique = true)
     private String token;
 
 
@@ -43,7 +44,7 @@ public class Provider implements DTOable {
 
 
     @OneToOne
-    @JoinColumn(name="REQUESTER_ID")
+    @JoinColumn(name = "REQUESTER_ID")
     private Device requester;
 
 

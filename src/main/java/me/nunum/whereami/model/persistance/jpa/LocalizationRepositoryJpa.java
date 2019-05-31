@@ -1,10 +1,12 @@
 package me.nunum.whereami.model.persistance.jpa;
 
 import me.nunum.whereami.framework.persistence.repositories.impl.jpa.JpaRepository;
+import me.nunum.whereami.model.Device;
 import me.nunum.whereami.model.Localization;
 import me.nunum.whereami.model.persistance.LocalizationRepository;
 import me.nunum.whereami.utils.AppConfig;
 
+import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -41,12 +43,9 @@ public class LocalizationRepositoryJpa
         return localizations;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public List<Localization> searchWithPagination(Optional<Integer> page, Optional<String> localizationName) {
-
-        if (!localizationName.isPresent()) {
-            return this.paginate(page);
-        }
+    public List<Localization> searchWithPagination(Device device, Optional<Integer> page, Optional<String> localizationName) {
 
         final Integer currentPage = page.map(p -> {
             if (p < 1) {
@@ -54,19 +53,23 @@ public class LocalizationRepositoryJpa
             } else return p;
         }).orElse(1);
 
-        final String localizationLabel = localizationName.get();
+        final EntityManager manager = entityManager();
 
-        final CriteriaBuilder criteriaBuilder = super.entityManager().getCriteriaBuilder();
+        if (!(localizationName.isPresent())) {
+            return (List<Localization>) manager.createNamedQuery("Localization.allVisibleLocalizations")
+                    .setParameter("ownerId", device.getId())
+                    .setMaxResults(DEFAULT_PAGESIZE)
+                    .setFirstResult((currentPage - 1) * DEFAULT_PAGESIZE)
+                    .getResultList();
+        } else {
+            final String lName = localizationName.get();
 
-        final CriteriaQuery<Localization> criteriaQuery = criteriaBuilder.createQuery(Localization.class);
-
-        final Root<Localization> localizationRoot = criteriaQuery.from(Localization.class);
-
-        final CriteriaQuery<Localization> query = criteriaQuery
-                .select(localizationRoot)
-                .where(criteriaBuilder.like(localizationRoot.get("label"), "%" + localizationLabel + "%"))
-                .orderBy(criteriaBuilder.desc(localizationRoot.get("created")));
-
-        return super.pageWithFiltering(query, currentPage);
+            return (List<Localization>) manager.createNamedQuery("Localization.allVisibleLocalizationsFilterByName")
+                    .setParameter("ownerId", device.getId())
+                    .setParameter("name", lName)
+                    .setMaxResults(DEFAULT_PAGESIZE)
+                    .setFirstResult((currentPage - 1) * DEFAULT_PAGESIZE)
+                    .getResultList();
+        }
     }
 }

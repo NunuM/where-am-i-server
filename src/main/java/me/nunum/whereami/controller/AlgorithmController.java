@@ -277,6 +277,7 @@ public class AlgorithmController implements AutoCloseable {
      * @throws ForbiddenEntityAccessException If requester is not the owner of the instance
      */
     private AlgorithmProvider getProvider(Principal userPrincipal, Long pId) {
+
         Device device = this.deviceRepository.findOrPersist(userPrincipal);
 
         Optional<Provider> optionalProvider = this.providerRepository.findByDevice(device);

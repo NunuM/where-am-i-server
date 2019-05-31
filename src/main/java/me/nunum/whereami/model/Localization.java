@@ -4,6 +4,7 @@ import me.nunum.whereami.framework.domain.Identifiable;
 import me.nunum.whereami.framework.dto.DTO;
 import me.nunum.whereami.framework.dto.DTOable;
 import me.nunum.whereami.model.dto.LocalizationDTO;
+import org.eclipse.persistence.annotations.Index;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -13,7 +14,17 @@ import java.util.Objects;
 
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = {"label", "user"}))
-public class Localization implements DTOable, Identifiable<Long>,Comparable<Localization> {
+@NamedQueries({
+        @NamedQuery(
+                name = "Localization.allVisibleLocalizations",
+                query = "SELECT OBJECT (l) FROM Localization l WHERE l.isPublic=true OR l.owner.id=:ownerId"
+        ),
+        @NamedQuery(
+                name = "Localization.allVisibleLocalizationsFilterByName",
+                query = "SELECT OBJECT (l) FROM Localization l WHERE (l.isPublic=true OR l.owner.id=:ownerId) AND l.label LIKE :name"
+        )
+})
+public class Localization implements DTOable, Identifiable<Long>, Comparable<Localization> {
 
     @Id
     @GeneratedValue
@@ -31,6 +42,9 @@ public class Localization implements DTOable, Identifiable<Long>,Comparable<Loca
     private Double latitude;
 
     private Double longitude;
+
+    @Index
+    private boolean isPublic;
 
     @Column(length = 100)
     private String user;
@@ -56,7 +70,7 @@ public class Localization implements DTOable, Identifiable<Long>,Comparable<Loca
 
     public Localization(String label,
                         String userLabel, Device owner) {
-        this(label, userLabel, 0.0, 0.0, owner);
+        this(label, userLabel, 0.0, 0.0, false, owner);
     }
 
 
@@ -64,6 +78,7 @@ public class Localization implements DTOable, Identifiable<Long>,Comparable<Loca
                         String userLabel,
                         Double latitude,
                         Double longitude,
+                        boolean isPublic,
                         Device owner) {
 
         this.label = label;
@@ -74,6 +89,7 @@ public class Localization implements DTOable, Identifiable<Long>,Comparable<Loca
         this.numberOfPositions = 0;
         this.user = userLabel;
         this.owner = owner;
+        this.isPublic = isPublic;
         this.trainings = new ArrayList<>();
         this.positionList = new ArrayList<>();
     }
@@ -138,10 +154,10 @@ public class Localization implements DTOable, Identifiable<Long>,Comparable<Loca
         this.numberOfPositions -= 1;
     }
 
-    public boolean addTraining(Training training){
+    public boolean addTraining(Training training) {
 
         this.trainings.add(training);
-        if(!Objects.equals(training.getLocalization().id(), this.id)){
+        if (!Objects.equals(training.getLocalization().id(), this.id)) {
             training.setLocalization(this);
         }
 
@@ -182,6 +198,7 @@ public class Localization implements DTOable, Identifiable<Long>,Comparable<Loca
                 ", numberOfPositions=" + numberOfPositions +
                 ", latitude=" + latitude +
                 ", longitude=" + longitude +
+                ", isPublic=" + isPublic +
                 ", user='" + user + '\'' +
                 ", owner=" + owner +
                 ", positionList=" + positionList +

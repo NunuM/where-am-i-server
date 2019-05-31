@@ -16,8 +16,10 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 @Api(value = "fingerprint")
 @Path("fingerprint")
@@ -37,9 +39,9 @@ public class FingerprintResource {
 
         try (final FingerprintController controller = new FingerprintController()) {
 
-            final DTO dto = controller.storeFingerprints(fingerprints);
+            List<Map<String, Object>> list = controller.storeFingerprints(fingerprints).stream().map(DTO::dtoValues).collect(Collectors.toList());
 
-            return Response.ok(dto.dtoValues()).build();
+            return Response.ok(list).build();
 
         } catch (Exception e) {
 

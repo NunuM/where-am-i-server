@@ -14,6 +14,7 @@ import me.nunum.whereami.model.persistance.jpa.LocalizationRepositoryJpa;
 import me.nunum.whereami.model.persistance.jpa.PostitionRepositoryJpa;
 import me.nunum.whereami.model.request.FingerprintRequest;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -30,41 +31,55 @@ public class FingerprintController implements AutoCloseable {
         this.localizationRepository = new LocalizationRepositoryJpa();
     }
 
-    public DTO storeFingerprints(List<FingerprintRequest> fingerprints) {
+    /**
+     * Bulk insert a list of samples
+     *
+     * @param fingerprints List to persist
+     * @return List of {@link PositionDTO}
+     */
+    public List<DTO> storeFingerprints(List<FingerprintRequest> fingerprints) {
 
         Position position = null;
+        List<DTO> dtos = new ArrayList<>();
 
-        List<Fingerprint> fingerprintList = fingerprints
-                .stream()
-                .map(FingerprintRequest::build)
-                .collect(Collectors.toList());
+        List<FingerprintRequest> distinct = fingerprints.stream().distinct().collect(Collectors.toList());
 
-        this.repository.bulkFingerprints(fingerprintList);
+        for (FingerprintRequest request : distinct) {
 
-        if (!fingerprints.isEmpty()) {
+            List<Fingerprint> fingerprintList = fingerprints
+                    .stream()
+                    .filter(e -> e.getPositionId() == request.getPositionId() && e.getLocalizationId() == request.getLocalizationId())
+                    .map(FingerprintRequest::build)
+                    .collect(Collectors.toList());
 
-            final Optional<Position> somePosition = positionRepository.findById((long) fingerprints.get(0).getPosition());
+            this.repository.bulkFingerprints(fingerprintList);
 
-            if (somePosition.isPresent()) {
-                position = somePosition.get();
+            if (!fingerprints.isEmpty()) {
 
-                position.incrementSamplesBy((long) fingerprints.size());
+                final Optional<Position> somePosition = positionRepository.findById(request.getPositionId());
 
-                Localization localization = position.getLocalization();
-                localization.incrementSample();
+                if (somePosition.isPresent()) {
+                    position = somePosition.get();
 
-                this.localizationRepository.save(localization);
+                    position.incrementSamplesBy((long) fingerprints.size());
 
-                this.positionRepository.updateMetaData(position);
+                    Localization localization = position.getLocalization();
+                    localization.incrementSample();
+
+                    this.localizationRepository.save(localization);
+
+                    this.positionRepository.updateMetaData(position);
+                }
+            }
+
+            if (position == null) {
+                dtos.add(new PositionDTO());
+            } else {
+                dtos.add(position.toDTO());
             }
         }
 
-        if (position == null) {
-            return new PositionDTO();
-        }
-
-
-        return position.toDTO();
+        return dtos;
     }
 
     @Override

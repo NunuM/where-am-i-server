@@ -2,6 +2,8 @@ package me.nunum.whereami.model.persistance.jpa;
 
 import me.nunum.whereami.framework.persistence.repositories.impl.jpa.JpaRepository;
 import me.nunum.whereami.model.Device;
+import me.nunum.whereami.model.exceptions.EntityAlreadyExists;
+import me.nunum.whereami.model.exceptions.NotAbleToPersistDeviceException;
 import me.nunum.whereami.model.persistance.DeviceRepository;
 import me.nunum.whereami.utils.AppConfig;
 
@@ -25,16 +27,32 @@ public class DeviceRepositoryJpa
     @Override
     public Device findOrPersist(Principal principal) {
 
-        try {
+        int retry = 0;
+        Device device = null;
 
-            EntityManagerFactory entityManagerFactory = super.entityManagerFactory();
-            EntityManager entityManager = entityManagerFactory.createEntityManager();
-            return (Device) entityManager.createNamedQuery("Device.findByInstance").setParameter("instance", principal.getName()).getSingleResult();
+        do {
+            try {
 
-        } catch (NoResultException e) {
+                EntityManagerFactory entityManagerFactory = super.entityManagerFactory();
+                EntityManager entityManager = entityManagerFactory.createEntityManager();
+                device = (Device) entityManager.createNamedQuery("Device.findByInstance").setParameter("instance", principal.getName()).getSingleResult();
 
-            return this.save(new Device(principal.getName()));
+            } catch (NoResultException e) {
+                try {
+                    device = this.save(new Device(principal.getName()));
+                } catch (EntityAlreadyExists e1) {
+                    //continue
+                }
+            }
+
+            retry++;
+        } while (retry < 3 && device == null);
+
+        if (device == null) {
+            throw new NotAbleToPersistDeviceException("The device with id " + principal.getName() + ", was not persisted due data racing.");
         }
+
+        return device;
     }
 
     @SuppressWarnings("unchecked")

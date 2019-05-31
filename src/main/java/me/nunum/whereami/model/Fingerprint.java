@@ -44,11 +44,11 @@ public class Fingerprint
     private String timeStamp;
 
     @Index
-    private Integer localizationId;
+    private Long localizationId;
 
-    private Integer floorid;
+    private Integer floorId;
 
-    private Integer positionId;
+    private Long positionId;
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date created;
@@ -70,8 +70,9 @@ public class Fingerprint
                        Integer frequency,
                        String timeStamp,
                        Integer buildid,
-                       Integer floorid,
-                       Integer position) {
+                       Integer floorId,
+                       Long positionId,
+                       Long localizationId) {
 
         this.uid = UUID.randomUUID().toString();
         this.bssid = bssid;
@@ -82,9 +83,9 @@ public class Fingerprint
         this.channelWidth = channelWidth;
         this.frequency = frequency;
         this.timeStamp = timeStamp;
-        this.localizationId = buildid;
-        this.floorid = floorid;
-        this.positionId = position;
+        this.floorId = floorId;
+        this.positionId = positionId;
+        this.localizationId = localizationId;
     }
 
     public Long getId() {
@@ -167,27 +168,27 @@ public class Fingerprint
         this.timeStamp = timeStamp;
     }
 
-    public Integer getLocalizationId() {
+    public Long getLocalizationId() {
         return localizationId;
     }
 
-    public void setLocalizationId(Integer localizationId) {
+    public void setLocalizationId(Long localizationId) {
         this.localizationId = localizationId;
     }
 
-    public Integer getFloorid() {
-        return floorid;
+    public Integer getFloorId() {
+        return floorId;
     }
 
-    public void setFloorid(Integer floorid) {
-        this.floorid = floorid;
+    public void setFloorId(Integer floorid) {
+        this.floorId = floorid;
     }
 
-    public Integer getPositionId() {
+    public Long getPositionId() {
         return positionId;
     }
 
-    public void setPositionId(Integer positionId) {
+    public void setPositionId(Long positionId) {
         this.positionId = positionId;
     }
 
@@ -249,7 +250,7 @@ public class Fingerprint
                 ", frequency=" + frequency +
                 ", timeStamp='" + timeStamp + '\'' +
                 ", localizationId=" + localizationId +
-                ", floorid=" + floorid +
+                ", floorId=" + floorId +
                 ", positionId=" + positionId +
                 ", created=" + created +
                 ", updated=" + updated +

@@ -2,6 +2,8 @@ package me.nunum.whereami.model.request;
 
 import me.nunum.whereami.model.Fingerprint;
 
+import java.util.Objects;
+
 public class FingerprintRequest {
 
     private String bssid;
@@ -12,13 +14,14 @@ public class FingerprintRequest {
     private int channelWidth;
     private int frequency;
     private String timeStamp;
-    private int buildid;
-    private int floorid;
-    private int position;
-    private int localization;
+    private int buildId;
+    private int floorId;
+    private Long positionId;
+    private Long localizationId;
 
 
     public FingerprintRequest() {
+        this("", "", 0, 0, 0, 0, 0, "", 0, 0, 0, 0);
     }
 
     public FingerprintRequest(String bssid,
@@ -29,10 +32,10 @@ public class FingerprintRequest {
                               int channelWidth,
                               int frequency,
                               String timeStamp,
-                              int buildid,
-                              int floorid,
-                              int position,
-                              int localization) {
+                              int buildId,
+                              int floorId,
+                              long position,
+                              long localization) {
         this.bssid = bssid;
         this.ssid = ssid;
         this.levelDBM = levelDBM;
@@ -41,10 +44,10 @@ public class FingerprintRequest {
         this.channelWidth = channelWidth;
         this.frequency = frequency;
         this.timeStamp = timeStamp;
-        this.buildid = buildid;
-        this.floorid = floorid;
-        this.position = position;
-        this.localization = localization;
+        this.buildId = buildId;
+        this.floorId = floorId;
+        this.positionId = position;
+        this.localizationId = localization;
     }
 
     public String getBssid() {
@@ -111,33 +114,51 @@ public class FingerprintRequest {
         this.timeStamp = timeStamp;
     }
 
-    public int getLocalization() {
-        return localization;
+    public long getLocalizationId() {
+        return localizationId;
     }
 
-    public void setBuildid(int buildid) {
-        this.buildid = buildid;
+    public void setLocalizationId(Long localizationId) {
+        this.localizationId = localizationId;
     }
 
-    public int getFloorid() {
-        return floorid;
+    public void setBuildId(int buildId) {
+        this.buildId = buildId;
     }
 
-    public void setFloorid(int floorid) {
-        this.floorid = floorid;
+    public int getFloorId() {
+        return floorId;
     }
 
-    public int getPosition() {
-        return position;
+    public void setFloorId(int floorId) {
+        this.floorId = floorId;
     }
 
-    public void setPosition(int position) {
-        this.position = position;
+    public long getPositionId() {
+        return positionId;
     }
 
+    public void setPositionId(Long positionId) {
+        this.positionId = positionId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        FingerprintRequest that = (FingerprintRequest) o;
+        return Objects.equals(positionId, that.positionId) &&
+                Objects.equals(localizationId, that.localizationId);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(positionId, localizationId);
+    }
 
     public Fingerprint build() {
-        return new Fingerprint(bssid, ssid, levelDBM, centerFreq0, centerFreq1, channelWidth, frequency, timeStamp, buildid, floorid, position);
+        return new Fingerprint(bssid, ssid, levelDBM, centerFreq0, centerFreq1, channelWidth, frequency, timeStamp, buildId, floorId, positionId, localizationId);
     }
 
 }

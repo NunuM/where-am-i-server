@@ -15,6 +15,7 @@ import javax.ws.rs.core.Application;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.HashMap;
+import java.util.UUID;
 import java.util.function.Function;
 
 import static org.junit.Assert.*;
@@ -35,8 +36,8 @@ public class AlgorithmResourceTest extends JerseyTest {
         }
 
 
-        for (int j = 0; j < 40; j++) {
-            repository.save(new Algorithm("Name" + (i + j), "Author" + (i + j), "http://paper.com/paper" + (i + j), false, device));
+        for (int j = 40; j < 80; j++) {
+            repository.save(new Algorithm("Name" + j, "Author" + j, "http://paper.com/paper" + j, false, device));
         }
 
     }
@@ -66,13 +67,13 @@ public class AlgorithmResourceTest extends JerseyTest {
         Response response = makeRequest.apply(1);
 
         //Inserted 40 approved rows, this must be true
-        assertEquals(response.getStatus(), 200);
+        assertEquals(200, response.getStatus());
         assertTrue(response.hasEntity());
 
         //GET HTTP request must be safe, thus, all non valid integers passed on page query
         //will act as the first page has been requested
         Response response1 = makeRequest.apply(-1);
-        assertEquals(response.getStatus(), 200);
+        assertEquals(200, response.getStatus());
         assertTrue(response.hasEntity());
 
         //Inserted 40 approved rows the last of the first page must be the row with 19
@@ -274,7 +275,7 @@ public class AlgorithmResourceTest extends JerseyTest {
 
         // Activate provider
         ProviderRepository providerRepository = new ProviderRepositoryJpa();
-        providerRepository.save(new Provider("deleteAlgorithmProviderWithQueuedTask@nunum.me", "", true, device));
+        providerRepository.save(new Provider("deleteAlgorithmProviderWithQueuedTask@nunum.me", UUID.randomUUID().toString(), true, device));
 
 
         // Create algorithm provider entity
@@ -340,8 +341,8 @@ public class AlgorithmResourceTest extends JerseyTest {
         Device device2 = deviceRepository.findOrPersist(() -> "deleteProvider");
 
         ProviderRepository providerRepository = new ProviderRepositoryJpa();
-        providerRepository.save(new Provider("test@nunum.me", "", true, device));
-        providerRepository.save(new Provider("tesdelt@nunum.me", "", true, device2));
+        providerRepository.save(new Provider("deleteAlgorithmProvider@nunum.me", UUID.randomUUID().toString(), true, device));
+        providerRepository.save(new Provider("deleteAlgorithmProvider2@nunum.me", UUID.randomUUID().toString(), true, device2));
 
         // Create algorithm provider entity
         HashMap<String, Object> validValidPayload = new HashMap<>(2);
@@ -423,7 +424,7 @@ public class AlgorithmResourceTest extends JerseyTest {
         Device device = deviceRepository.findOrPersist(() -> "provider");
 
         ProviderRepository providerRepository = new ProviderRepositoryJpa();
-        Provider provider = providerRepository.save(new Provider("teste12345@nunum.me", "", false, device));
+        Provider provider = providerRepository.save(new Provider("teste12345@nunum.me", UUID.randomUUID().toString(), false, device));
 
 
         Response response2 = target("algorithm/" + response.get("id") + "/provider")
@@ -512,8 +513,8 @@ public class AlgorithmResourceTest extends JerseyTest {
         Device device2 = deviceRepository.findOrPersist(() -> "updateProvider2");
 
         ProviderRepository providerRepository = new ProviderRepositoryJpa();
-        providerRepository.save(new Provider("updateProvider@nunum.me", "", true, device));
-        providerRepository.save(new Provider("updateProvider2@nunum.me", "", true, device2));
+        providerRepository.save(new Provider("updateProvider@nunum.me", UUID.randomUUID().toString(), true, device));
+        providerRepository.save(new Provider("updateProvider2@nunum.me", UUID.randomUUID().toString(), true, device2));
 
         // Create algorithm provider entity
         HashMap<String, Object> validValidPayload = new HashMap<>(2);
