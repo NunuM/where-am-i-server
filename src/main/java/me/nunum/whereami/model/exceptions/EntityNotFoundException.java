@@ -12,10 +12,6 @@ public class EntityNotFoundException extends WebApplicationException
         super(s, Response.Status.NOT_FOUND);
     }
 
-    public EntityNotFoundException(Throwable throwable) {
-        super(throwable);
-    }
-
     @Override
     public Response toResponse(EntityNotFoundException exception) {
         return Response.status(Response.Status.NOT_FOUND).build();

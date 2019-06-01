@@ -174,6 +174,9 @@ public class Training implements DTOable {
         return new TrainingDTO(this.id,
                 status.toString(),
                 algorithm.getName(),
-                algorithm.getId(), created, updated);
+                algorithm.getId(),
+                algorithmProvider.getId(),
+                created,
+                updated);
     }
 }

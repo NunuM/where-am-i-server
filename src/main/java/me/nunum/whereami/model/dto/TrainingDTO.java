@@ -14,6 +14,7 @@ public final class TrainingDTO implements DTO {
                        final String status,
                        final String name,
                        Long algId,
+                       Long pId,
                        Date created,
                        Date updated) {
 
@@ -26,6 +27,7 @@ public final class TrainingDTO implements DTO {
         this.objectMap.put("id", id);
         this.objectMap.put("status", status);
         this.objectMap.put("algorithm", algMap);
+        this.objectMap.put("algorithmProvider", pId);
         this.objectMap.put("created", created);
         this.objectMap.put("updated", updated);
     }

@@ -155,7 +155,6 @@ public final class TrainingController implements AutoCloseable {
                 isAllowedToCheckTheStatus(deviceRepository.findOrPersist(userPrincipal))) {
 
             throw new ForbiddenEntityAccessException(String.format("Requester %s not has permissions", userPrincipal.getName()));
-
         }
 
         return training.toDTO();
@@ -170,6 +169,12 @@ public final class TrainingController implements AutoCloseable {
      * @return List of {@link me.nunum.whereami.model.dto.TrainingDTO}
      */
     public List<DTO> allTrainingStatus(final Principal user, final Localization localization) {
+
+        final Device device = this.deviceRepository.findOrPersist(user);
+
+        if (!localization.isOwner(device)) {
+            throw new ForbiddenEntityAccessException(String.format("Device %s is not allowed", device.getId()));
+        }
 
         List<Training> trainingList = this.repository.findByLocalization(localization);
 
