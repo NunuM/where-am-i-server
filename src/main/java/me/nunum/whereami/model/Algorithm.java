@@ -137,7 +137,11 @@ public class Algorithm
         return this.providers.stream().filter(e -> e.getId().equals(id)).findFirst();
     }
 
-    public boolean isPusblisher(final Device publisher) {
+    public Optional<AlgorithmProvider> firstAlgorithmProvider(){
+        return this.providers.stream().findFirst();
+    }
+
+    public boolean isPublisher(final Device publisher) {
         return this.publisher.equals(publisher);
     }
 
@@ -163,8 +167,8 @@ public class Algorithm
 
         Algorithm algorithm = (Algorithm) o;
 
-        if (name != null ? !name.equals(algorithm.name) : algorithm.name != null) return false;
-        return created != null ? created.equals(algorithm.created) : algorithm.created == null;
+        if (!Objects.equals(name, algorithm.name)) return false;
+        return Objects.equals(created, algorithm.created);
     }
 
     @Override

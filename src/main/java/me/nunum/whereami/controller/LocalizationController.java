@@ -6,13 +6,13 @@ import me.nunum.whereami.model.Localization;
 import me.nunum.whereami.model.LocalizationSpamReport;
 import me.nunum.whereami.model.exceptions.EntityNotFoundException;
 import me.nunum.whereami.model.exceptions.ForbiddenEntityDeletionException;
+import me.nunum.whereami.model.exceptions.ForbiddenSubResourceException;
 import me.nunum.whereami.model.persistance.DeviceRepository;
 import me.nunum.whereami.model.persistance.LocalizationRepository;
 import me.nunum.whereami.model.persistance.LocalizationSpamRepository;
 import me.nunum.whereami.model.persistance.jpa.DeviceRepositoryJpa;
 import me.nunum.whereami.model.persistance.jpa.LocalizationRepositoryJpa;
 import me.nunum.whereami.model.persistance.jpa.LocalizationSpamRepositoryJpa;
-import me.nunum.whereami.model.request.LocalizationSpamRequest;
 import me.nunum.whereami.model.request.NewLocalizationRequest;
 
 import java.security.Principal;
@@ -118,26 +118,14 @@ public class LocalizationController implements AutoCloseable {
      * Report a specific localization
      *
      * @param userPrincipal See {@link Principal}
-     * @param spamRequest   See {@link LocalizationSpamRequest}
+     * @param localization   See {@link Localization}
      * @return See {@link me.nunum.whereami.model.dto.LocalizationReportDTO}
      * @throws EntityNotFoundException Localization does not exists
      */
     public DTO newSpamReport(final Principal userPrincipal,
-                             final LocalizationSpamRequest spamRequest) {
+                             final Localization localization) {
 
-        final Optional<Localization> someLocalization = this.repository.findById(spamRequest.getId());
-
-        if (!someLocalization.isPresent()) {
-            throw new EntityNotFoundException(
-                    String.format("Spam report for localization %d requested by %s does not exists",
-                            spamRequest.getId(),
-                            userPrincipal.getName())
-            );
-        }
-
-        final Localization theLocalization = someLocalization.get();
-
-        final LocalizationSpamReport localizationSpamReport = this.spamRepository.findOrCreateByLocalization(theLocalization);
+        final LocalizationSpamReport localizationSpamReport = this.spamRepository.findOrCreateByLocalization(localization);
 
         localizationSpamReport.newReport(this.deviceRepository.findOrPersist(userPrincipal));
 
@@ -152,7 +140,10 @@ public class LocalizationController implements AutoCloseable {
      * @return see {@link Localization}
      * @throws EntityNotFoundException If localization not exists
      */
-    public Localization localization(final Long localizationId) {
+    public Localization localization(final Principal principal, final Long localizationId) {
+
+        final Device device = this.deviceRepository.findOrPersist(principal);
+
         final Optional<Localization> someLocalization = this.repository.findById(localizationId);
 
         if (!someLocalization.isPresent()) {
@@ -161,7 +152,13 @@ public class LocalizationController implements AutoCloseable {
             );
         }
 
-        return someLocalization.get();
+        final Localization localization = someLocalization.get();
+
+        if (localization.isPublic() || localization.isOwner(device)) {
+            return localization;
+        }
+
+        throw new ForbiddenSubResourceException(String.format("Device %s is not allowed to the sub-resource", device.getId()));
     }
 
     @Override

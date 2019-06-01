@@ -38,7 +38,7 @@ public class EmailNotifyService implements Callable<Boolean> {
             }
         });
 
-        session.setDebug(true);
+        session.setDebug(false);
 
         Transport.send(message.message(session));
 

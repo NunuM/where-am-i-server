@@ -15,10 +15,13 @@ import javax.ws.rs.core.Application;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
+import java.util.Vector;
 import java.util.function.Function;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class AlgorithmResourceTest extends JerseyTest {
 
@@ -76,19 +79,12 @@ public class AlgorithmResourceTest extends JerseyTest {
         assertEquals(200, response.getStatus());
         assertTrue(response.hasEntity());
 
-        //Inserted 40 approved rows the last of the first page must be the row with 19
-        final String page1 = response.readEntity(String.class);
-        assertTrue(page1.endsWith("Author19\",\"providers\":[]}]"));
-        assertEquals(page1, response1.readEntity(String.class));
-
-        //Inserted 40 approved rows the first of the second page must be the row with 19
-        Response response2 = makeRequest.apply(2);
-        String page2 = response2.readEntity(String.class);
-        assertTrue(page2.startsWith("[{\"name\":\"Name20\""));
-        assertNotSame(page1, page2);
+        //Inserted 40 approved rows
+        List<Object> objects = response.readEntity(Vector.class);
+        assertEquals("Must have", 20, objects.size());
 
         //Inserted 40 approved rows the subsequent pages must be empty
-        Response response3 = makeRequest.apply(5);
+        Response response3 = makeRequest.apply(10);
         assertEquals("[]", response3.readEntity(String.class));
     }
 
@@ -111,7 +107,7 @@ public class AlgorithmResourceTest extends JerseyTest {
                 .invoke();
 
 
-        final Response response = makeRequest.apply(algorithm.getId().toString()    );
+        final Response response = makeRequest.apply(algorithm.getId().toString());
 
         assertEquals(200, response.getStatus());
 

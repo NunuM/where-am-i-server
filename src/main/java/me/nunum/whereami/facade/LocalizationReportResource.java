@@ -5,21 +5,19 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import me.nunum.whereami.controller.LocalizationController;
 import me.nunum.whereami.framework.dto.DTO;
+import me.nunum.whereami.model.Localization;
 import me.nunum.whereami.model.exceptions.EntityAlreadyExists;
 import me.nunum.whereami.model.exceptions.EntityNotFoundException;
-import me.nunum.whereami.model.request.LocalizationSpamRequest;
 
 import javax.annotation.security.PermitAll;
-import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.SecurityContext;
+import java.security.Principal;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 
 @Api("spam")
 @PermitAll
@@ -27,13 +25,17 @@ public class LocalizationReportResource {
 
     private static final Logger LOGGER = Logger.getLogger(LocalizationReportResource.class.getSimpleName());
 
+    private final Principal principal;
+    private final Localization localization;
     private final LocalizationController controller;
-    private final SecurityContext securityContext;
 
-    public LocalizationReportResource(LocalizationController controller,
-                                      SecurityContext securityContext) {
+
+    public LocalizationReportResource(Principal principal,
+                                      Localization localization,
+                                      LocalizationController controller) {
+        this.principal = principal;
         this.controller = controller;
-        this.securityContext = securityContext;
+        this.localization = localization;
     }
 
     @POST
@@ -42,10 +44,10 @@ public class LocalizationReportResource {
     })
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
-    public Response localizationSpam(@Valid LocalizationSpamRequest spamRequest) {
+    public Response localizationSpam() {
 
         try {
-            final DTO reportDto = this.controller.newSpamReport(securityContext.getUserPrincipal(), spamRequest);
+            final DTO reportDto = this.controller.newSpamReport(principal, localization);
 
             return Response.ok(reportDto.dtoValues()).build();
 
@@ -66,3 +68,4 @@ public class LocalizationReportResource {
         }
     }
 }
+

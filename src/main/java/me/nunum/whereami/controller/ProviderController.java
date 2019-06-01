@@ -17,8 +17,12 @@ import me.nunum.whereami.service.notification.NotifyService;
 import javax.persistence.EntityNotFoundException;
 import java.security.Principal;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ProviderController implements AutoCloseable {
+
+    private static final Logger LOGGER = Logger.getLogger(ProviderController.class.getSimpleName());
 
     private final RoleRepository roleRepository;
     private final DeviceRepository deviceRepository;
@@ -55,7 +59,12 @@ public class ProviderController implements AutoCloseable {
 
         final Provider provider = request.build(device);
 
-        NotifyService.newProviderRequest(provider).run();
+        try {
+
+            NotifyService.newProviderRequest(provider).run();
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Could not send email", e);
+        }
 
         return this.providerRepository.save(provider).toDTO();
     }

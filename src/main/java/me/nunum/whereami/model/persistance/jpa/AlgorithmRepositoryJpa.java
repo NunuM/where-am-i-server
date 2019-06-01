@@ -36,7 +36,8 @@ public class AlgorithmRepositoryJpa
 
         final Root<Algorithm> algorithmRoot = builderQuery.from(Algorithm.class);
 
-        final CriteriaQuery<Algorithm> where = builderQuery.where(criteriaBuilder.equal(algorithmRoot.get("isApproved"), true));
+        final CriteriaQuery<Algorithm> where = builderQuery
+                .where(criteriaBuilder.equal(algorithmRoot.get("isApproved"), true));
 
         return this.pageWithFiltering(where, currentPage);
     }

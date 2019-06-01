@@ -73,7 +73,7 @@ public class PositionResource {
 
         try {
 
-            final DTO dto = this.controller.newPosition(securityContext, newPositionRequest);
+            final DTO dto = this.controller.newPosition(securityContext.getUserPrincipal(), newPositionRequest);
 
             return Response.ok(dto.dtoValues()).build();
 
@@ -107,7 +107,7 @@ public class PositionResource {
     public Response deletePosition(@PathParam("ip") Long ip) {
         try {
 
-            final DTO dto = this.controller.deletePosition(securityContext, ip);
+            final DTO dto = this.controller.deletePosition(securityContext.getUserPrincipal(), ip);
 
             return Response.ok(dto.dtoValues()).build();
 
@@ -121,7 +121,7 @@ public class PositionResource {
 
             LOGGER.log(Level.SEVERE, "Localization position not found", e);
 
-            return Response.status(Response.Status.FORBIDDEN).build();
+            return Response.status(Response.Status.NOT_FOUND).build();
 
         } catch (Exception e) {
 
@@ -139,7 +139,7 @@ public class PositionResource {
 
 
     @Path("{ip}/spam")
-    public PositionReportResource positionReportResource() {
-        return new PositionReportResource(controller, securityContext);
+    public PositionReportResource positionReportResource(@PathParam("ip") Long positionId) {
+        return new PositionReportResource(controller.position(securityContext.getUserPrincipal(), positionId), controller, securityContext);
     }
 }

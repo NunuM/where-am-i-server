@@ -2,9 +2,9 @@ package me.nunum.whereami.facade;
 
 import io.swagger.annotations.Api;
 import me.nunum.whereami.controller.PositionsController;
+import me.nunum.whereami.model.Position;
 import me.nunum.whereami.model.exceptions.EntityAlreadyExists;
 import me.nunum.whereami.model.exceptions.EntityNotFoundException;
-import me.nunum.whereami.model.request.PositionSpamRequest;
 
 import javax.annotation.security.PermitAll;
 import javax.ws.rs.POST;
@@ -20,21 +20,24 @@ public class PositionReportResource {
 
     private static final Logger LOGGER = Logger.getLogger(PositionReportResource.class.getSimpleName());
 
+    private final Position position;
     private final PositionsController controller;
     private final SecurityContext securityContext;
 
-    public PositionReportResource(PositionsController controller,
+    public PositionReportResource(Position position,
+                                  PositionsController controller,
                                   SecurityContext securityContext) {
+        this.position = position;
         this.controller = controller;
         this.securityContext = securityContext;
     }
 
     @POST
-    public Response positionSpam(PositionSpamRequest request) {
+    public Response positionSpam() {
 
         try {
             return Response
-                    .ok(controller.processSpamRequest(securityContext.getUserPrincipal(), request))
+                    .ok(controller.processSpamRequest(securityContext.getUserPrincipal(), this.position))
                     .build();
         } catch (EntityAlreadyExists e) {
             return Response.status(Response.Status.CONFLICT).build();

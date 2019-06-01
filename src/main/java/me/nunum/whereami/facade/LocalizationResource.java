@@ -18,6 +18,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
@@ -125,8 +126,11 @@ public class LocalizationResource {
             @ApiImplicitParam(name = "X-APP", value = "App Instance", required = true, dataType = "string", paramType = "header")
     })
     @Path("{id}/spam")
-    public LocalizationReportResource reportResource() {
-        return new LocalizationReportResource(new LocalizationController(), securityContext);
+    public LocalizationReportResource reportResource(@PathParam("id") Long localizationId) throws Exception {
+        try (final LocalizationController controller = new LocalizationController()) {
+            final Principal principal = securityContext.getUserPrincipal();
+            return new LocalizationReportResource(principal, controller.localization(principal, localizationId), controller);
+        }
     }
 
     @ApiImplicitParams({
@@ -135,7 +139,7 @@ public class LocalizationResource {
     @Path("{id}/train")
     public TrainResource trainResource(@PathParam("id") Long id) throws Exception {
         try (final LocalizationController controller = new LocalizationController()) {
-            return new TrainResource(controller.localization(id), securityContext);
+            return new TrainResource(controller.localization(securityContext.getUserPrincipal(), id), securityContext);
         }
     }
 
@@ -145,7 +149,7 @@ public class LocalizationResource {
     @Path("{id}/position")
     public PositionResource positionResource(@PathParam("id") Long id) throws Exception {
         try (final LocalizationController controller = new LocalizationController()) {
-            return new PositionResource(controller.localization(id), securityContext);
+            return new PositionResource(controller.localization(securityContext.getUserPrincipal(), id), securityContext);
         }
     }
 }

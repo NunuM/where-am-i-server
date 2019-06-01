@@ -71,7 +71,7 @@ public class AlgorithmController implements AutoCloseable {
 
         final Algorithm algorithm = getAlgorithm(aId);
 
-        if (!algorithm.isPusblisher(device)) {
+        if (!algorithm.isPublisher(device)) {
             throw new ForbiddenEntityAccessException(String.format("Device %s not have update privileges to update algorithm %d", device.instanceId(), aId));
         }
 

@@ -143,6 +143,10 @@ public class Localization implements DTOable, Identifiable<Long>, Comparable<Loc
         return this.owner.equals(requester);
     }
 
+    public boolean isPublic() {
+        return isPublic;
+    }
+
     public void incrementSample() {
         this.samples += 1;
     }

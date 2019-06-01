@@ -2,6 +2,8 @@ package me.nunum.whereami;
 
 import me.nunum.whereami.facade.ApiListingResource;
 import me.nunum.whereami.framework.interceptor.PrincipalInterceptor;
+import me.nunum.whereami.model.exceptions.EntityNotFoundException;
+import me.nunum.whereami.model.exceptions.ForbiddenSubResourceException;
 import org.glassfish.grizzly.http.server.CLStaticHttpHandler;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.grizzly.http.server.ServerConfiguration;
@@ -49,6 +51,9 @@ public final class Main {
         rc.property(ServerProperties.BV_SEND_ERROR_IN_RESPONSE, true);
 
         rc.register(RolesAllowedDynamicFeature.class);
+
+        rc.register(EntityNotFoundException.class);
+        rc.register(ForbiddenSubResourceException.class);
 
 
         // create and start a new instance of grizzly http server

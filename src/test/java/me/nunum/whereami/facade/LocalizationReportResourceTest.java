@@ -50,7 +50,7 @@ public class LocalizationReportResourceTest extends JerseyTest {
         // Create a valid report
         Response response = target("localization/" + localization.id().toString() + "/spam")
                 .request(MediaType.APPLICATION_JSON)
-                .header("X-APP", "NotLocalizationSpam")
+                .header("X-APP", "localizationSpam")
                 .buildPost(Entity.json(report))
                 .invoke();
 
@@ -60,7 +60,7 @@ public class LocalizationReportResourceTest extends JerseyTest {
         // try to duplicate report
         Response response1 = target("localization/" + localization.id().toString() + "/spam")
                 .request(MediaType.APPLICATION_JSON)
-                .header("X-APP", "NotLocalizationSpam")
+                .header("X-APP", "localizationSpam")
                 .buildPost(Entity.json(report))
                 .invoke();
 
@@ -71,7 +71,7 @@ public class LocalizationReportResourceTest extends JerseyTest {
         report.put("id",-11);
         Response response2 = target("localization/-10/spam")
                 .request(MediaType.APPLICATION_JSON)
-                .header("X-APP", "NotLocalizationSpam")
+                .header("X-APP", "localizationSpam")
                 .buildPost(Entity.json(report))
                 .invoke();
 

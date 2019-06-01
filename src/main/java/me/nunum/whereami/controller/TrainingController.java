@@ -103,7 +103,7 @@ public final class TrainingController implements AutoCloseable {
                 LOGGER.log(Level.FINE, "Could not close previous entity manager", e1);
             }
 
-            LOGGER.log(Level.INFO, String
+            LOGGER.log(Level.INFO, () -> String
                     .format("Training for algorithm %d and provider %d for localization %d already exists, reset task",
                             algorithm.getId(),
                             provider.getId(),
