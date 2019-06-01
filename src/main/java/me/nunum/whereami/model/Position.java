@@ -7,12 +7,14 @@ import me.nunum.whereami.model.dto.PositionDTO;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.Objects;
 
 @Entity
 @NamedQuery(
         name = "Position.findByLocalizationId",
         query = "SELECT OBJECT(u) FROM Position u where u.localization.id=:localizationId"
 )
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"LABEL", "LOCALIZATION_ID"}))
 public class Position
         implements Comparable<Position>,
         Identifiable<Long>,
@@ -41,6 +43,11 @@ public class Position
     private Localization localization;
 
 
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "SPAM_POSITION_ID")
+    private PositionSpamReport spamReport;
+
+
     @Temporal(TemporalType.TIMESTAMP)
     private Date created;
 
@@ -59,6 +66,7 @@ public class Position
         this.routers = 0;
         this.samples = 0L;
         this.strongestSignal = "";
+        this.spamReport = new PositionSpamReport(this);
     }
 
     @PrePersist
@@ -79,19 +87,15 @@ public class Position
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Position)) return false;
-
+        if (o == null || getClass() != o.getClass()) return false;
         Position position = (Position) o;
-
-        if (!label.equals(position.label)) return false;
-        return created.equals(position.created);
+        return Objects.equals(label, position.label) &&
+                Objects.equals(localization, position.localization);
     }
 
     @Override
     public int hashCode() {
-        int result = label.hashCode();
-        result = 31 * result + created.hashCode();
-        return result;
+        return Objects.hash(label, localization);
     }
 
     public Localization getLocalization() {
@@ -127,5 +131,21 @@ public class Position
 
     public void setNumberOfRouters(Integer numberOfRouters) {
         this.routers = numberOfRouters;
+    }
+
+    @Override
+    public String toString() {
+        return "Position{" +
+                "id=" + id +
+                ", label='" + label + '\'' +
+                ", samples=" + samples +
+                ", routers=" + routers +
+                ", networks=" + networks +
+                ", strongestSignal='" + strongestSignal + '\'' +
+                ", localization=" + localization +
+                ", spamReport=" + spamReport +
+                ", created=" + created +
+                ", updated=" + updated +
+                '}';
     }
 }

@@ -15,7 +15,10 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.security.Principal;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Optional;
 import java.util.Vector;
 
 import static org.junit.Assert.assertEquals;
@@ -133,7 +136,7 @@ public class LocalizationResourceTest extends JerseyTest {
 
         HashMap<String, Object> payload = new HashMap<>();
         payload.put("label", "newLocalization");
-        payload.put("public", false);
+        payload.put("isPublic", false);
         payload.put("user", "newLocalization");
         payload.put("latitude", 0.0);
         payload.put("longitude", 0.0);
@@ -160,7 +163,7 @@ public class LocalizationResourceTest extends JerseyTest {
 
         HashMap<String, Object> payload = new HashMap<>();
         payload.put("label", "deleteLocalization");
-        payload.put("public", false);
+        payload.put("isPublic", false);
         payload.put("user", "deleteLocalization");
         payload.put("latitude", 0.0);
         payload.put("longitude", 0.0);
@@ -202,6 +205,14 @@ public class LocalizationResourceTest extends JerseyTest {
                 .buildDelete()
                 .invoke();
         assertEquals("Localization deleted", 200, response2.getStatus());
+
+
+        DeviceRepositoryJpa deviceRepository = new DeviceRepositoryJpa();
+        final List<Device> deviceList = deviceRepository.page(1, 200);
+
+        final Optional<Device> device = deviceList.stream().filter(e -> e.instanceId().equalsIgnoreCase("deleteLocalization")).findFirst();
+
+        assertTrue("Must remain the device", device.isPresent());
 
 
     }

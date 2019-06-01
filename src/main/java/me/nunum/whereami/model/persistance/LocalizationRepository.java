@@ -9,7 +9,8 @@ import java.util.Optional;
 
 public interface LocalizationRepository extends Repository<Localization, Long>, AutoCloseable {
 
-    List<Localization> paginate(Optional<Integer> page);
+    void deleteLocalization(Localization localization);
+
 
     List<Localization> searchWithPagination(Device device, Optional<Integer> page, Optional<String> localizationName);
 }

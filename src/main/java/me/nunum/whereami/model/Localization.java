@@ -58,6 +58,10 @@ public class Localization implements DTOable, Identifiable<Long>, Comparable<Loc
     @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, mappedBy = "localization")
     private List<Training> trainings;
 
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "SPAM_LOCALIZATION_ID")
+    public LocalizationSpamReport spamReport;
+
     @Temporal(TemporalType.TIMESTAMP)
     private Date created;
 
@@ -93,6 +97,7 @@ public class Localization implements DTOable, Identifiable<Long>, Comparable<Loc
         this.isPublic = isPublic;
         this.trainings = new ArrayList<>();
         this.positionList = new ArrayList<>();
+        this.spamReport = new LocalizationSpamReport(this);
     }
 
 

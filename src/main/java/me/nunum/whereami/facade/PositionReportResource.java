@@ -1,6 +1,8 @@
 package me.nunum.whereami.facade;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import me.nunum.whereami.controller.PositionsController;
 import me.nunum.whereami.model.Position;
 import me.nunum.whereami.model.exceptions.EntityAlreadyExists;
@@ -33,6 +35,9 @@ public class PositionReportResource {
     }
 
     @POST
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "X-APP", value = "App Instance", required = true, dataType = "string", paramType = "header")
+    })
     public Response positionSpam() {
 
         try {

@@ -18,26 +18,16 @@ public class LocalizationRepositoryJpa
         return AppConfig.JPA_UNIT;
     }
 
+
     @Override
-    public List<Localization> paginate(Optional<Integer> page) {
+    public void deleteLocalization(Localization localization)
+    {
+        final EntityManager entityManager = entityManager();
 
-        entityManager().close();
+        entityManager.getTransaction();
 
-        List<Localization> localizations = new ArrayList<>();
+        entityManager.createQuery("").executeUpdate();
 
-        final Integer currentPage = page.map(p -> {
-            if (p < 1) {
-                return 1;
-            } else return p;
-        }).orElse(1);
-
-        final Iterator<Localization> theLocalizationIterator = this.iterator(currentPage);
-
-        theLocalizationIterator.forEachRemaining(localizations::add);
-
-        Collections.sort(localizations);
-
-        return localizations;
     }
 
     @SuppressWarnings("unchecked")

@@ -49,7 +49,7 @@ public class PositionResourceTest extends JerseyTest {
         PositionRepository positionRepository = new PostitionRepositoryJpa();
 
         for (int i = 0; i < 30; i++) {
-            positionRepository.save(new Position("positions" + 1, localization));
+            positionRepository.save(new Position("positions" + i, localization));
         }
 
         // List all entities for the owner

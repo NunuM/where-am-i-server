@@ -20,10 +20,10 @@ public class PositionSpamReport implements DTOable {
     @GeneratedValue
     private Long id;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.REFRESH)
     private List<Device> reporters;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "spamReport")
     private Position position;
 
     @Temporal(TemporalType.TIMESTAMP)
