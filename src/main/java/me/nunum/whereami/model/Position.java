@@ -106,6 +106,14 @@ public class Position
         this.samples += samples;
     }
 
+    public void addSpamReport(Device report) {
+        this.spamReport.newReport(report);
+    }
+
+    public PositionSpamReport getSpamReport() {
+        return spamReport;
+    }
+
     @Override
     public DTO toDTO() {
         return new PositionDTO(id, label, samples, routers, networks, strongestSignal);

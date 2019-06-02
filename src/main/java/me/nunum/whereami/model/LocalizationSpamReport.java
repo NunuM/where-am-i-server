@@ -46,6 +46,10 @@ public class LocalizationSpamReport
         return this.reporters.add(device);
     }
 
+    public List<Device> getReporters() {
+        return reporters;
+    }
+
     @PrePersist
     protected void onCreate() {
         updated = created = new Date(System.currentTimeMillis());

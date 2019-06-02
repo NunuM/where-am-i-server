@@ -178,6 +178,14 @@ public class Localization implements DTOable, Identifiable<Long>, Comparable<Loc
         return owner;
     }
 
+    public LocalizationSpamReport getSpamReport() {
+        return spamReport;
+    }
+
+    public void addSpamReporter(Device reporter) {
+        this.spamReport.newReport(reporter);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

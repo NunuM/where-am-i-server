@@ -118,18 +118,18 @@ public class LocalizationController implements AutoCloseable {
      * Report a specific localization
      *
      * @param userPrincipal See {@link Principal}
-     * @param localization   See {@link Localization}
+     * @param localization  See {@link Localization}
      * @return See {@link me.nunum.whereami.model.dto.LocalizationReportDTO}
      * @throws EntityNotFoundException Localization does not exists
      */
     public DTO newSpamReport(final Principal userPrincipal,
                              final Localization localization) {
 
-        final LocalizationSpamReport localizationSpamReport = this.spamRepository.findOrCreateByLocalization(localization);
+        localization.addSpamReporter(this.deviceRepository.findOrPersist(userPrincipal));
 
-        localizationSpamReport.newReport(this.deviceRepository.findOrPersist(userPrincipal));
+        this.repository.save(localization);
 
-        return this.spamRepository.save(localizationSpamReport).toDTO();
+        return localization.getSpamReport().toDTO();
     }
 
 

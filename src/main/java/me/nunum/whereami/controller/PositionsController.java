@@ -130,11 +130,11 @@ public class PositionsController implements AutoCloseable {
      */
     public DTO processSpamRequest(Principal userPrincipal, Position position) {
 
-        PositionSpamReport positionSpamReport = this.positionSpamRepository.findOrCreateByPosition(position);
+        position.addSpamReport(this.deviceRepository.findOrPersist(userPrincipal));
 
-        positionSpamReport.newReport(this.deviceRepository.findOrPersist(userPrincipal));
+        this.repository.save(position);
 
-        return this.positionSpamRepository.save(positionSpamReport).toDTO();
+        return position.getSpamReport().toDTO();
 
     }
 

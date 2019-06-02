@@ -18,6 +18,7 @@ import javax.ws.rs.core.Response;
 import java.util.HashMap;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class LocalizationReportResourceTest extends JerseyTest {
 
@@ -30,7 +31,7 @@ public class LocalizationReportResourceTest extends JerseyTest {
     public void localizationSpam() {
 
 
-        LocalizationRepository localizationRepository = new LocalizationRepositoryJpa();
+        LocalizationRepositoryJpa localizationRepository = new LocalizationRepositoryJpa();
 
         DeviceRepository deviceRepository = new DeviceRepositoryJpa();
         Device device = deviceRepository.findOrPersist(() -> "localizationSpam");
@@ -56,19 +57,12 @@ public class LocalizationReportResourceTest extends JerseyTest {
 
         assertEquals("Create a valid spam report", 200, response.getStatus());
 
-
-        // try to duplicate report
-        Response response1 = target("localization/" + localization.id().toString() + "/spam")
-                .request(MediaType.APPLICATION_JSON)
-                .header("X-APP", "localizationSpam")
-                .buildPost(Entity.json(report))
-                .invoke();
-
-        assertEquals("Try to duplicate record", 409, response1.getStatus());
+        localization = localizationRepository.findById(localization.id()).get();
+        assertEquals("Must have one reporter", 1, localization.getSpamReport().getReporters().size());
 
 
         // Not existing localization
-        report.put("id",-11);
+        report.put("id", -11);
         Response response2 = target("localization/-10/spam")
                 .request(MediaType.APPLICATION_JSON)
                 .header("X-APP", "localizationSpam")
