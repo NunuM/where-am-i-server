@@ -22,7 +22,7 @@ public class LocalizationSpamReport
     @GeneratedValue
     private Long id;
 
-    @OneToMany(cascade = CascadeType.REFRESH)
+    @OneToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
     private List<Device> reporters;
 
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "spamReport")

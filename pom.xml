@@ -31,7 +31,7 @@
             <artifactId>jersey-hk2</artifactId>
         </dependency>
 
-         <dependency>
+        <dependency>
             <groupId>org.glassfish.jersey.media</groupId>
             <artifactId>jersey-media-json-binding</artifactId>
         </dependency>
@@ -44,7 +44,7 @@
         <dependency>
             <groupId>org.eclipse.persistence</groupId>
             <artifactId>org.eclipse.persistence.jpa</artifactId>
-            <version>2.7.1</version>
+            <version>2.7.4</version>
         </dependency>
 
         <dependency>
@@ -101,11 +101,19 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.5.1</version>
+                <version>3.8.1</version>
                 <inherited>true</inherited>
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.19.1</version>
+                <configuration>
+                    <argLine>-javaagent:lib/org.eclipse.persistence.jpa-2.7.4.jar</argLine>
                 </configuration>
             </plugin>
             <plugin>
@@ -121,6 +129,16 @@
                 </executions>
                 <configuration>
                     <mainClass>me.nunum.whereami.Main</mainClass>
+                    <systemProperties>
+                        <property>
+                            <key>app.smtp.user</key>
+                            <value></value>
+                        </property>
+                        <property>
+                            <key>app.smtp.password</key>
+                            <value></value>
+                        </property>
+                    </systemProperties>
                 </configuration>
             </plugin>
             <plugin>

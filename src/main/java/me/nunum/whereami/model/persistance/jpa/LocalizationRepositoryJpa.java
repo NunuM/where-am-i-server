@@ -7,7 +7,8 @@ import me.nunum.whereami.model.persistance.LocalizationRepository;
 import me.nunum.whereami.utils.AppConfig;
 
 import javax.persistence.EntityManager;
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
 
 public class LocalizationRepositoryJpa
         extends JpaRepository<Localization, Long>
