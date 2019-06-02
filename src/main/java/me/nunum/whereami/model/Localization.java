@@ -60,7 +60,7 @@ public class Localization implements DTOable, Identifiable<Long>, Comparable<Loc
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "SPAM_LOCALIZATION_ID")
-    public LocalizationSpamReport spamReport;
+    private LocalizationSpamReport spamReport;
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date created;

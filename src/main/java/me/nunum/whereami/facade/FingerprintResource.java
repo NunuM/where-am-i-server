@@ -13,8 +13,10 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -29,6 +31,9 @@ public class FingerprintResource {
 
     private static final Logger LOGGER = Logger.getLogger("FingerprintResource");
 
+    @Context
+    private SecurityContext securityContext;
+
     @POST
     @ApiImplicitParams({
             @ApiImplicitParam(name = "X-APP", value = "App Instance", required = true, dataType = "string", paramType = "header")
@@ -39,7 +44,7 @@ public class FingerprintResource {
 
         try (final FingerprintController controller = new FingerprintController()) {
 
-            List<Map<String, Object>> list = controller.storeFingerprints(fingerprints).stream().map(DTO::dtoValues).collect(Collectors.toList());
+            List<Map<String, Object>> list = controller.storeFingerprints(securityContext.getUserPrincipal(), fingerprints).stream().map(DTO::dtoValues).collect(Collectors.toList());
 
             return Response.ok(list).build();
 

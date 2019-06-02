@@ -3,11 +3,13 @@ package me.nunum.whereami.migration;
 
 import me.nunum.whereami.model.Role;
 import me.nunum.whereami.utils.AppConfig;
+import org.slf4j.bridge.SLF4JBridgeHandler;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import java.util.logging.Level;
+import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 public final class Migration1 implements Runnable {
@@ -30,6 +32,9 @@ public final class Migration1 implements Runnable {
     }
 
     public static void main(String[] args) {
+        LogManager.getLogManager().reset();
+        SLF4JBridgeHandler.install();
+
         new Migration1().run();
     }
 }

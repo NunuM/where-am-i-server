@@ -44,15 +44,36 @@ public class FingerprintResourceTest extends JerseyTest {
 
         DeviceRepository deviceRepository = new DeviceRepositoryJpa();
         Device device = deviceRepository.findOrPersist(() -> "collectFingerprint");
+        Device device1 = deviceRepository.findOrPersist(() -> "notCollectFingerprint");
 
         ProviderRepository providerRepository = new ProviderRepositoryJpa();
         providerRepository.save(new Provider("collectFingerprint@nunum.me", UUID.randomUUID().toString(), true, device));
 
         LocalizationRepository localizationRepository = new LocalizationRepositoryJpa();
         Localization localization = localizationRepository.save(new Localization("collectFingerprint", "collectFingerprint", device));
+        Localization localization1 = localizationRepository.save(new Localization("notCollectFingerprint", "notCollectFingerprint", device1));
 
         PositionRepository positionRepository = new PostitionRepositoryJpa();
         Position position = positionRepository.save(new Position("collectFingerprint", localization));
+        Position position1 = positionRepository.save(new Position("notCollectFingerprint", localization1));
+
+
+        HashMap<String, Object> sample1 = new HashMap<>();
+
+        sample1.put("bssid", "bssid" + 1);
+        sample1.put("ssid", "ssid" + 1);
+        sample1.put("levelDBM", 1);
+        sample1.put("centerFreq0", 1);
+        sample1.put("centerFreq1", 1);
+        sample1.put("channelWidth", 1);
+        sample1.put("frequency", 0);
+        sample1.put("timeStamp", String.valueOf(Instant.now().getEpochSecond()));
+        sample1.put("buildId", 1);
+        sample1.put("floorId", 1);
+        sample1.put("positionId", position1.id());
+        sample1.put("localizationId", localization1.id());
+
+        payload.add(sample1);
 
         for (int i = 10; i < 20; i++) {
 
@@ -75,26 +96,11 @@ public class FingerprintResourceTest extends JerseyTest {
         }
 
 
-        HashMap<String, Object> sample = new HashMap<>();
 
-        sample.put("bssid", "bssid" + 1);
-        sample.put("ssid", "ssid" + 1);
-        sample.put("levelDBM", 1);
-        sample.put("centerFreq0", 1);
-        sample.put("centerFreq1", 1);
-        sample.put("channelWidth", 1);
-        sample.put("frequency", 0);
-        sample.put("timeStamp", String.valueOf(Instant.now().getEpochSecond()));
-        sample.put("buildId", 1);
-        sample.put("floorId", 1);
-        sample.put("positionId", -1);
-        sample.put("localizationId", -12);
-
-        payload.add(sample);
 
         Response response = target("fingerprint")
                 .request(MediaType.APPLICATION_JSON)
-                .header("X-APP", "Test")
+                .header("X-APP", "collectFingerprint")
                 .buildPost(Entity.json(payload))
                 .invoke();
 

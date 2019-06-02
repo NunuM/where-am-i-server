@@ -29,6 +29,12 @@ public class AlgorithmProvider implements DTOable {
     private METHOD method;
 
 
+    private float predictionRate;
+
+
+    private boolean isDeployed;
+
+
     @Temporal(TemporalType.TIMESTAMP)
     private Date created;
 
@@ -68,6 +74,11 @@ public class AlgorithmProvider implements DTOable {
             public String[] requiredKeys() {
                 return new String[]{GIT_PROVIDER_URL_KEY};
             }
+
+            @Override
+            public boolean isAutomaticDeployed() {
+                return false;
+            }
         },
         UNSUPPORTED {
             @Override
@@ -78,6 +89,10 @@ public class AlgorithmProvider implements DTOable {
 
 
         public abstract String[] requiredKeys();
+
+        public boolean isAutomaticDeployed() {
+            return false;
+        }
 
 
         public static METHOD parse(String method) {
@@ -98,6 +113,8 @@ public class AlgorithmProvider implements DTOable {
         this.provider = provider;
         this.method = method;
         this.properties = properties;
+        this.predictionRate = 0f;
+        this.isDeployed = method.isAutomaticDeployed();
     }
 
     public Long getId() {
@@ -122,6 +139,22 @@ public class AlgorithmProvider implements DTOable {
 
     public boolean wasVerified() {
         return this.provider.isConfirmed();
+    }
+
+    public boolean isDeployed() {
+        return isDeployed;
+    }
+
+    public void setDeployed(boolean deployed) {
+        isDeployed = deployed;
+    }
+
+    public float getPredictionRate() {
+        return predictionRate;
+    }
+
+    public void setPredictionRate(float predictionRate) {
+        this.predictionRate = predictionRate;
     }
 
     @PrePersist
@@ -158,8 +191,10 @@ public class AlgorithmProvider implements DTOable {
     public String toString() {
         return "AlgorithmProvider{" +
                 "id=" + id +
-                ", provider='" + provider + '\'' +
+                ", provider=" + provider +
                 ", method=" + method +
+                ", predictionRate=" + predictionRate +
+                ", isDeployed=" + isDeployed +
                 ", created=" + created +
                 ", updated=" + updated +
                 ", properties=" + properties +

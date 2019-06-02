@@ -137,7 +137,7 @@ public class Algorithm
         return this.providers.stream().filter(e -> e.getId().equals(id)).findFirst();
     }
 
-    public Optional<AlgorithmProvider> firstAlgorithmProvider(){
+    public Optional<AlgorithmProvider> firstAlgorithmProvider() {
         return this.providers.stream().findFirst();
     }
 
@@ -200,10 +200,12 @@ public class Algorithm
                 authorName,
                 paperURL,
                 isApproved,
-                providers.stream().map(e-> {
-                    final HashMap<String, Object> map = new HashMap<>(2);
+                providers.stream().map(e -> {
+                    final HashMap<String, Object> map = new HashMap<>(4);
                     map.put("id", e.getId());
                     map.put("method", e.getMethod().toString());
+                    map.put("isDeployed", e.isDeployed());
+                    map.put("predictionRate", e.getPredictionRate());
 
                     return map;
                 }).collect(Collectors.toList()));
