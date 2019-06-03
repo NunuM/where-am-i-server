@@ -114,6 +114,9 @@
                 <version>2.19.1</version>
                 <configuration>
                     <argLine>-javaagent:lib/org.eclipse.persistence.jpa-2.7.4.jar</argLine>
+                    <systemProperties>
+                        <app.persistence.unit>me.nunum.whereami.TEST_JPA_PERSISTENCE</app.persistence.unit>
+                    </systemProperties>
                 </configuration>
             </plugin>
             <plugin>
@@ -131,12 +134,20 @@
                     <mainClass>me.nunum.whereami.Main</mainClass>
                     <systemProperties>
                         <property>
+                            <key>app.server.port</key>
+                            <value>8080</value>
+                        </property>
+                        <property>
                             <key>app.smtp.user</key>
-                            <value></value>
+                            <value>${env.HOME}</value>
                         </property>
                         <property>
                             <key>app.smtp.password</key>
-                            <value></value>
+                            <value>${env.HOME}</value>
+                        </property>
+                        <property>
+                            <key>app.persistence.unit</key>
+                            <value>me.nunum.whereami.JPA_PERSISTENCE</value>
                         </property>
                     </systemProperties>
                 </configuration>

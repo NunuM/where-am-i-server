@@ -33,8 +33,7 @@ public class AlgorithmResourceTest extends JerseyTest {
 
         final AlgorithmRepository repository = new AlgorithmRepositoryJpa();
 
-        int i = 0;
-        for (i = 0; i < 40; i++) {
+        for (int i = 0; i < 40; i++) {
             repository.save(new Algorithm("Name" + i, "Author" + i, "http://paper.com/paper" + i, true, device));
         }
 
