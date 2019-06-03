@@ -1,5 +1,8 @@
 package me.nunum.whereami.model;
 
+import me.nunum.whereami.framework.dto.DTO;
+import me.nunum.whereami.framework.dto.DTOable;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Date;
@@ -16,7 +19,8 @@ import java.util.List;
                 query = "SELECT OBJECT(u) FROM Device u JOIN Role r where r.name=:role "
         )
 })
-public class Device implements Comparable<Device> {
+public class Device
+        implements Comparable<Device> , DTOable {
 
     @Id
     @GeneratedValue
@@ -24,6 +28,8 @@ public class Device implements Comparable<Device> {
 
     @Column(unique = true, updatable = false, nullable = false)
     private String instanceId;
+
+    private String firebaseToken;
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date created;
@@ -39,7 +45,18 @@ public class Device implements Comparable<Device> {
     }
 
     public Device(String instanceId) {
-        this(instanceId, new ArrayList<>(0));
+        this(instanceId,"", new ArrayList<>(0));
+    }
+
+    public Device(String instanceId, String firebaseToken) {
+        this(instanceId,firebaseToken, new ArrayList<>(0));
+    }
+
+    public Device(String instanceId, String firebaseToken, List<Role> roles){
+        this.instanceId = instanceId;
+        this.firebaseToken = firebaseToken;
+        this.roles = roles;
+
     }
 
     public Device(String instanceId, List<Role> roles) {
@@ -54,6 +71,15 @@ public class Device implements Comparable<Device> {
 
     public String instanceId() {
         return instanceId;
+    }
+
+
+    public String getFirebaseToken() {
+        return firebaseToken;
+    }
+
+    public void setFirebaseToken(String firebaseToken) {
+        this.firebaseToken = firebaseToken;
     }
 
     @PrePersist
@@ -98,5 +124,10 @@ public class Device implements Comparable<Device> {
 
     public boolean isInRole(final String role) {
         return this.roles.stream().anyMatch(e -> e.is(role));
+    }
+
+    @Override
+    public DTO toDTO() {
+        return null;
     }
 }

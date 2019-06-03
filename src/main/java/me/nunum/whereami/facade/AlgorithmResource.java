@@ -237,6 +237,7 @@ public class AlgorithmResource {
             @ApiImplicitParam(name = "X-APP", value = "App Instance", required = true, dataType = "string", paramType = "header")
     })
     @Path("{it}/provider")
+    @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     @RolesAllowed({"provider"})
     public Response addAlgorithmProvider(@PathParam("it") Long aId, NewAlgorithmProvider algorithmProvider) {
