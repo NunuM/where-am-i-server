@@ -3,7 +3,6 @@ package me.nunum.whereami.controller;
 import me.nunum.whereami.framework.dto.DTO;
 import me.nunum.whereami.model.Device;
 import me.nunum.whereami.model.Localization;
-import me.nunum.whereami.model.LocalizationSpamReport;
 import me.nunum.whereami.model.exceptions.EntityNotFoundException;
 import me.nunum.whereami.model.exceptions.ForbiddenEntityDeletionException;
 import me.nunum.whereami.model.exceptions.ForbiddenSubResourceException;

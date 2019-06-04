@@ -4,7 +4,6 @@ import me.nunum.whereami.framework.dto.DTO;
 import me.nunum.whereami.model.Device;
 import me.nunum.whereami.model.Localization;
 import me.nunum.whereami.model.Position;
-import me.nunum.whereami.model.PositionSpamReport;
 import me.nunum.whereami.model.exceptions.EntityNotFoundException;
 import me.nunum.whereami.model.exceptions.ForbiddenEntityDeletionException;
 import me.nunum.whereami.model.exceptions.ForbiddenEntityModificationException;
