@@ -3,11 +3,13 @@ package me.nunum.whereami.model;
 import me.nunum.whereami.framework.dto.DTO;
 import me.nunum.whereami.framework.dto.DTOable;
 import me.nunum.whereami.model.dto.PostDTO;
+import org.eclipse.persistence.annotations.Index;
 
 import javax.persistence.*;
 import java.util.Date;
 
 @Entity
+@NamedQuery(name = "Post.all", query = "SELECT OBJECT (u) FROM Post u ORDER BY u.created DESC")
 public class Post
         implements Comparable<Post>,
         DTOable {
@@ -25,6 +27,7 @@ public class Post
     @Column(nullable = false)
     private String sourceURL;
 
+    @Index
     @Temporal(TemporalType.TIMESTAMP)
     private Date created;
 
@@ -105,7 +108,7 @@ public class Post
 
     @Override
     public DTO toDTO() {
-        return new PostDTO(id, title, imageURL, sourceURL);
+        return new PostDTO(id, title, imageURL, sourceURL, created);
     }
 
     @PrePersist

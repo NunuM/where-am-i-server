@@ -5,6 +5,7 @@ import me.nunum.whereami.model.Post;
 import me.nunum.whereami.model.persistance.PostRepository;
 import me.nunum.whereami.utils.AppConfig;
 
+import javax.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -21,6 +22,7 @@ public class PostRepositoryJpa
     }
 
 
+    @SuppressWarnings("unchecked")
     @Override
     public List<Post> paginate(Optional<Integer> page) {
 
@@ -32,11 +34,12 @@ public class PostRepositoryJpa
             } else return p;
         }).orElse(1);
 
-        final Iterator<Post> thePostIterator = this.iterator(currentPage);
+        final EntityManager manager = entityManager();
 
-        thePostIterator.forEachRemaining(posts::add);
-
-        return posts;
+        return manager.createNamedQuery("Post.all")
+                .setMaxResults(DEFAULT_PAGE_SIZE)
+                .setFirstResult((currentPage - 1) * DEFAULT_PAGE_SIZE)
+                .getResultList();
     }
 
 }

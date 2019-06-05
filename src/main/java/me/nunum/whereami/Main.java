@@ -2,8 +2,11 @@ package me.nunum.whereami;
 
 import me.nunum.whereami.facade.ApiListingResource;
 import me.nunum.whereami.framework.interceptor.PrincipalInterceptor;
+import me.nunum.whereami.model.Post;
 import me.nunum.whereami.model.exceptions.EntityNotFoundException;
 import me.nunum.whereami.model.exceptions.ForbiddenSubResourceException;
+import me.nunum.whereami.model.persistance.PostRepository;
+import me.nunum.whereami.model.persistance.jpa.PostRepositoryJpa;
 import org.glassfish.grizzly.http.server.CLStaticHttpHandler;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.grizzly.http.server.ServerConfiguration;
@@ -25,7 +28,7 @@ import java.util.logging.Logger;
  */
 public final class Main {
     // Base URI the Grizzly HTTP server will listen on
-    private static final String BASE_URI = String.format("http://0.0.0.0:%s", System.getProperty("app.server.port", "9000"));
+    private static final String BASE_URI = String.format("http://0.0.0.0:%s", System.getProperty("app.server.port", "8080"));
 
     private static final Logger LOGGER = Logger.getLogger("Main");
 
@@ -67,7 +70,7 @@ public final class Main {
      * @param args
      * @throws IOException
      */
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, InterruptedException {
 
         LogManager.getLogManager().reset();
         SLF4JBridgeHandler.install();
@@ -80,6 +83,14 @@ public final class Main {
 
         ServerConfiguration cfg = server.getServerConfiguration();
         cfg.addHttpHandler(docsHandler, "/docs/");
+
+        PostRepository repository = new PostRepositoryJpa();
+
+        for (int i = 0; i < 40; i++) {
+            repository.save(new Post("Test title" + i,"https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/R_logo.svg/120px-R_logo.svg.png","https://nunum.me"));
+            Thread.sleep(1000);
+        }
+
 
         Main.LOGGER.log(Level.INFO, "Jersey app started with WADL available at "
                 + "{0} \nHit enter to stop it...", BASE_URI);
