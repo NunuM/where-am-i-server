@@ -12,7 +12,7 @@ import java.util.Objects;
 @Entity
 @NamedQuery(
         name = "Position.findByLocalizationId",
-        query = "SELECT OBJECT(u) FROM Position u where u.localization.id=:localizationId"
+        query = "SELECT OBJECT(u) FROM Position u where u.localization.id=:localizationId ORDER BY u.id DESC"
 )
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = {"LABEL", "LOCALIZATION_ID"}))
 public class Position

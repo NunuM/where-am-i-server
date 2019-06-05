@@ -15,7 +15,7 @@ import java.util.UUID;
 @NamedQueries({
         @NamedQuery(
                 name = "Training.findAllByLocalization",
-                query = "SELECT OBJECT(u) FROM Training u where u.localization.id=:localizationId"),
+                query = "SELECT OBJECT(u) FROM Training u where u.localization.id=:localizationId ORDER BY u.updated DESC"),
         @NamedQuery(
                 name = "Training.findAllByProviderId",
                 query = "SELECT OBJECT(u) FROM Training u where u.algorithmProvider.id=:providerId"

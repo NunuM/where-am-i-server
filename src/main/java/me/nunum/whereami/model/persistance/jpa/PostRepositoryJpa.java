@@ -7,7 +7,6 @@ import me.nunum.whereami.utils.AppConfig;
 
 import javax.persistence.EntityManager;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 

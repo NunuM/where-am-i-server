@@ -17,11 +17,11 @@ import java.util.Objects;
 @NamedQueries({
         @NamedQuery(
                 name = "Localization.allVisibleLocalizations",
-                query = "SELECT OBJECT (l) FROM Localization l WHERE l.isPublic=true OR l.owner.id=:ownerId"
+                query = "SELECT OBJECT (l) FROM Localization l WHERE l.isPublic=true OR l.owner.id=:ownerId ORDER BY l.id DESC"
         ),
         @NamedQuery(
                 name = "Localization.allVisibleLocalizationsFilterByName",
-                query = "SELECT OBJECT (l) FROM Localization l WHERE (l.isPublic=true OR l.owner.id=:ownerId) AND l.label LIKE :name"
+                query = "SELECT OBJECT (l) FROM Localization l WHERE (l.isPublic=true OR l.owner.id=:ownerId) AND l.label LIKE :name ORDER BY l.id DESC"
         )
 })
 public class Localization implements DTOable, Identifiable<Long>, Comparable<Localization> {

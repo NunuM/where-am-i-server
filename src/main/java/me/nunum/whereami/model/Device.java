@@ -20,7 +20,7 @@ import java.util.List;
         )
 })
 public class Device
-        implements Comparable<Device> , DTOable {
+        implements Comparable<Device>, DTOable {
 
     @Id
     @GeneratedValue
@@ -45,25 +45,24 @@ public class Device
     }
 
     public Device(String instanceId) {
-        this(instanceId,"", new ArrayList<>(0));
+        this(instanceId, "", new ArrayList<>(0));
     }
 
     public Device(String instanceId, String firebaseToken) {
-        this(instanceId,firebaseToken, new ArrayList<>(0));
-    }
-
-    public Device(String instanceId, String firebaseToken, List<Role> roles){
-        this.instanceId = instanceId;
-        this.firebaseToken = firebaseToken;
-        this.roles = roles;
-
+        this(instanceId, firebaseToken, new ArrayList<>(0));
     }
 
     public Device(String instanceId, List<Role> roles) {
+        this(instanceId, "", roles);
+    }
+
+    public Device(String instanceId, String firebaseToken, List<Role> roles) {
         this.instanceId = instanceId;
+        this.firebaseToken = firebaseToken;
         this.roles = roles;
         this.onCreate();
     }
+
 
     public Long getId() {
         return id;
