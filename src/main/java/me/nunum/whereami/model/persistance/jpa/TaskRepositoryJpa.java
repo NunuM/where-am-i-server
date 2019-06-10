@@ -7,9 +7,6 @@ import me.nunum.whereami.model.persistance.TaskRepository;
 import me.nunum.whereami.utils.AppConfig;
 
 import javax.persistence.EntityManager;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -29,18 +26,15 @@ public class TaskRepositoryJpa
     /**
      * {@inheritDoc}
      */
+    @SuppressWarnings("unchecked")
     @Override
     public Stream<Task> openTasks() {
 
-        final CriteriaBuilder criteriaBuilder = super.entityManager().getCriteriaBuilder();
+        final EntityManager manager = entityManager();
 
-        CriteriaQuery<Task> builderQuery = criteriaBuilder.createQuery(Task.class);
-
-        final Root<Task> taskRoot = builderQuery.from(Task.class);
-
-        CriteriaQuery<Task> where = builderQuery.where(criteriaBuilder.equal(taskRoot.get("state"), Task.STATE.RUNNING));
-
-        return entityManager().createQuery(where).getResultStream();
+        return manager.createNamedQuery("Task.allByStatus")
+                .setParameter("st", Task.STATE.RUNNING)
+                .getResultStream();
     }
 
     /**

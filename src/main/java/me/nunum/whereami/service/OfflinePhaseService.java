@@ -1,5 +1,6 @@
 package me.nunum.whereami.service;
 
+import me.nunum.whereami.framework.domain.Executable;
 import me.nunum.whereami.model.AlgorithmProvider;
 import me.nunum.whereami.model.Fingerprint;
 import me.nunum.whereami.model.Task;
@@ -23,28 +24,26 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class SchedulerService implements Runnable {
+public class OfflinePhaseService extends Executable {
 
-    private static final Logger LOGGER = Logger.getLogger(SchedulerService.class.getSimpleName());
+    private static final Logger LOGGER = Logger.getLogger(OfflinePhaseService.class.getSimpleName());
 
-    private final TaskRepository tasks;
-    private final TrainingRepository trainings;
-    private final FingerprintRepository fingerprints;
 
-    public SchedulerService() {
-        this.tasks = new TaskRepositoryJpa();
-        this.trainings = new TrainingRepositoryJpa();
-        this.fingerprints = new FingerprintRepositoryJpa();
+    public OfflinePhaseService() {
+        super();
     }
 
     /**
      *
      */
-    @Override
-    public void run() {
+    public Boolean call() {
+
+        final TaskRepository tasks = new TaskRepositoryJpa();
+        final TrainingRepository trainings = new TrainingRepositoryJpa();
+        final FingerprintRepository fingerprints = new FingerprintRepositoryJpa();
 
 
-        LOGGER.log(Level.INFO, "Starting SchedulerService service");
+        LOGGER.log(Level.INFO, "Starting OfflinePhaseService");
 
         final Stream<Task> openTasks = tasks.openTasks();
 
@@ -106,6 +105,7 @@ public class SchedulerService implements Runnable {
 
         });
 
+        return true;
     }
 
     /**
@@ -121,6 +121,8 @@ public class SchedulerService implements Runnable {
 
         final String url = providerServiceProperties.get(AlgorithmProvider.HTTP_PROVIDER_INGESTION_URL_KEY);
         final Client client = ClientBuilder.newClient();
+
+        LOGGER.info(() -> String.format("Pushing %d samples for url %s", fingerprints.size(), url));
 
         HashMap<String, Object> payload = new HashMap<>(2);
 

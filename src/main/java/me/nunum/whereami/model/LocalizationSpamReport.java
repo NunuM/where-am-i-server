@@ -83,16 +83,6 @@ public class LocalizationSpamReport
         return result;
     }
 
-    @Override
-    public String toString() {
-        return "LocalizationSpamReport{" +
-                "id=" + id +
-                ", reporters=" + reporters +
-                ", localization=" + localization +
-                ", created=" + created +
-                ", updated=" + updated +
-                '}';
-    }
 
     @Override
     public DTO toDTO() {

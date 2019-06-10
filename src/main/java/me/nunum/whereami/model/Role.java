@@ -71,14 +71,4 @@ public class Role {
         return Objects.hash(name);
     }
 
-    @Override
-    public String toString() {
-        return "Role{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", devices=" + devices +
-                ", created=" + created +
-                ", updated=" + updated +
-                '}';
-    }
 }

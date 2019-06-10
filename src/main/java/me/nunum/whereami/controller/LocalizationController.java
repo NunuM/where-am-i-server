@@ -3,16 +3,22 @@ package me.nunum.whereami.controller;
 import me.nunum.whereami.framework.dto.DTO;
 import me.nunum.whereami.model.Device;
 import me.nunum.whereami.model.Localization;
+import me.nunum.whereami.model.Prediction;
 import me.nunum.whereami.model.exceptions.EntityNotFoundException;
 import me.nunum.whereami.model.exceptions.ForbiddenEntityDeletionException;
 import me.nunum.whereami.model.exceptions.ForbiddenSubResourceException;
 import me.nunum.whereami.model.persistance.DeviceRepository;
 import me.nunum.whereami.model.persistance.LocalizationRepository;
 import me.nunum.whereami.model.persistance.LocalizationSpamRepository;
+import me.nunum.whereami.model.persistance.PredictionRepository;
 import me.nunum.whereami.model.persistance.jpa.DeviceRepositoryJpa;
 import me.nunum.whereami.model.persistance.jpa.LocalizationRepositoryJpa;
 import me.nunum.whereami.model.persistance.jpa.LocalizationSpamRepositoryJpa;
+import me.nunum.whereami.model.persistance.jpa.PredictionRepositoryJpa;
 import me.nunum.whereami.model.request.NewLocalizationRequest;
+import me.nunum.whereami.model.request.NewPredictionRequest;
+import me.nunum.whereami.service.OnlinePhaseService;
+import me.nunum.whereami.service.TaskManager;
 
 import java.security.Principal;
 import java.util.List;
@@ -160,8 +166,33 @@ public class LocalizationController implements AutoCloseable {
         throw new ForbiddenSubResourceException(String.format("Device %s is not allowed to the sub-resource", device.getId()));
     }
 
+
+    public List<DTO> requestNewPrediction(Principal userPrincipal, Long id, NewPredictionRequest request) {
+
+        final Localization localization = this.localization(userPrincipal, id);
+
+        final PredictionRepository predictionRepository = new PredictionRepositoryJpa();
+
+        if (!request.isOnlyPolling()) {
+
+            Long requestId = predictionRepository.maxRequestIdForLocalization(localization) + 1;
+
+            final OnlinePhaseService onlinePhaseService = new OnlinePhaseService(localization, requestId, request.getSamples());
+
+            TaskManager.getInstance().queue(onlinePhaseService);
+        }
+
+        return predictionRepository
+                .allPredictionsSince(localization, request.getLastUpdate())
+                .stream()
+                .map(Prediction::toDTO)
+                .collect(Collectors.toList());
+    }
+
+
     @Override
     public void close() throws Exception {
         this.repository.close();
     }
+
 }

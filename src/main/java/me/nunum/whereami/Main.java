@@ -2,11 +2,12 @@ package me.nunum.whereami;
 
 import me.nunum.whereami.facade.ApiListingResource;
 import me.nunum.whereami.framework.interceptor.PrincipalInterceptor;
-import me.nunum.whereami.model.Post;
+import me.nunum.whereami.model.*;
 import me.nunum.whereami.model.exceptions.EntityNotFoundException;
 import me.nunum.whereami.model.exceptions.ForbiddenSubResourceException;
-import me.nunum.whereami.model.persistance.PostRepository;
-import me.nunum.whereami.model.persistance.jpa.PostRepositoryJpa;
+import me.nunum.whereami.model.persistance.*;
+import me.nunum.whereami.model.persistance.jpa.*;
+import me.nunum.whereami.service.TaskManager;
 import org.glassfish.grizzly.http.server.CLStaticHttpHandler;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.grizzly.http.server.ServerConfiguration;
@@ -19,6 +20,8 @@ import org.slf4j.bridge.SLF4JBridgeHandler;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.HashMap;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
@@ -37,7 +40,7 @@ public final class Main {
      *
      * @return Grizzly HTTP server.
      */
-    public static HttpServer startServer() {
+    private static HttpServer startServer() {
 
         // create a resource config that scans for JAX-RS resources and providers
         // in me.nunum.whereami.facade package
@@ -75,6 +78,42 @@ public final class Main {
         LogManager.getLogManager().reset();
         SLF4JBridgeHandler.install();
 
+
+        PostRepository repository = new PostRepositoryJpa();
+
+        for (int i = 0; i < 10; i++) {
+            repository.save(new Post("Test title" + i, "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/R_logo.svg/120px-R_logo.svg.png", "https://nunum.me"));
+        }
+
+        DeviceRepository deviceRepository = new DeviceRepositoryJpa();
+        final Device device = deviceRepository.save(new Device("das"));
+
+        RoleRepository roleRepository = new RoleRepositoryJpa();
+        roleRepository.save(new Role("admin"));
+        final Role role = new Role("provider");
+        role.addDevice(device);
+        roleRepository.save(role);
+
+        AlgorithmRepository algorithmRepository = new AlgorithmRepositoryJpa();
+        Algorithm algorithm = algorithmRepository.save(new Algorithm("Mean", "Nuno", "example.pt", true, device));
+
+        ProviderRepository providerRepository = new ProviderRepositoryJpa();
+        final Provider provider = providerRepository.save(new Provider("nuno@nunum.me", UUID.randomUUID().toString(), true, device));
+
+        final HashMap<String, String> map = new HashMap<>(3);
+        map.put(AlgorithmProvider.HTTP_PROVIDER_INGESTION_URL_KEY, "http://www.mocky.io/v2/5cfd86b93200007100ccd52f");
+        map.put(AlgorithmProvider.HTTP_PROVIDER_PREDICTION_URL_KEY, "http://www.mocky.io/v2/5cfd86b93200007100ccd52f");
+        algorithm.addProvider(new AlgorithmProvider(provider, AlgorithmProvider.METHOD.HTTP, map));
+        algorithm = algorithmRepository.save(algorithm);
+
+
+        LocalizationRepository localizationRepository = new LocalizationRepositoryJpa();
+        final Localization localization = localizationRepository.save(new Localization("Q", "Q", device));
+
+        PositionRepository positionRepository = new PostitionRepositoryJpa();
+        positionRepository.save(new Position("localization", localization));
+
+
         final HttpServer server = startServer();
 
         ClassLoader loader = Main.class.getClassLoader();
@@ -84,17 +123,14 @@ public final class Main {
         ServerConfiguration cfg = server.getServerConfiguration();
         cfg.addHttpHandler(docsHandler, "/docs/");
 
-        PostRepository repository = new PostRepositoryJpa();
-
-        for (int i = 0; i < 40; i++) {
-            repository.save(new Post("Test title" + i,"https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/R_logo.svg/120px-R_logo.svg.png","https://nunum.me"));
-            Thread.sleep(1000);
-        }
-
-
-        Main.LOGGER.log(Level.INFO, "Jersey app started with WADL available at "
+        LOGGER.log(Level.INFO, "Jersey app started with WADL available at "
                 + "{0} \nHit enter to stop it...", BASE_URI);
-        System.in.read();
+
+        final Thread taskManager = new Thread(() -> TaskManager.getInstance().run(), "TaskManager");
+        taskManager.start();
+
+        taskManager.join();
+
         server.shutdown();
 
     }

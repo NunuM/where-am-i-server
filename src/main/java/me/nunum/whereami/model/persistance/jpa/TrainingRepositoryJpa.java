@@ -81,8 +81,7 @@ public class TrainingRepositoryJpa
 
         try {
             entityManager.getTransaction().begin();
-            affected = entityManager.createNamedQuery("Task.deleteAllByProviderId").setParameter("providerId", provider.getId()).executeUpdate();
-            entityManager.createNamedQuery("Training.deleteAllByProviderId").setParameter("providerId", provider.getId()).executeUpdate();
+            affected = entityManager.createNamedQuery("Training.deleteAllByProviderId").setParameter("providerId", provider.getId()).executeUpdate();
             entityManager.getTransaction().commit();
         } catch (IllegalStateException | RollbackException e) {
             entityManager.getTransaction().rollback();

@@ -22,7 +22,7 @@ public class AlgorithmProvider implements DTOable {
     @GeneratedValue
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Provider provider;
 
 
@@ -187,17 +187,4 @@ public class AlgorithmProvider implements DTOable {
         return Objects.hash(this.provider.getEmail(), method);
     }
 
-    @Override
-    public String toString() {
-        return "AlgorithmProvider{" +
-                "id=" + id +
-                ", provider=" + provider +
-                ", method=" + method +
-                ", predictionRate=" + predictionRate +
-                ", isDeployed=" + isDeployed +
-                ", created=" + created +
-                ", updated=" + updated +
-                ", properties=" + properties +
-                '}';
-    }
 }

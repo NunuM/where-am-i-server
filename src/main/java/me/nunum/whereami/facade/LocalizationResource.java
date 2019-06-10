@@ -9,6 +9,7 @@ import me.nunum.whereami.model.exceptions.EntityAlreadyExists;
 import me.nunum.whereami.model.exceptions.EntityNotFoundException;
 import me.nunum.whereami.model.exceptions.ForbiddenEntityDeletionException;
 import me.nunum.whereami.model.request.NewLocalizationRequest;
+import me.nunum.whereami.model.request.NewPredictionRequest;
 
 import javax.annotation.security.PermitAll;
 import javax.inject.Singleton;
@@ -116,6 +117,40 @@ public class LocalizationResource {
         } catch (Exception e) {
 
             LOGGER.log(Level.SEVERE, "Unable to create new localization", e);
+
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+
+    @POST
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "X-APP", value = "App Instance", required = true, dataType = "string", paramType = "header")
+    })
+    @Path("{id}/predict")
+    public Response startPrediction(@PathParam("id") Long id, NewPredictionRequest request) {
+
+        try (final LocalizationController controller = new LocalizationController()) {
+
+            final List<DTO> dtos = controller.requestNewPrediction(securityContext.getUserPrincipal(), id, request);
+
+            return Response.ok(dtos.stream().map(DTO::dtoValues).collect(Collectors.toList())).build();
+
+        } catch (EntityNotFoundException e) {
+
+            LOGGER.log(Level.SEVERE, "Localization not found", e);
+
+            return Response.status(Response.Status.NOT_FOUND).build();
+
+        } catch (ForbiddenEntityDeletionException e) {
+
+            LOGGER.log(Level.SEVERE, "Localization not belongs to requester", e);
+
+            return Response.status(Response.Status.FORBIDDEN).build();
+
+        } catch (Exception e) {
+
+            LOGGER.log(Level.SEVERE, "Some error", e);
 
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }

@@ -35,7 +35,7 @@ public class Algorithm
     private boolean isApproved;
 
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Device publisher;
 
 
@@ -176,21 +176,6 @@ public class Algorithm
         int result = name != null ? name.hashCode() : 0;
         result = 31 * result + (created != null ? created.hashCode() : 0);
         return result;
-    }
-
-
-    @Override
-    public String toString() {
-        return "Algorithm{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", authorName='" + authorName + '\'' +
-                ", paperURL='" + paperURL + '\'' +
-                ", isApproved=" + isApproved +
-                ", created=" + created +
-                ", updated=" + updated +
-                ", providers=" + providers +
-                '}';
     }
 
     @Override

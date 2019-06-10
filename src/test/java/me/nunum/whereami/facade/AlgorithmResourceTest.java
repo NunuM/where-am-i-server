@@ -318,7 +318,7 @@ public class AlgorithmResourceTest extends JerseyTest {
                 .header("X-APP", "deleteAlgorithmProviderWithQueuedTask")
                 .buildDelete()
                 .invoke();
-        assertTrue("Delete success", response3.getStatus() == 200);
+        assertEquals("Delete success",  200, response3.getStatus());
 
     }
 

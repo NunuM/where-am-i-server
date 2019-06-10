@@ -91,15 +91,6 @@ public class Device
         updated = new Date(System.currentTimeMillis());
     }
 
-    @Override
-    public String toString() {
-        return "Device{" +
-                "id=" + id +
-                ", instanceId='" + instanceId + '\'' +
-                ", created=" + created +
-                ", updated=" + updated +
-                '}';
-    }
 
     @Override
     public int compareTo(Device device) {

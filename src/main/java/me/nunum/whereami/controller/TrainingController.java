@@ -15,6 +15,8 @@ import me.nunum.whereami.model.persistance.jpa.DeviceRepositoryJpa;
 import me.nunum.whereami.model.persistance.jpa.TaskRepositoryJpa;
 import me.nunum.whereami.model.persistance.jpa.TrainingRepositoryJpa;
 import me.nunum.whereami.model.request.NewTrainingRequest;
+import me.nunum.whereami.service.OfflinePhaseService;
+import me.nunum.whereami.service.TaskManager;
 
 import java.security.Principal;
 import java.util.List;
@@ -93,6 +95,8 @@ public final class TrainingController implements AutoCloseable {
 
             training = this.repository.save(training);
 
+            TaskManager.getInstance().queue(new OfflinePhaseService());
+
             return training.toDTO();
 
         } catch (EntityAlreadyExists e) {
@@ -118,12 +122,12 @@ public final class TrainingController implements AutoCloseable {
 
             final Training training1 = training.get();
 
-            final Optional<Task> task = this.taskRepository.findTaskByTrainingId(training1);
+            training1.resetState();
+            training1.getTask().setState(Task.STATE.RUNNING);
 
-            task.ifPresent(t -> {
-                t.setState(Task.STATE.RUNNING);
-                this.taskRepository.save(t);
-            });
+            this.repository.save(training1);
+
+            TaskManager.getInstance().queue(new OfflinePhaseService());
 
             return training1.toDTO();
         }

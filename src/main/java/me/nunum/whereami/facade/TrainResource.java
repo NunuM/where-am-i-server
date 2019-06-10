@@ -75,12 +75,6 @@ public class TrainResource {
 
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
 
-        } finally {
-            try {
-                this.controller.close();
-            } catch (Exception exception) {
-                LOGGER.log(Level.SEVERE, "Could not close entity manager", exception);
-            }
         }
     }
 
@@ -110,12 +104,6 @@ public class TrainResource {
 
             return Response.status(Response.Status.FORBIDDEN).build();
 
-        } finally {
-            try {
-                this.controller.close();
-            } catch (Exception exception) {
-                LOGGER.log(Level.SEVERE, "Could not close entity manager", exception);
-            }
         }
     }
 
@@ -148,12 +136,6 @@ public class TrainResource {
 
             return Response.status(Response.Status.FORBIDDEN).build();
 
-        } finally {
-            try {
-                this.controller.close();
-            } catch (Exception exception) {
-                LOGGER.log(Level.SEVERE, "Could not close entity manager", exception);
-            }
         }
     }
 
@@ -183,12 +165,6 @@ public class TrainResource {
 
             return Response.status(Response.Status.FORBIDDEN).build();
 
-        } finally {
-            try {
-                this.controller.close();
-            } catch (Exception exception) {
-                LOGGER.log(Level.SEVERE, "Could not close entity manager", exception);
-            }
         }
     }
 }

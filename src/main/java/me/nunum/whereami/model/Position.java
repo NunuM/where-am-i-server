@@ -141,19 +141,4 @@ public class Position
         this.routers = numberOfRouters;
     }
 
-    @Override
-    public String toString() {
-        return "Position{" +
-                "id=" + id +
-                ", label='" + label + '\'' +
-                ", samples=" + samples +
-                ", routers=" + routers +
-                ", networks=" + networks +
-                ", strongestSignal='" + strongestSignal + '\'' +
-                ", localization=" + localization +
-                ", spamReport=" + spamReport +
-                ", created=" + created +
-                ", updated=" + updated +
-                '}';
-    }
 }

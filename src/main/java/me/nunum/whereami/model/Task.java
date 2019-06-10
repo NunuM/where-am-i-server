@@ -1,5 +1,8 @@
 package me.nunum.whereami.model;
 
+import me.nunum.whereami.framework.dto.DTO;
+import me.nunum.whereami.framework.dto.DTOable;
+import me.nunum.whereami.model.dto.TaskDTO;
 import org.eclipse.persistence.annotations.Index;
 
 import javax.persistence.*;
@@ -15,12 +18,17 @@ import java.util.Objects;
         @NamedQuery(
                 name = "Task.deleteAllByProviderId",
                 query = "DELETE FROM Task t WHERE t.training.algorithmProvider.id=:providerId"
+        ),
+        @NamedQuery(
+                name = "Task.allByStatus",
+                query = "SELECT OBJECT(t) FROM Task t WHERE t.state=:st"
         )
 })
-public class Task {
+public class Task implements DTOable {
 
     @Id
     @GeneratedValue
+    @Column(name = "TASK_ID")
     private Long id;
 
 
@@ -29,7 +37,7 @@ public class Task {
     @Index
     private Long cursor;
 
-    @OneToOne(fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.REMOVE)
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "task")
     private Training training;
 
 
@@ -51,21 +59,36 @@ public class Task {
     @Index
     private STATE state;
 
+
     public enum STATE {
-        RUNNING, FINISH_SINK
+        RUNNING {
+            @Override
+            public String toString() {
+                return "running";
+            }
+        }, FINISH_SINK {
+            @Override
+            public String toString() {
+                return "sink";
+            }
+        }, FINISH_TRAINING {
+            @Override
+            public String toString() {
+                return "ready for prediction";
+            }
+        }
     }
 
     public Task() {
     }
 
-    public Task(Long cursor, Training training) {
-        this(100, cursor, training);
+    public Task(Long cursor) {
+        this(100, cursor);
     }
 
-    public Task(int batchSize, Long cursor, Training training) {
+    public Task(int batchSize, Long cursor) {
         this.batchSize = batchSize;
         this.cursor = cursor;
-        this.training = training;
         this.state = STATE.RUNNING;
     }
 
@@ -127,6 +150,11 @@ public class Task {
         this.finishSinkAt = finishSinkAt;
     }
 
+    public void trainingFinish() {
+        this.finishTraingAt = new Date(System.currentTimeMillis());
+        this.state = STATE.FINISH_TRAINING;
+        this.training.trainingIsFinish();
+    }
 
     public STATE getState() {
         return state;
@@ -161,16 +189,8 @@ public class Task {
     }
 
     @Override
-    public String toString() {
-        return "Task{" +
-                "id=" + id +
-                ", batchSize=" + batchSize +
-                ", cursor=" + cursor +
-                ", training=" + training +
-                ", created=" + created +
-                ", updated=" + updated +
-                ", finish=" + finishSinkAt +
-                ", state=" + state +
-                '}';
+    public DTO toDTO() {
+        return new TaskDTO(this.id, this.state.toString());
     }
+
 }

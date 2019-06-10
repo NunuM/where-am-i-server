@@ -38,19 +38,19 @@ public class Training implements DTOable {
 
     private String uid;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Algorithm algorithm;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private AlgorithmProvider algorithmProvider;
 
     private TrainingStatus status;
 
-    @ManyToOne(fetch=FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Localization localization;
 
-    @OneToOne(orphanRemoval = true, cascade = CascadeType.ALL, mappedBy = "training")
-    @JoinColumn(name="TASK_ID")
+    @OneToOne(orphanRemoval = true, cascade = CascadeType.ALL)
+    @JoinColumn(name = "TASK_ID")
     private Task task;
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -81,7 +81,7 @@ public class Training implements DTOable {
         this.status = status;
         this.localization = localization;
         this.algorithmProvider = provider;
-        this.task = new Task(0L, this);
+        this.task = new Task(0L);
     }
 
     public Long getId() {
@@ -128,6 +128,10 @@ public class Training implements DTOable {
         this.task = task;
     }
 
+    public boolean isFinished() {
+        return this.status.equals(TrainingStatus.FINISHED);
+    }
+
     @PrePersist
     protected void onCreate() {
         updated = created = Date.from(Instant.now());
@@ -151,18 +155,6 @@ public class Training implements DTOable {
         return Objects.hash(uid);
     }
 
-    @Override
-    public String toString() {
-        return "Training{" +
-                "id=" + id +
-                ", uid='" + uid + '\'' +
-                ", algorithm=" + algorithm +
-                ", status=" + status +
-                ", localization=" + localization +
-                ", created=" + created +
-                ", updated=" + updated +
-                '}';
-    }
 
     public boolean isAllowedToCheckTheStatus(Device device) {
         return this.localization.isOwner(device);
@@ -178,5 +170,9 @@ public class Training implements DTOable {
                 algorithmProvider.getId(),
                 created,
                 updated);
+    }
+
+    public void resetState() {
+        this.status = TrainingStatus.REQUEST;
     }
 }

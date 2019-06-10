@@ -22,6 +22,10 @@ import java.util.Objects;
         @NamedQuery(
                 name = "Localization.allVisibleLocalizationsFilterByName",
                 query = "SELECT OBJECT (l) FROM Localization l WHERE (l.isPublic=true OR l.owner.id=:ownerId) AND l.label LIKE :name ORDER BY l.id DESC"
+        ),
+        @NamedQuery(
+                name = "Localization.allVisibleLocalizationsFilterByTraining",
+                query = "SELECT OBJECT (l) FROM Localization l JOIN l.trainings t WHERE (l.isPublic=true OR l.owner.id=:ownerId) HAVING t.status=3 ORDER BY l.id DESC"
         )
 })
 public class Localization implements DTOable, Identifiable<Long>, Comparable<Localization> {
@@ -49,13 +53,13 @@ public class Localization implements DTOable, Identifiable<Long>, Comparable<Loc
     @Column(length = 100)
     private String user;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Device owner;
 
     @OneToMany(orphanRemoval = true, cascade = CascadeType.REMOVE, mappedBy = "localization")
     private List<Position> positionList;
 
-    @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, mappedBy = "localization")
+    @OneToMany(orphanRemoval = true, cascade = CascadeType.REMOVE, mappedBy = "localization")
     private List<Training> trainings;
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
@@ -186,6 +190,10 @@ public class Localization implements DTOable, Identifiable<Long>, Comparable<Loc
         this.spamReport.newReport(reporter);
     }
 
+    public List<Training> getTrainings() {
+        return trainings;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -199,26 +207,6 @@ public class Localization implements DTOable, Identifiable<Long>, Comparable<Loc
     public int hashCode() {
 
         return Objects.hash(label, owner);
-    }
-
-    @Override
-    public String toString() {
-        return "Localization{" +
-                "id=" + id +
-                ", label='" + label + '\'' +
-                ", samples=" + samples +
-                ", accuracy=" + accuracy +
-                ", numberOfPositions=" + numberOfPositions +
-                ", latitude=" + latitude +
-                ", longitude=" + longitude +
-                ", isPublic=" + isPublic +
-                ", user='" + user + '\'' +
-                ", owner=" + owner +
-                ", positionList=" + positionList +
-                ", trainings=" + trainings +
-                ", created=" + created +
-                ", updated=" + updated +
-                '}';
     }
 
     @Override

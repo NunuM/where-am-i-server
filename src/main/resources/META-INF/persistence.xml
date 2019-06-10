@@ -18,12 +18,13 @@
         <class>me.nunum.whereami.model.TrainingStatus</class>
         <class>me.nunum.whereami.model.Role</class>
         <class>me.nunum.whereami.model.Provider</class>
+        <class>me.nunum.whereami.model.Prediction</class>
 
         <class>me.nunum.whereami.model.Task</class>
 
         <properties>
-            <!-- <property name="javax.persistence.jdbc.url" value="jdbc:h2:tcp://localhost/~/test"/> -->
-            <property name="javax.persistence.jdbc.url" value="jdbc:h2:mem:test"/>
+            <property name="javax.persistence.jdbc.url" value="jdbc:h2:tcp://localhost/~/test"/>
+            <!--<property name="javax.persistence.jdbc.url" value="jdbc:h2:mem:test"/> -->
             <property name="javax.persistence.jdbc.password" value=""/>
             <property name="javax.persistence.jdbc.driver" value="org.h2.Driver"/>
             <property name="javax.persistence.jdbc.user" value="sa"/>

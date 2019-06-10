@@ -1,7 +1,9 @@
 package me.nunum.whereami.service.notification;
 
 import me.nunum.whereami.model.Device;
+import me.nunum.whereami.model.Localization;
 import me.nunum.whereami.model.Provider;
+import me.nunum.whereami.model.Task;
 import me.nunum.whereami.service.notification.channel.EmailNotifyService;
 
 import java.util.Set;
@@ -27,6 +29,10 @@ public class NotifyService {
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Could not sent notification", e);
         }
+    }
+
+    public static NotifyService traningFinished(Localization localization, final Task task) {
+        return new NotifyService(() -> true);
     }
 
     public static NotifyService providerDeletionNotification(final Set<Device> devices) {

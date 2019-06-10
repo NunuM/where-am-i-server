@@ -131,19 +131,6 @@ public class Provider implements DTOable {
         return Objects.hash(requester);
     }
 
-    @Override
-    public String toString() {
-        return "Provider{" +
-                "id=" + id +
-                ", email='" + email + '\'' +
-                ", token='" + token + '\'' +
-                ", isConfirmed=" + isConfirmed +
-                ", requester=" + requester +
-                ", created=" + created +
-                ", updated=" + updated +
-                ", confirmed=" + confirmed +
-                '}';
-    }
 
     @Override
     public DTO toDTO() {
