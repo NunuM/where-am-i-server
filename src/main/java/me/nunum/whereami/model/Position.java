@@ -69,6 +69,10 @@ public class Position
         this.spamReport = new PositionSpamReport(this);
     }
 
+    public String getLabel() {
+        return label;
+    }
+
     @PrePersist
     protected void onCreate() {
         updated = created = new Date(System.currentTimeMillis());

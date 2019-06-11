@@ -38,6 +38,8 @@ public class Prediction implements DTOable {
 
     private Long providerId;
 
+    private String positionLabel;
+
     @Temporal(TemporalType.TIMESTAMP)
     private Date created;
 
@@ -51,12 +53,13 @@ public class Prediction implements DTOable {
      * @param positionId
      * @param accuracy
      */
-    public Prediction(Long requestId, Long localizationId, Long positionId, Float accuracy, Long providerId) {
+    public Prediction(Long requestId, Long localizationId, Long positionId, String positionLabel, Float accuracy, Long providerId) {
         this.requestId = requestId;
         this.localizationId = localizationId;
         this.positionId = positionId;
         this.accuracy = accuracy;
         this.providerId = providerId;
+        this.positionLabel = positionLabel;
     }
 
     public Long getRequestId() {
@@ -96,6 +99,6 @@ public class Prediction implements DTOable {
 
     @Override
     public DTO toDTO() {
-        return new PredictionDTO(this.localizationId, this.requestId,this.positionId, this.accuracy, this.providerId);
+        return new PredictionDTO(this.id,this.localizationId,this.positionLabel,this.requestId, this.positionId, this.accuracy, this.providerId);
     }
 }

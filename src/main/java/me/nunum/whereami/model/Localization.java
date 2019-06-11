@@ -7,10 +7,7 @@ import me.nunum.whereami.model.dto.LocalizationDTO;
 import org.eclipse.persistence.annotations.Index;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = {"label", "user"}))
@@ -212,5 +209,12 @@ public class Localization implements DTOable, Identifiable<Long>, Comparable<Loc
     @Override
     public int compareTo(Localization o) {
         return this.label.compareToIgnoreCase(o.label);
+    }
+
+    public String positionLabelById(Long positionPredicated) {
+
+        final Optional<Position> optionalPosition = this.positionList.stream().filter(e -> e.id().equals(positionPredicated)).findFirst();
+
+        return optionalPosition.isPresent() ? optionalPosition.get().getLabel() : "";
     }
 }

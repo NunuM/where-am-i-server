@@ -88,6 +88,7 @@ public class OnlinePhaseService extends Executable {
                                     requestId,
                                     localization.id(),
                                     positionPredicated,
+                                    localization.positionLabelById(positionPredicated),
                                     accuracy,
                                     e.getAlgorithmProvider().getId());
 

@@ -1,5 +1,6 @@
 package me.nunum.whereami.model.request;
 
+import javax.validation.constraints.NotNull;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -10,10 +11,13 @@ public class NewPredictionRequest {
 
     private List<FingerprintSample> samples;
 
+    @NotNull
     private Date lastUpdate;
 
+    @NotNull
     private Date clientNow;
 
+    @NotNull
     private boolean onlyPolling;
 
     public NewPredictionRequest() {
