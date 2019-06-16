@@ -6,6 +6,7 @@ import me.nunum.whereami.model.Localization;
 import me.nunum.whereami.model.Prediction;
 import me.nunum.whereami.model.exceptions.EntityNotFoundException;
 import me.nunum.whereami.model.exceptions.ForbiddenEntityDeletionException;
+import me.nunum.whereami.model.exceptions.ForbiddenEntityModificationException;
 import me.nunum.whereami.model.exceptions.ForbiddenSubResourceException;
 import me.nunum.whereami.model.persistance.DeviceRepository;
 import me.nunum.whereami.model.persistance.LocalizationRepository;
@@ -17,6 +18,7 @@ import me.nunum.whereami.model.persistance.jpa.LocalizationSpamRepositoryJpa;
 import me.nunum.whereami.model.persistance.jpa.PredictionRepositoryJpa;
 import me.nunum.whereami.model.request.NewLocalizationRequest;
 import me.nunum.whereami.model.request.NewPredictionRequest;
+import me.nunum.whereami.model.request.UpdatePredictionRequest;
 import me.nunum.whereami.service.OnlinePhaseService;
 import me.nunum.whereami.service.TaskManager;
 
@@ -50,12 +52,13 @@ public class LocalizationController implements AutoCloseable {
      */
     public List<DTO> localizations(final Principal principal,
                                    final Optional<Integer> page,
-                                   final Optional<String> localizationName) {
+                                   final Optional<String> localizationName,
+                                   final Optional<String> trained) {
 
         final Device requester = this.deviceRepository.findOrPersist(principal);
 
         return this.repository
-                .searchWithPagination(requester, page, localizationName)
+                .searchWithPagination(requester, page, localizationName, trained)
                 .stream()
                 .map(e -> e.toDTO(requester))
                 .collect(Collectors.toList());
@@ -190,9 +193,34 @@ public class LocalizationController implements AutoCloseable {
     }
 
 
+    public DTO processPredictionFeedback(Principal userPrincipal, Long localizationId, Long predictionId, UpdatePredictionRequest request) {
+
+        final Localization localization = this.localization(userPrincipal, localizationId);
+
+        final PredictionRepositoryJpa predictions = new PredictionRepositoryJpa();
+
+        final Optional<Prediction> optionalPrediction = predictions.findById(predictionId);
+
+        if (!optionalPrediction.isPresent()) {
+            throw new EntityNotFoundException(String.format("Prediction %d does not exists", predictionId));
+        }
+
+        final Prediction prediction = optionalPrediction.get();
+
+        if (!prediction.isSameLocalization(localization)) {
+            throw new ForbiddenEntityModificationException(String.format("Prediction %d is not associated with localization %d", localizationId, predictionId));
+        }
+
+        request.updateFeebdack(prediction);
+
+        return predictions.save(prediction).toDTO();
+    }
+
+
     @Override
     public void close() throws Exception {
         this.repository.close();
     }
+
 
 }

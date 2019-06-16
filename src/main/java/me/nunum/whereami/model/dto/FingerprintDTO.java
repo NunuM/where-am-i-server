@@ -6,7 +6,7 @@ import me.nunum.whereami.model.Fingerprint;
 import java.util.HashMap;
 import java.util.Map;
 
-public class FingerprintDTO implements DTO {
+public final class FingerprintDTO implements DTO {
 
     private HashMap<String,Object> map;
 

@@ -25,7 +25,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-public final class TrainingController implements AutoCloseable {
+public class TrainingController implements AutoCloseable {
 
     private static final Logger LOGGER = Logger.getLogger(TrainingController.class.getSimpleName());
 

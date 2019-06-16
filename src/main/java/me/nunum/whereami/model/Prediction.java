@@ -40,6 +40,28 @@ public class Prediction implements DTOable {
 
     private String positionLabel;
 
+    private PREDICTION_FEEDBACK predictionFeedback;
+
+
+    enum PREDICTION_FEEDBACK {
+        NOT_GIVEN {
+            @Override
+            public String toString() {
+                return "Not given";
+            }
+        }, CORRECT {
+            @Override
+            public String toString() {
+                return "Correct";
+            }
+        }, INCORRECT {
+            @Override
+            public String toString() {
+                return "incorrect";
+            }
+        }
+    }
+
     @Temporal(TemporalType.TIMESTAMP)
     private Date created;
 
@@ -60,6 +82,7 @@ public class Prediction implements DTOable {
         this.accuracy = accuracy;
         this.providerId = providerId;
         this.positionLabel = positionLabel;
+        this.predictionFeedback = PREDICTION_FEEDBACK.NOT_GIVEN;
     }
 
     public Long getRequestId() {
@@ -83,6 +106,18 @@ public class Prediction implements DTOable {
         created = Date.from(Instant.now());
     }
 
+    public boolean isSameLocalization(final Localization localization) {
+        return this.localizationId.equals(localization.id());
+    }
+
+    public void correctPrediction() {
+        this.predictionFeedback = PREDICTION_FEEDBACK.CORRECT;
+    }
+
+    public void incorrectPrediction() {
+        this.predictionFeedback = PREDICTION_FEEDBACK.INCORRECT;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -99,6 +134,14 @@ public class Prediction implements DTOable {
 
     @Override
     public DTO toDTO() {
-        return new PredictionDTO(this.id,this.localizationId,this.positionLabel,this.requestId, this.positionId, this.accuracy, this.providerId);
+        return new PredictionDTO(
+                this.id,
+                this.localizationId,
+                this.positionLabel,
+                this.requestId,
+                this.positionId,
+                this.accuracy,
+                this.providerId,
+                this.predictionFeedback.ordinal());
     }
 }

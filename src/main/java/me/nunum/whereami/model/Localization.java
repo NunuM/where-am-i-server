@@ -22,7 +22,7 @@ import java.util.*;
         ),
         @NamedQuery(
                 name = "Localization.allVisibleLocalizationsFilterByTraining",
-                query = "SELECT OBJECT (l) FROM Localization l JOIN l.trainings t WHERE (l.isPublic=true OR l.owner.id=:ownerId) HAVING t.status=3 ORDER BY l.id DESC"
+                query = "SELECT OBJECT (l) FROM Localization l JOIN l.trainings t WHERE (l.isPublic=true OR l.owner.id=:ownerId) AND l.numberOfModels > 0 ORDER BY l.id DESC"
         )
 })
 public class Localization implements DTOable, Identifiable<Long>, Comparable<Localization> {
@@ -36,7 +36,8 @@ public class Localization implements DTOable, Identifiable<Long>, Comparable<Loc
 
     private Long samples;
 
-    private Float accuracy;
+    @Index
+    private Integer numberOfModels;
 
     private Integer numberOfPositions;
 
@@ -91,7 +92,7 @@ public class Localization implements DTOable, Identifiable<Long>, Comparable<Loc
         this.latitude = latitude;
         this.longitude = longitude;
         this.samples = 0L;
-        this.accuracy = 0.0f;
+        this.numberOfModels = 0;
         this.numberOfPositions = 0;
         this.user = userLabel;
         this.owner = owner;
@@ -118,7 +119,7 @@ public class Localization implements DTOable, Identifiable<Long>, Comparable<Loc
                 this.label,
                 this.user,
                 this.samples,
-                this.accuracy,
+                this.numberOfModels,
                 this.numberOfPositions,
                 false
         );
@@ -129,7 +130,7 @@ public class Localization implements DTOable, Identifiable<Long>, Comparable<Loc
                 this.label,
                 this.user,
                 this.samples,
-                this.accuracy,
+                this.numberOfModels,
                 this.numberOfPositions,
                 this.owner.equals(requester)
         );
@@ -163,6 +164,15 @@ public class Localization implements DTOable, Identifiable<Long>, Comparable<Loc
 
     public void decrementPosition() {
         this.numberOfPositions -= 1;
+    }
+
+    public void incrementTrainedModels() {
+        this.numberOfModels += 1;
+    }
+
+    public void decrementTrainedModels() {
+        if (numberOfModels > 0)
+            this.numberOfModels -= 1;
     }
 
     public boolean addTraining(Training training) {

@@ -8,8 +8,10 @@ import me.nunum.whereami.framework.dto.DTO;
 import me.nunum.whereami.model.exceptions.EntityAlreadyExists;
 import me.nunum.whereami.model.exceptions.EntityNotFoundException;
 import me.nunum.whereami.model.exceptions.ForbiddenEntityDeletionException;
+import me.nunum.whereami.model.exceptions.ForbiddenEntityModificationException;
 import me.nunum.whereami.model.request.NewLocalizationRequest;
 import me.nunum.whereami.model.request.NewPredictionRequest;
+import me.nunum.whereami.model.request.UpdatePredictionRequest;
 
 import javax.annotation.security.PermitAll;
 import javax.inject.Singleton;
@@ -42,12 +44,15 @@ public class LocalizationResource {
             @ApiImplicitParam(name = "X-APP", value = "App Instance", required = true, dataType = "string", paramType = "header")
     })
     @Produces({MediaType.APPLICATION_JSON})
-    public Response retrieveLocalizations(@QueryParam("page") Integer page, @QueryParam("name") String localizationName) {
+    public Response retrieveLocalizations(@QueryParam("page") Integer page,
+                                          @QueryParam("name") String localizationName,
+                                          @QueryParam("trained") String trained) {
 
         try (final LocalizationController controller = new LocalizationController()) {
             final List<DTO> dtos = controller.localizations(securityContext.getUserPrincipal(),
                     Optional.ofNullable(page),
-                    Optional.ofNullable(localizationName)
+                    Optional.ofNullable(localizationName),
+                    Optional.ofNullable(trained)
             );
 
             return Response.ok(dtos.stream().map(DTO::dtoValues).collect(Collectors.toList())).build();
@@ -156,6 +161,45 @@ public class LocalizationResource {
         }
     }
 
+
+    @PUT
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "X-APP", value = "App Instance", required = true, dataType = "string", paramType = "header")
+    })
+    @Path("{id}/predict/{prediction}")
+    public Response predictionFeedbackRequest(@PathParam("id") Long localizationId,
+                                              @PathParam("prediction") Long predictionId,
+                                              UpdatePredictionRequest request) {
+
+        try (final LocalizationController controller = new LocalizationController()) {
+
+
+            final DTO dto = controller.processPredictionFeedback(securityContext.getUserPrincipal(),
+                    localizationId,
+                    predictionId,
+                    request);
+
+            return Response.ok().entity(dto.dtoValues()).build();
+
+        } catch (EntityNotFoundException e) {
+
+            LOGGER.log(Level.SEVERE, "Localization not found", e);
+
+            return Response.status(Response.Status.NOT_FOUND).build();
+
+        } catch (ForbiddenEntityModificationException e) {
+
+            LOGGER.log(Level.SEVERE, "Localization not belongs to prediction", e);
+
+            return Response.status(Response.Status.FORBIDDEN).build();
+
+        } catch (Exception e) {
+
+            LOGGER.log(Level.SEVERE, "Some error", e);
+
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 
     @ApiImplicitParams({
             @ApiImplicitParam(name = "X-APP", value = "App Instance", required = true, dataType = "string", paramType = "header")

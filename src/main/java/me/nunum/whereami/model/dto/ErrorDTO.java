@@ -4,7 +4,7 @@ import me.nunum.whereami.framework.dto.DTO;
 
 import java.util.HashMap;
 
-public class ErrorDTO implements DTO {
+public final class ErrorDTO implements DTO {
 
 
     private HashMap<String, Object> map = new HashMap<>();

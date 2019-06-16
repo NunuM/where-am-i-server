@@ -235,7 +235,10 @@ public class AlgorithmController implements AutoCloseable {
 
         /** Notify affected devices */
         List<Training> trainings = trainingRepository.findAllTrainingWithProvider(provider);
-        final Set<Device> devices = trainings.stream().map(e -> e.getLocalization().getOwner()).collect(Collectors.toSet());
+        final Set<Device> devices = trainings.stream().map(e -> {
+            e.getLocalization().decrementTrainedModels();
+            return e.getLocalization().getOwner();
+        }).collect(Collectors.toSet());
         final NotifyService notifyService = NotifyService.providerDeletionNotification(devices);
         notifyService.run();
 

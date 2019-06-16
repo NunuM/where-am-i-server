@@ -6,7 +6,7 @@ import me.nunum.whereami.model.AlgorithmProvider;
 import java.util.HashMap;
 import java.util.Map;
 
-public class AlgorithmProviderDTO implements DTO {
+public final class AlgorithmProviderDTO implements DTO {
 
     private HashMap<String, Object> map;
 

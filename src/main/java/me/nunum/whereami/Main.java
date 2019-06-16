@@ -78,7 +78,7 @@ public final class Main {
         LogManager.getLogManager().reset();
         SLF4JBridgeHandler.install();
 
-
+//
 //        PostRepository repository = new PostRepositoryJpa();
 //
 //        for (int i = 0; i < 10; i++) {

@@ -5,7 +5,7 @@ import me.nunum.whereami.framework.dto.DTO;
 import java.util.HashMap;
 import java.util.Map;
 
-public class TaskDTO implements DTO {
+public final class TaskDTO implements DTO {
 
 
     private HashMap<String, Object> map;

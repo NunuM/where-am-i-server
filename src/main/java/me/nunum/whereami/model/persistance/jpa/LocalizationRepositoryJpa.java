@@ -21,8 +21,7 @@ public class LocalizationRepositoryJpa
 
 
     @Override
-    public void deleteLocalization(Localization localization)
-    {
+    public void deleteLocalization(Localization localization) {
         final EntityManager entityManager = entityManager();
 
         entityManager.getTransaction();
@@ -33,7 +32,10 @@ public class LocalizationRepositoryJpa
 
     @SuppressWarnings("unchecked")
     @Override
-    public List<Localization> searchWithPagination(Device device, Optional<Integer> page, Optional<String> localizationName) {
+    public List<Localization> searchWithPagination(Device device,
+                                                   Optional<Integer> page,
+                                                   Optional<String> localizationName,
+                                                   Optional<String> trained) {
 
         final Integer currentPage = page.map(p -> {
             if (p < 1) {
@@ -42,6 +44,15 @@ public class LocalizationRepositoryJpa
         }).orElse(1);
 
         final EntityManager manager = entityManager();
+
+        if (trained.isPresent()) {
+            return (List<Localization>) manager.createNamedQuery("Localization.allVisibleLocalizationsFilterByTraining")
+                    .setParameter("ownerId", device.getId())
+                    .setMaxResults(DEFAULT_PAGE_SIZE)
+                    .setFirstResult((currentPage - 1) * DEFAULT_PAGE_SIZE)
+                    .getResultList();
+        }
+
 
         if (!(localizationName.isPresent())) {
             return (List<Localization>) manager.createNamedQuery("Localization.allVisibleLocalizations")

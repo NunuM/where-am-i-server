@@ -12,5 +12,8 @@ public interface LocalizationRepository extends Repository<Localization, Long>, 
     void deleteLocalization(Localization localization);
 
 
-    List<Localization> searchWithPagination(Device device, Optional<Integer> page, Optional<String> localizationName);
+    List<Localization> searchWithPagination(Device device,
+                                            Optional<Integer> page,
+                                            Optional<String> localizationName,
+                                            Optional<String> trained);
 }

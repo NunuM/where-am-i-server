@@ -14,7 +14,7 @@ public final class LocalizationDTO implements DTO {
                            String label,
                            String userLabel,
                            Long samples,
-                           Float accuracy,
+                           Integer numberOfModels,
                            Integer positions,
                            boolean isOwner) {
 
@@ -28,7 +28,7 @@ public final class LocalizationDTO implements DTO {
         this.objectMap.put("isOwner", isOwner);
 
         stats.put("samples", samples);
-        stats.put("accuracy", accuracy);
+        stats.put("numberOfTrainedModels", numberOfModels);
         stats.put("positions", positions);
 
         this.objectMap.put("stats", stats);

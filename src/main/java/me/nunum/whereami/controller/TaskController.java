@@ -16,7 +16,7 @@ import me.nunum.whereami.service.notification.NotifyService;
 import java.security.Principal;
 import java.util.Optional;
 
-public final class TaskController implements AutoCloseable {
+public class TaskController implements AutoCloseable {
 
     private final TaskRepository taskRepository;
     private final DeviceRepository deviceRepository;
@@ -48,9 +48,13 @@ public final class TaskController implements AutoCloseable {
         }
 
         if (request.isFinish()) {
+
             task.trainingFinish();
 
             final Localization localization = task.trainingInfo().getLocalization();
+
+            localization.incrementTrainedModels();
+
             NotifyService.traningFinished(localization, task);
 
         } else {

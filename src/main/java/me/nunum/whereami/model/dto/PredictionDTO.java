@@ -5,13 +5,21 @@ import me.nunum.whereami.framework.dto.DTO;
 import java.util.HashMap;
 import java.util.Map;
 
-public class PredictionDTO implements DTO {
+public final class PredictionDTO implements DTO {
 
 
-    private HashMap<String, Object> map;
+    private final HashMap<String, Object> map;
 
-    public PredictionDTO(Long id, Long localizationId, String predictionLabel, Long requestId, Long predictedPosition, Float accuracy, Long providerId) {
-        this.map = new HashMap<>(7);
+    public PredictionDTO(Long id,
+                         Long localizationId,
+                         String predictionLabel,
+                         Long requestId,
+                         Long predictedPosition,
+                         Float accuracy,
+                         Long providerId,
+                         int predictionFeedback) {
+
+        this.map = new HashMap<>(8);
 
         this.map.put("id", id);
         this.map.put("localizationId", localizationId);
@@ -20,6 +28,7 @@ public class PredictionDTO implements DTO {
         this.map.put("providerId", providerId);
         this.map.put("predictedPositionId", predictedPosition);
         this.map.put("predictionLabel", predictionLabel);
+        this.map.put("predictionFeedback", predictionFeedback);
     }
 
     @Override
