@@ -152,6 +152,10 @@
                             <value>${env.HOME}</value>
                         </property>
                         <property>
+                            <key>app.firebase.service.account</key>
+                            <value>${env.HOME}</value>
+                        </property>
+                        <property>
                             <key>app.persistence.unit</key>
                             <value>me.nunum.whereami.JPA_PERSISTENCE</value>
                         </property>
