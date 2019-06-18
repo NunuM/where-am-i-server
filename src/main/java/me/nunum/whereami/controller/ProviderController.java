@@ -61,7 +61,7 @@ public class ProviderController implements AutoCloseable {
 
         try {
 
-            NotifyService.newProviderRequest(provider).run();
+            NotifyService.newProviderRequest(provider);
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Could not send email", e);
         }

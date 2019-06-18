@@ -1,6 +1,7 @@
 package me.nunum.whereami.service.notification.channel;
 
 
+import me.nunum.whereami.framework.domain.Executable;
 import me.nunum.whereami.utils.AppConfig;
 
 import javax.mail.*;
@@ -8,9 +9,8 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.util.Date;
 import java.util.Properties;
-import java.util.concurrent.Callable;
 
-public class EmailNotifyService implements Callable<Boolean> {
+public class EmailNotifyService extends Executable {
 
     private final NewProviderMessage message;
 

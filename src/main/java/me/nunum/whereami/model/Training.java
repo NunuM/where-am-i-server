@@ -112,6 +112,10 @@ public class Training implements DTOable {
         return localization;
     }
 
+    public Algorithm getAlgorithm() {
+        return algorithm;
+    }
+
     public AlgorithmProvider getAlgorithmProvider() {
         return algorithmProvider;
     }

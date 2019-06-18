@@ -55,7 +55,7 @@ public class TaskController implements AutoCloseable {
 
             localization.incrementTrainedModels();
 
-            NotifyService.traningFinished(localization, task);
+            NotifyService.trainingFinished(localization, task);
 
         } else {
             task.setState(Task.STATE.FINISH_SINK);

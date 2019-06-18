@@ -78,40 +78,40 @@ public final class Main {
         LogManager.getLogManager().reset();
         SLF4JBridgeHandler.install();
 
-//
-//        PostRepository repository = new PostRepositoryJpa();
-//
-//        for (int i = 0; i < 10; i++) {
-//            repository.save(new Post("Test title" + i, "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/R_logo.svg/120px-R_logo.svg.png", "https://nunum.me"));
-//        }
-//
-//        DeviceRepository deviceRepository = new DeviceRepositoryJpa();
-//        final Device device = deviceRepository.save(new Device("das"));
-//
-//        RoleRepository roleRepository = new RoleRepositoryJpa();
-//        roleRepository.save(new Role("admin"));
-//        final Role role = new Role("provider");
-//        role.addDevice(device);
-//        roleRepository.save(role);
-//
-//        AlgorithmRepository algorithmRepository = new AlgorithmRepositoryJpa();
-//        Algorithm algorithm = algorithmRepository.save(new Algorithm("Mean", "Nuno", "example.pt", true, device));
-//
-//        ProviderRepository providerRepository = new ProviderRepositoryJpa();
-//        final Provider provider = providerRepository.save(new Provider("nuno@nunum.me", UUID.randomUUID().toString(), true, device));
-//
-//        final HashMap<String, String> map = new HashMap<>(3);
-//        map.put(AlgorithmProvider.HTTP_PROVIDER_INGESTION_URL_KEY, "http://www.mocky.io/v2/5cfd86b93200007100ccd52f");
-//        map.put(AlgorithmProvider.HTTP_PROVIDER_PREDICTION_URL_KEY, "http://www.mocky.io/v2/5cfd86b93200007100ccd52f");
-//        algorithm.addProvider(new AlgorithmProvider(provider, AlgorithmProvider.METHOD.HTTP, map));
-//        algorithm = algorithmRepository.save(algorithm);
-//
-//
-//        LocalizationRepository localizationRepository = new LocalizationRepositoryJpa();
-//        final Localization localization = localizationRepository.save(new Localization("Q", "Q", device));
-//
-//        PositionRepository positionRepository = new PostitionRepositoryJpa();
-//        positionRepository.save(new Position("localization", localization));
+
+        PostRepository repository = new PostRepositoryJpa();
+
+        for (int i = 0; i < 10; i++) {
+            repository.save(new Post("Test title" + i, "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/R_logo.svg/120px-R_logo.svg.png", "https://nunum.me"));
+        }
+
+        DeviceRepository deviceRepository = new DeviceRepositoryJpa();
+        final Device device = deviceRepository.save(new Device("das"));
+
+        RoleRepository roleRepository = new RoleRepositoryJpa();
+        roleRepository.save(new Role("admin"));
+        final Role role = new Role("provider");
+        role.addDevice(device);
+        roleRepository.save(role);
+
+        AlgorithmRepository algorithmRepository = new AlgorithmRepositoryJpa();
+        Algorithm algorithm = algorithmRepository.save(new Algorithm("Mean", "Nuno", "example.pt", true, device));
+
+        ProviderRepository providerRepository = new ProviderRepositoryJpa();
+        final Provider provider = providerRepository.save(new Provider("nuno@nunum.me", UUID.randomUUID().toString(), true, device));
+
+        final HashMap<String, String> map = new HashMap<>(3);
+        map.put(AlgorithmProvider.HTTP_PROVIDER_INGESTION_URL_KEY, "http://www.mocky.io/v2/5cfd86b93200007100ccd52f");
+        map.put(AlgorithmProvider.HTTP_PROVIDER_PREDICTION_URL_KEY, "http://www.mocky.io/v2/5cfd86b93200007100ccd52f");
+        algorithm.addProvider(new AlgorithmProvider(provider, AlgorithmProvider.METHOD.HTTP, map));
+        algorithm = algorithmRepository.save(algorithm);
+
+
+        LocalizationRepository localizationRepository = new LocalizationRepositoryJpa();
+        final Localization localization = localizationRepository.save(new Localization("Q", "Q", device));
+
+        PositionRepository positionRepository = new PostitionRepositoryJpa();
+        positionRepository.save(new Position("localization", localization));
 
 
         final HttpServer server = startServer();

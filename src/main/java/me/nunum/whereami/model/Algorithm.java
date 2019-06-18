@@ -11,6 +11,10 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Entity
+@NamedQuery(
+        name = "Algorithm.algorithmNameByProvider",
+        query = "SELECT a.name FROM Algorithm a WHERE a.providers IN (:provider)"
+)
 public class Algorithm
         implements Identifiable<String>,
         Comparable<Algorithm>,

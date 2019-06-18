@@ -146,7 +146,7 @@ public class AlgorithmController implements AutoCloseable {
 
         try {
             Set<Device> devices = this.deviceRepository.findAllDevicesInRole(Role.ADMIN);
-            NotifyService.newAlgorithmNotification(devices).run();
+            NotifyService.newAlgorithmNotification(devices);
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Notification was not sent", e);
         }
@@ -239,8 +239,10 @@ public class AlgorithmController implements AutoCloseable {
             e.getLocalization().decrementTrainedModels();
             return e.getLocalization().getOwner();
         }).collect(Collectors.toSet());
-        final NotifyService notifyService = NotifyService.providerDeletionNotification(devices);
-        notifyService.run();
+
+        final String algorithmName = this.algorithmProviderRepository.algorithmByProvider(provider).orElse("");
+        NotifyService.providerDeletionNotification(devices, algorithmName);
+
 
         /**  Delete provider */
         int affectedDevices = trainingRepository.deleteTrainingsAffectedBy(provider);

@@ -2,6 +2,7 @@ package me.nunum.whereami.model;
 
 import me.nunum.whereami.framework.dto.DTO;
 import me.nunum.whereami.framework.dto.DTOable;
+import me.nunum.whereami.model.dto.DeviceDTO;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -118,6 +119,6 @@ public class Device
 
     @Override
     public DTO toDTO() {
-        return null;
+        return new DeviceDTO(this.firebaseToken);
     }
 }
