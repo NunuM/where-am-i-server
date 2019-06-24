@@ -2,6 +2,7 @@ package me.nunum.whereami.model.dto;
 
 import me.nunum.whereami.framework.dto.DTO;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,9 +17,10 @@ public final class LocalizationDTO implements DTO {
                            Long samples,
                            Integer numberOfModels,
                            Integer positions,
-                           boolean isOwner) {
+                           boolean isOwner,
+                           Date created) {
 
-        this.objectMap = new HashMap<>(4);
+        this.objectMap = new HashMap<>(5);
 
         final Map<String, Object> stats = new HashMap<>(3);
 
@@ -26,6 +28,7 @@ public final class LocalizationDTO implements DTO {
         this.objectMap.put("label", label);
         this.objectMap.put("user", userLabel);
         this.objectMap.put("isOwner", isOwner);
+        this.objectMap.put("created", created);
 
         stats.put("samples", samples);
         stats.put("numberOfTrainedModels", numberOfModels);

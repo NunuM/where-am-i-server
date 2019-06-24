@@ -11,6 +11,7 @@ import me.nunum.whereami.model.persistance.jpa.FingerprintRepositoryJpa;
 import me.nunum.whereami.model.persistance.jpa.TaskRepositoryJpa;
 import me.nunum.whereami.model.persistance.jpa.TrainingRepositoryJpa;
 import me.nunum.whereami.service.exceptions.HTTPRequestError;
+import me.nunum.whereami.utils.AppConfig;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -120,7 +121,7 @@ public class OfflinePhaseService extends Executable {
     private boolean flushPayload(Long taskID, List<Fingerprint> fingerprints, Map<String, String> providerServiceProperties) {
 
         final String url = providerServiceProperties.get(AlgorithmProvider.HTTP_PROVIDER_INGESTION_URL_KEY);
-        final Client client = ClientBuilder.newClient();
+        final Client client = ClientBuilder.newClient(AppConfig.getInstance().clientConfig());
 
         LOGGER.info(() -> String.format("Pushing %d samples for url %s", fingerprints.size(), url));
 
@@ -129,7 +130,7 @@ public class OfflinePhaseService extends Executable {
         payload.put("id", taskID);
         payload.put("fingerprints", fingerprints.stream().map(e -> e.toDTO().dtoValues()).collect(Collectors.toList()));
 
-        try (Response response = client.target(url)
+        try (final Response response = client.target(url)
                 .request(MediaType.APPLICATION_JSON)
                 .buildPost(Entity.entity(payload, MediaType.APPLICATION_JSON))
                 .invoke()) {

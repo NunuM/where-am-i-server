@@ -53,12 +53,13 @@ public class LocalizationController implements AutoCloseable {
     public List<DTO> localizations(final Principal principal,
                                    final Optional<Integer> page,
                                    final Optional<String> localizationName,
-                                   final Optional<String> trained) {
+                                   final Optional<String> trained,
+                                   final Optional<Boolean> onlyUserLocalizations) {
 
         final Device requester = this.deviceRepository.findOrPersist(principal);
 
         return this.repository
-                .searchWithPagination(requester, page, localizationName, trained)
+                .searchWithPagination(requester, page, localizationName, trained, onlyUserLocalizations)
                 .stream()
                 .map(e -> e.toDTO(requester))
                 .collect(Collectors.toList());

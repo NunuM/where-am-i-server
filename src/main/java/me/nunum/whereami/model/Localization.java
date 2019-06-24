@@ -23,6 +23,10 @@ import java.util.*;
         @NamedQuery(
                 name = "Localization.allVisibleLocalizationsFilterByTraining",
                 query = "SELECT OBJECT (l) FROM Localization l JOIN l.trainings t WHERE (l.isPublic=true OR l.owner.id=:ownerId) AND l.numberOfModels > 0 ORDER BY l.id DESC"
+        ),
+        @NamedQuery(
+                name = "Localization.onlyOwnerLocalizations",
+                query = "SELECT OBJECT (l) FROM Localization l WHERE l.owner.id=:ownerId ORDER BY l.id DESC"
         )
 })
 public class Localization implements DTOable, Identifiable<Long>, Comparable<Localization> {
@@ -121,7 +125,8 @@ public class Localization implements DTOable, Identifiable<Long>, Comparable<Loc
                 this.samples,
                 this.numberOfModels,
                 this.numberOfPositions,
-                false
+                false,
+                this.created
         );
     }
 
@@ -132,7 +137,8 @@ public class Localization implements DTOable, Identifiable<Long>, Comparable<Loc
                 this.samples,
                 this.numberOfModels,
                 this.numberOfPositions,
-                this.owner.equals(requester)
+                this.owner.equals(requester),
+                this.created
         );
     }
 
@@ -144,6 +150,10 @@ public class Localization implements DTOable, Identifiable<Long>, Comparable<Loc
     @Override
     public Long id() {
         return this.id;
+    }
+
+    public String getLabel() {
+        return label;
     }
 
     public boolean isOwner(Device requester) {

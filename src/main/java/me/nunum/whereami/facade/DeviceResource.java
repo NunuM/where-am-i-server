@@ -1,6 +1,8 @@
 package me.nunum.whereami.facade;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import me.nunum.whereami.controller.DeviceController;
 import me.nunum.whereami.model.request.UpdateDeviceRequest;
 
@@ -22,6 +24,9 @@ public class DeviceResource {
 
 
     @POST
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "X-APP", value = "App Instance", required = true, dataType = "string", paramType = "header")
+    })
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     public Response updateDevice(UpdateDeviceRequest request) {

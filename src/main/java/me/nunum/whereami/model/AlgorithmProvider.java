@@ -91,7 +91,7 @@ public class AlgorithmProvider implements DTOable {
         public abstract String[] requiredKeys();
 
         public boolean isAutomaticDeployed() {
-            return false;
+            return true;
         }
 
 

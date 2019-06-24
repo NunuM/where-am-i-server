@@ -46,13 +46,15 @@ public class LocalizationResource {
     @Produces({MediaType.APPLICATION_JSON})
     public Response retrieveLocalizations(@QueryParam("page") Integer page,
                                           @QueryParam("name") String localizationName,
-                                          @QueryParam("trained") String trained) {
+                                          @QueryParam("trained") String trained,
+                                          @QueryParam("owner") Boolean onlyUserLocalizations) {
 
         try (final LocalizationController controller = new LocalizationController()) {
             final List<DTO> dtos = controller.localizations(securityContext.getUserPrincipal(),
                     Optional.ofNullable(page),
                     Optional.ofNullable(localizationName),
-                    Optional.ofNullable(trained)
+                    Optional.ofNullable(trained),
+                    Optional.ofNullable(onlyUserLocalizations)
             );
 
             return Response.ok(dtos.stream().map(DTO::dtoValues).collect(Collectors.toList())).build();

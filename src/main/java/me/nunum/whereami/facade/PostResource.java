@@ -13,10 +13,9 @@ import javax.annotation.security.RolesAllowed;
 import javax.inject.Singleton;
 import javax.validation.Valid;
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.SecurityContext;
+import javax.ws.rs.core.*;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
@@ -47,7 +46,10 @@ public class PostResource {
 
             final List<DTO> dtoList = controller.posts(Optional.ofNullable(page));
 
-            return Response.ok(dtoList.stream().map(DTO::dtoValues).collect(Collectors.toList())).build();
+            return Response.ok(dtoList.stream().map(DTO::dtoValues).collect(Collectors.toList()))
+                    .expires(new Date(System.currentTimeMillis() + 3600000))
+                    .header("Date", new Date())
+                    .build();
 
         } catch (Exception e) {
 

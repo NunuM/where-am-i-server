@@ -3,6 +3,8 @@ package me.nunum.whereami.utils;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
+import me.nunum.whereami.framework.interceptor.ClientLoggingInterceptor;
+import org.glassfish.jersey.client.ClientConfig;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -13,8 +15,11 @@ public class AppConfig {
     private static final AppConfig ourInstance = new AppConfig();
 
     private FirebaseApp firebaseApp;
+    private final ClientConfig clientConfig;
 
     private AppConfig() {
+        clientConfig = new ClientConfig();
+        clientConfig.register(ClientLoggingInterceptor.class);
     }
 
     public static final String JPA_UNIT = System.getProperty("app.persistence.unit", "me.nunum.whereami.JPA_PERSISTENCE");
@@ -28,13 +33,12 @@ public class AppConfig {
 
 
     /**
-     *
      * @return See {@link FirebaseApp}
      * @throws FileNotFoundException
      * @throws IOException
      */
     public synchronized FirebaseApp firebaseApp() throws IOException {
-        if(this.firebaseApp == null){
+        if (this.firebaseApp == null) {
             FileInputStream serviceAccount =
                     new FileInputStream(System.getProperty("app.firebase.service.account"));
 
@@ -47,6 +51,10 @@ public class AppConfig {
         }
 
         return firebaseApp;
+    }
+
+    public ClientConfig clientConfig() {
+        return clientConfig;
     }
 
     public static AppConfig getInstance() {

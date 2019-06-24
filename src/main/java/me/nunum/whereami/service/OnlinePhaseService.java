@@ -8,6 +8,7 @@ import me.nunum.whereami.model.Training;
 import me.nunum.whereami.model.persistance.PredictionRepository;
 import me.nunum.whereami.model.persistance.jpa.PredictionRepositoryJpa;
 import me.nunum.whereami.model.request.FingerprintSample;
+import me.nunum.whereami.utils.AppConfig;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -57,44 +58,44 @@ public class OnlinePhaseService extends Executable {
 
                     final String url = providerProperties.get(AlgorithmProvider.HTTP_PROVIDER_PREDICTION_URL_KEY);
 
-                    LOGGER.info(() -> String.format("Query for prediction for request id %d for url %s", requestId, url));
-
-                    final Client client = ClientBuilder.newClient();
+                    final Client client = ClientBuilder.newClient(AppConfig.getInstance().clientConfig());
 
                     final HashMap<String, Object> payload = new HashMap<>(2);
                     payload.put("localizationId", localization.id());
                     payload.put("samples", samples);
 
-                    final Response response = client.target(url)
+                    try (final Response response = client.target(url)
                             .request(MediaType.APPLICATION_JSON)
                             .buildPost(Entity.entity(payload, MediaType.APPLICATION_JSON))
-                            .invoke();
+                            .invoke()) {
 
-                    if (response.getStatus() == 200
-                            && response.hasEntity()) {
+                        if (response.getStatus() == 200
+                                && response.hasEntity()) {
 
-                        final HashMap<String, Object> entity = response.readEntity(HashMap.class);
+                            final HashMap<String, Object> entity = response.readEntity(HashMap.class);
 
-                        final String positionIdKey = "positionId";
-                        final String accuracyKey = "accuracy";
+                            final String positionIdKey = "positionId";
+                            final String accuracyKey = "accuracy";
 
-                        if (entity.containsKey(positionIdKey)) {
+                            if (entity.containsKey(positionIdKey)) {
 
-                            final Long positionPredicated = ((BigDecimal) entity.get(positionIdKey)).longValue();
+                                final Long positionPredicated = ((BigDecimal) entity.get(positionIdKey)).longValue();
 
-                            final Float accuracy = ((BigDecimal) entity.getOrDefault(accuracyKey, 0f)).floatValue();
+                                final Float accuracy = ((BigDecimal) entity.getOrDefault(accuracyKey, 0f)).floatValue();
 
-                            final Prediction prediction = new Prediction(
-                                    requestId,
-                                    localization.id(),
-                                    positionPredicated,
-                                    localization.positionLabelById(positionPredicated),
-                                    accuracy,
-                                    e.getAlgorithmProvider().getId());
+                                final Prediction prediction = new Prediction(
+                                        requestId,
+                                        localization.id(),
+                                        positionPredicated,
+                                        localization.positionLabelById(positionPredicated),
+                                        accuracy,
+                                        e.getAlgorithmProvider().getId());
 
-                            this.predictionRepository.save(prediction);
+                                this.predictionRepository.save(prediction);
+                            }
                         }
                     }
+
                 });
 
         return true;

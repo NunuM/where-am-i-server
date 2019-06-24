@@ -15,5 +15,6 @@ public interface LocalizationRepository extends Repository<Localization, Long>, 
     List<Localization> searchWithPagination(Device device,
                                             Optional<Integer> page,
                                             Optional<String> localizationName,
-                                            Optional<String> trained);
+                                            Optional<String> trained,
+                                            Optional<Boolean> onlyUserLocalizations);
 }

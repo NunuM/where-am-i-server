@@ -35,7 +35,8 @@ public class LocalizationRepositoryJpa
     public List<Localization> searchWithPagination(Device device,
                                                    Optional<Integer> page,
                                                    Optional<String> localizationName,
-                                                   Optional<String> trained) {
+                                                   Optional<String> trained,
+                                                   Optional<Boolean> onlyUserLocalizations) {
 
         final Integer currentPage = page.map(p -> {
             if (p < 1) {
@@ -47,6 +48,14 @@ public class LocalizationRepositoryJpa
 
         if (trained.isPresent()) {
             return (List<Localization>) manager.createNamedQuery("Localization.allVisibleLocalizationsFilterByTraining")
+                    .setParameter("ownerId", device.getId())
+                    .setMaxResults(DEFAULT_PAGE_SIZE)
+                    .setFirstResult((currentPage - 1) * DEFAULT_PAGE_SIZE)
+                    .getResultList();
+        }
+
+        if (onlyUserLocalizations.isPresent()) {
+            return (List<Localization>) manager.createNamedQuery("Localization.onlyOwnerLocalizations")
                     .setParameter("ownerId", device.getId())
                     .setMaxResults(DEFAULT_PAGE_SIZE)
                     .setFirstResult((currentPage - 1) * DEFAULT_PAGE_SIZE)

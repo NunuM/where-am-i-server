@@ -1,9 +1,6 @@
 package me.nunum.whereami.service.notification;
 
-import me.nunum.whereami.model.Device;
-import me.nunum.whereami.model.Localization;
-import me.nunum.whereami.model.Provider;
-import me.nunum.whereami.model.Task;
+import me.nunum.whereami.model.*;
 import me.nunum.whereami.service.TaskManager;
 import me.nunum.whereami.service.notification.channel.EmailNotifyService;
 import me.nunum.whereami.service.notification.channel.FirebaseChannel;
@@ -25,7 +22,8 @@ public class NotifyService {
         final HashMap<String, String> payload = new HashMap<>(4);
         payload.put("algorithmId", task.trainingInfo().getAlgorithm().getId().toString());
         payload.put("algorithmName", name);
-        payload.put("algorithmProviderId", task.trainingInfo().getId().toString());
+        payload.put("localizationName", localization.getLabel());
+        payload.put("algorithmProviderId", task.trainingInfo().getAlgorithmProvider().getId().toString());
         payload.put("action", TRAINED_FINISHED_NOTIFICATION_ACTION);
 
         TaskManager
@@ -60,7 +58,7 @@ public class NotifyService {
                 )));
     }
 
-    public static void newAlgorithmNotification(final Set<Device> devices) {
+    public static void newAlgorithmNotification(final Set<Device> devices, final Algorithm algorithm) {
         final TaskManager taskManager = TaskManager.getInstance();
 
         final Set<String> targets = devices
@@ -71,6 +69,8 @@ public class NotifyService {
 
         final HashMap<String, String> payload = new HashMap<>(1);
         payload.put("action", NEW_ALGORITHM_NOTIFICATION_ACTION);
+        payload.put("algorithmId", algorithm.getId().toString());
+        payload.put("algorithmName", algorithm.getName());
 
         taskManager
                 .queue(new FirebaseChannel(new FirebaseChannel

@@ -146,7 +146,7 @@ public class AlgorithmController implements AutoCloseable {
 
         try {
             Set<Device> devices = this.deviceRepository.findAllDevicesInRole(Role.ADMIN);
-            NotifyService.newAlgorithmNotification(devices);
+            NotifyService.newAlgorithmNotification(devices, algorithm);
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Notification was not sent", e);
         }
