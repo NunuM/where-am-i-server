@@ -4,10 +4,26 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>me.nunum.whereami</groupId>
-    <artifactId>server</artifactId>
+    <artifactId>where-am-i</artifactId>
     <packaging>jar</packaging>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.0</version>
     <name>server</name>
+    <url>https://github.com/NunuM/where-am-i-server</url>
+
+    <licenses>
+        <license>
+            <name>MIT</name>
+            <url>https://github.com/NunuM/where-am-i-server/blob/master/LICENSE</url>
+        </license>
+    </licenses>
+
+    <contributors>
+        <contributor>
+            <name>Nuno</name>
+            <url>https://www.nunum.me</url>
+            <timezone>0</timezone>
+        </contributor>
+    </contributors>
 
     <dependencyManagement>
         <dependencies>

@@ -1,0 +1,29 @@
+name: WhereAmI # app name'
+adopt-info: Info
+base: Info
+version: '1.0.0' # git tag version'
+summary: WhereAmI Java Server # 79 char long summary
+description: |
+  This is a APP
+
+grade: stable # must be 'stable' to release into candidate/stable channels
+confinement: strict # use 'strict' once you have the right plugs and slots
+
+parts:
+  whereami:
+    plugin: maven
+    source: https://github.com/NunuM/where-am-i-server.git
+    source-type: git
+    maven-options:
+      [-DskipTests=true]
+    build-packages:
+      - openjdk-8-jdk
+
+apps:
+  whereami:
+    command: java -XX:+UseShenandoahGC -Xms256M -Xmx512M -XX:+UnlockExperimentalVMOptions -XX:ShenandoahUncommitDelay=1000 -XX:ShenandoahGuaranteedGCInterval=10000 -jar $SNAP/jar/where-am-i-1.0.0.jar
+    daemon: forking
+    restart-condition: always
+    plugs:
+      - network
+      - network-bind
