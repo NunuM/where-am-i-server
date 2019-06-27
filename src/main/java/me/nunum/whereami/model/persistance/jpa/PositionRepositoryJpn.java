@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
 
-public class PostitionRepositoryJpa
+public class PositionRepositoryJpn
         extends JpaRepository<Position, Long>
         implements PositionRepository {
 

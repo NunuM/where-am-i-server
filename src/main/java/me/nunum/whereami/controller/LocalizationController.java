@@ -31,7 +31,6 @@ public class LocalizationController implements AutoCloseable {
 
     private final LocalizationRepository repository;
     private final DeviceRepository deviceRepository;
-    private final LocalizationSpamRepository spamRepository;
 
     /**
      * Constructor
@@ -39,7 +38,6 @@ public class LocalizationController implements AutoCloseable {
     public LocalizationController() {
         this.repository = new LocalizationRepositoryJpa();
         this.deviceRepository = new DeviceRepositoryJpa();
-        this.spamRepository = new LocalizationSpamRepositoryJpa();
     }
 
     /**

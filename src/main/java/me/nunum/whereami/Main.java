@@ -7,6 +7,7 @@ import me.nunum.whereami.model.exceptions.EntityNotFoundException;
 import me.nunum.whereami.model.exceptions.ForbiddenSubResourceException;
 import me.nunum.whereami.model.persistance.*;
 import me.nunum.whereami.model.persistance.jpa.*;
+import me.nunum.whereami.model.request.FingerprintSample;
 import me.nunum.whereami.service.TaskManager;
 import org.glassfish.grizzly.http.server.CLStaticHttpHandler;
 import org.glassfish.grizzly.http.server.HttpServer;
@@ -18,9 +19,12 @@ import org.glassfish.jersey.server.ServerProperties;
 import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
 import org.slf4j.bridge.SLF4JBridgeHandler;
 
+import javax.json.Json;
 import java.io.IOException;
 import java.net.URI;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
@@ -78,7 +82,6 @@ public final class Main {
         LogManager.getLogManager().reset();
         SLF4JBridgeHandler.install();
 
-
         PostRepository repository = new PostRepositoryJpa();
 
         for (int i = 0; i < 10; i++) {
@@ -102,17 +105,25 @@ public final class Main {
 
         final HashMap<String, String> map = new HashMap<>(3);
         map.put(AlgorithmProvider.HTTP_PROVIDER_INGESTION_URL_KEY, "http://www.mocky.io/v2/5cfd86b93200007100ccd52f");
-        map.put(AlgorithmProvider.HTTP_PROVIDER_PREDICTION_URL_KEY, "http://www.mocky.io/v2/5cfd86b93200007100ccd52f");
+        map.put(AlgorithmProvider.HTTP_PROVIDER_PREDICTION_URL_KEY, String.format("%s/algorithm/%d/implementation/1", BASE_URI, algorithm.getId()));
         algorithm.addProvider(new AlgorithmProvider(provider, AlgorithmProvider.METHOD.HTTP, map));
         algorithm = algorithmRepository.save(algorithm);
 
+//
+//        LocalizationRepository localizationRepository = new LocalizationRepositoryJpa();
+//        final Localization localization = localizationRepository.save(new Localization("Porto", "NunuM", device));
+//
+//        PositionRepository positionRepository = new PositionRepositoryJpn();
+//        positionRepository.save(new Position("Quarto", localization));
 
-        LocalizationRepository localizationRepository = new LocalizationRepositoryJpa();
-        final Localization localization = localizationRepository.save(new Localization("Q", "Q", device));
-
-        PositionRepository positionRepository = new PostitionRepositoryJpa();
-        positionRepository.save(new Position("localization", localization));
-
+//        final FingerprintSample fingerprintSample = new FingerprintSample("", "Vodafone-F4386B", -78, 0, 0, 0, 0, "");
+//        final FingerprintSample fingerprintSample1 = new FingerprintSample("", "Vodafone-67C2AA", -95, 0, 0, 0, 0, "");
+//        final FingerprintSample fingerprintSample2 = new FingerprintSample("", "VodafoneMobileWiFi-4ECE70", -49, 0, 0, 0, 0, "");
+//
+//        final List<FingerprintSample> samples = Arrays.asList(fingerprintSample, fingerprintSample1, fingerprintSample2);
+//
+//        final FingerprintRepositoryJpa fingerprints = new FingerprintRepositoryJpa();
+//        fingerprints.predictUserLocalization(samples,22L);
 
         final HttpServer server = startServer();
 

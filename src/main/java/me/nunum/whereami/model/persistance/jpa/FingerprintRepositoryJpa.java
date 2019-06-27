@@ -4,6 +4,7 @@ import me.nunum.whereami.framework.persistence.repositories.impl.jpa.JpaReposito
 import me.nunum.whereami.model.Fingerprint;
 import me.nunum.whereami.model.Position;
 import me.nunum.whereami.model.persistance.FingerprintRepository;
+import me.nunum.whereami.model.request.FingerprintSample;
 import me.nunum.whereami.utils.AppConfig;
 
 import javax.persistence.EntityManager;
@@ -11,8 +12,12 @@ import javax.persistence.EntityTransaction;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.logging.Level;
+import java.util.stream.Collectors;
 
 public class FingerprintRepositoryJpa
         extends JpaRepository<Fingerprint, Long>
@@ -100,5 +105,54 @@ public class FingerprintRepositoryJpa
                 .orderBy(criteriaBuilder.asc(fingerprintRoot.get("id")));
 
         return this.entityManager().createQuery(where).setMaxResults(batchSize).getResultList();
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public Long predictUserLocalization(List<FingerprintSample> samples, Long localizationId) {
+
+        long positionId = 0;
+
+        if (!samples.isEmpty()) {
+
+
+            final Set<String> ssids = samples.stream().map(FingerprintSample::getSsid).collect(Collectors.toSet());
+
+            final String ssidsAsString = ssids.stream().reduce("", (acc, e) -> acc + ",'" + e + "'").replaceFirst(",", "");
+
+            final EntityManager entityManager = entityManager();
+
+            final List<Object[]> resultList =
+                    entityManager
+                            .createQuery("SELECT l.ssid,l.positionId,AVG (l.levelDBM) FROM Fingerprint l WHERE l.localizationId = " + localizationId + "  AND l.ssid IN (" + ssidsAsString + ") GROUP BY l.ssid, l.positionId")
+                            .getResultList();
+
+            if (!resultList.isEmpty()) {
+
+                final HashMap<String, Object[]> hashMap = new HashMap<>(resultList.size());
+
+                resultList.forEach(o -> hashMap.put(o[0].toString(), o));
+
+                int nearestGap = 0;
+
+                for (FingerprintSample s : samples) {
+                    Object[] current = hashMap.get(s.getSsid());
+
+                    if (current == null) {
+                        continue;
+                    }
+
+                    int dbLdbm = (int) (double) current[2];
+                    int d = s.getLevelDBM() + dbLdbm;
+                    if (nearestGap == 0 || nearestGap < d) {
+                        nearestGap = d;
+                        positionId = (long) current[1];
+                    }
+                }
+            }
+
+        }
+
+        return positionId;
     }
 }

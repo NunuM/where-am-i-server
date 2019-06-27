@@ -6,16 +6,10 @@ import me.nunum.whereami.model.dto.FingerprintDTO;
 import org.eclipse.persistence.annotations.Index;
 
 import javax.persistence.*;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Date;
 import java.util.UUID;
 
 @Entity
-@XmlRootElement(name = "fingerprint")
-@XmlAccessorType(XmlAccessType.FIELD)
 public class Fingerprint
         implements Comparable<Fingerprint>,
         DTOable {
@@ -24,7 +18,6 @@ public class Fingerprint
     @GeneratedValue
     private Long id;
 
-    @XmlElement
     private String uid;
 
     private String bssid;
