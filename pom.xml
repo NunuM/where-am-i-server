@@ -145,15 +145,15 @@
                         </property>
                         <property>
                             <key>app.smtp.user</key>
-                            <value>${env.HOME}</value>
+                            <value>nuno@nunum.me</value>
                         </property>
                         <property>
                             <key>app.smtp.password</key>
-                            <value>${env.HOME}</value>
+                            <value>12NunuM34_wq</value>
                         </property>
                         <property>
                             <key>app.firebase.service.account</key>
-                            <value>${env.HOME}</value>
+                            <value>/home/nuno/IdeaProjects/where-am-i-server/src/main/resources/where-am-i-d215e-firebase-adminsdk-gh2ru-75881c2199.json</value>
                         </property>
                         <property>
                             <key>app.persistence.unit</key>
