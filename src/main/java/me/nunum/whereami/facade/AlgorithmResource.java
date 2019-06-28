@@ -317,4 +317,33 @@ public class AlgorithmResource {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
     }
+
+
+    @POST
+    @Path("{it}/implementation/{ag}")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "X-APP", value = "App Instance", required = true, dataType = "string", paramType = "header")
+    })
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response executeAlgorithm(@PathParam("it") Long aId, @PathParam("ag") Long ag, NewAlgorithmRunRequest request) {
+
+        try (final AlgorithmController controller = new AlgorithmController()) {
+
+            return Response.ok(controller.runAlgorithmImplementation(aId, ag, request).dtoValues()).build();
+
+        } catch (ForbiddenEntityAccessException | ForbiddenEntityCreationException e) {
+
+            LOGGER.log(Level.SEVERE, "Forbidden action", e);
+
+            return Response.status(Response.Status.FORBIDDEN).entity(ErrorDTO.fromError(e)).build();
+
+        } catch (Exception e){
+
+            LOGGER.log(Level.SEVERE, "Unable to apply algorithms", e);
+
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
 }

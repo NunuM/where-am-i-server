@@ -2,6 +2,7 @@ package me.nunum.whereami.controller;
 
 import me.nunum.whereami.framework.dto.DTO;
 import me.nunum.whereami.model.*;
+import me.nunum.whereami.model.dto.AlgorithmImplementationDTO;
 import me.nunum.whereami.model.exceptions.EntityNotFoundException;
 import me.nunum.whereami.model.exceptions.ForbiddenEntityAccessException;
 import me.nunum.whereami.model.exceptions.ForbiddenEntityCreationException;
@@ -27,6 +28,7 @@ public class AlgorithmController implements AutoCloseable {
     private final AlgorithmProviderRepository algorithmProviderRepository;
     private final ProviderRepository providerRepository;
     private final TrainingRepository trainingRepository;
+    private final FingerprintRepository fingerprintRepository;
 
     /**
      * constructor
@@ -37,6 +39,7 @@ public class AlgorithmController implements AutoCloseable {
         this.providerRepository = new ProviderRepositoryJpa();
         this.algorithmProviderRepository = new AlgorithmProviderRepositoryJpa();
         this.trainingRepository = new TrainingRepositoryJpa();
+        this.fingerprintRepository = new FingerprintRepositoryJpa();
     }
 
     /**
@@ -323,5 +326,12 @@ public class AlgorithmController implements AutoCloseable {
     @Override
     public void close() throws Exception {
         repository.close();
+    }
+
+    public DTO runAlgorithmImplementation(Long aId, Long ag, NewAlgorithmRunRequest request) {
+
+        long predictedPosition = this.fingerprintRepository.predictUserLocalization(request.getSamples(), request.getLocalizationId());
+
+        return new AlgorithmImplementationDTO(predictedPosition, 100.0);
     }
 }

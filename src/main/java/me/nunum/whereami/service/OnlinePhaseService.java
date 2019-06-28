@@ -5,7 +5,9 @@ import me.nunum.whereami.model.AlgorithmProvider;
 import me.nunum.whereami.model.Localization;
 import me.nunum.whereami.model.Prediction;
 import me.nunum.whereami.model.Training;
+import me.nunum.whereami.model.persistance.FingerprintRepository;
 import me.nunum.whereami.model.persistance.PredictionRepository;
+import me.nunum.whereami.model.persistance.jpa.FingerprintRepositoryJpa;
 import me.nunum.whereami.model.persistance.jpa.PredictionRepositoryJpa;
 import me.nunum.whereami.model.request.FingerprintSample;
 import me.nunum.whereami.utils.AppConfig;
@@ -39,6 +41,7 @@ public class OnlinePhaseService extends Executable {
         this.requestId = requestId;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public Boolean call() throws Exception {
 
@@ -66,6 +69,7 @@ public class OnlinePhaseService extends Executable {
 
                     try (final Response response = client.target(url)
                             .request(MediaType.APPLICATION_JSON)
+                            .header("X-APP", localization.getOwner().instanceId())
                             .buildPost(Entity.entity(payload, MediaType.APPLICATION_JSON))
                             .invoke()) {
 
@@ -79,19 +83,22 @@ public class OnlinePhaseService extends Executable {
 
                             if (entity.containsKey(positionIdKey)) {
 
-                                final Long positionPredicated = ((BigDecimal) entity.get(positionIdKey)).longValue();
+                                final long positionPredicated = ((BigDecimal) entity.get(positionIdKey)).longValue();
 
-                                final Float accuracy = ((BigDecimal) entity.getOrDefault(accuracyKey, 0f)).floatValue();
+                                if (positionPredicated != 0L) {
 
-                                final Prediction prediction = new Prediction(
-                                        requestId,
-                                        localization.id(),
-                                        positionPredicated,
-                                        localization.positionLabelById(positionPredicated),
-                                        accuracy,
-                                        e.getAlgorithmProvider().getId());
+                                    final Float accuracy = ((BigDecimal) entity.getOrDefault(accuracyKey, 0f)).floatValue();
 
-                                this.predictionRepository.save(prediction);
+                                    final Prediction prediction = new Prediction(
+                                            requestId,
+                                            localization.id(),
+                                            positionPredicated,
+                                            localization.positionLabelById(positionPredicated),
+                                            accuracy,
+                                            e.getAlgorithmProvider().getId());
+
+                                    this.predictionRepository.save(prediction);
+                                }
                             }
                         }
                     }

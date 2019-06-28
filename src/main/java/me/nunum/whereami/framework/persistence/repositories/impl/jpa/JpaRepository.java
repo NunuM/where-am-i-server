@@ -149,7 +149,7 @@ public abstract class JpaRepository<T, K extends Serializable>
      */
     @Override
     public long size() {
-        return (Long) entityManager().createQuery("SELECT COUNT(*) FROM " + entityClass.getSimpleName())
+        return entityManager().createQuery("SELECT COUNT(t) FROM " + entityClass.getSimpleName() + " as t", Long.class)
                 .getSingleResult();
     }
 
