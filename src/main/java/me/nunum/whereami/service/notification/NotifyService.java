@@ -7,11 +7,25 @@ import me.nunum.whereami.service.notification.channel.FirebaseChannel;
 
 import java.util.HashMap;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 public class NotifyService {
 
-    public static void trainingFinished(Localization localization, final Task task) {
+    private static final Logger LOGGER = Logger.getLogger(NotifyService.class.getSimpleName());
+
+    private static final String TRAINED_FINISHED_NOTIFICATION_TITLE = "Training was finished";
+    private static final String TRAINED_FINISHED_NOTIFICATION_ACTION = "2";
+    private static final String TRAINED_FINISHED_NOTIFICATION_MESSAGE = "A new model for the algorithm %s was finished";
+    private static final String NEW_ALGORITHM_NOTIFICATION_TITLE = "New Algorithm";
+    private static final String NEW_ALGORITHM_NOTIFICATION_ACTION = "1";
+    private static final String NEW_ALGORITHM_NOTIFICATION_BODY = "A Algorithm is waiting for your approval";
+    private static final String DELETE_ALGORITHM_PROVIDER_TITLE = "Algorithm provider deletion";
+    private static final String DELETE_ALGORITHM_PROVIDER_BODY = "A provider for the algorithm %s was deleted and your model was affected as well";
+    private static final String DELETE_ALGORITHM_PROVIDER_ACTION = "3";
+
+    public static void trainingFinished(final Localization localization, final Task task) {
         if (localization.getOwner().getFirebaseToken() == null
                 || localization.getOwner().getFirebaseToken().isEmpty()) {
             return;
@@ -87,18 +101,20 @@ public class NotifyService {
                 .queue(new EmailNotifyService(new EmailNotifyService.NewProviderMessage(provider.getEmail(), provider.getToken())));
     }
 
+    public static void newTrainingRequest(final Task task) {
+        try {
+            TaskManager
+                    .getInstance()
+                    .queue(new EmailNotifyService(new EmailNotifyService.NewTrainingRequest(task)));
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Could not instantiate mailNotifyService.NewTrainingRequest", e);
+        }
+    }
 
-    private static final String TRAINED_FINISHED_NOTIFICATION_TITLE = "Training was finished";
-    private static final String TRAINED_FINISHED_NOTIFICATION_ACTION = "2";
-    private static final String TRAINED_FINISHED_NOTIFICATION_MESSAGE = "A new model for the algorithm %s was finished";
-
-
-    private static final String NEW_ALGORITHM_NOTIFICATION_TITLE = "New Algorithm";
-    private static final String NEW_ALGORITHM_NOTIFICATION_ACTION = "1";
-    private static final String NEW_ALGORITHM_NOTIFICATION_BODY = "A Algorithm is waiting for your approval";
-
-    private static final String DELETE_ALGORITHM_PROVIDER_TITLE = "Algorithm provider deletion";
-    private static final String DELETE_ALGORITHM_PROVIDER_BODY = "A provider for the algorithm %s was deleted and your model was affected as well";
-    private static final String DELETE_ALGORITHM_PROVIDER_ACTION = "3";
+    public static void newFeedback(final Feedback feedback) {
+        TaskManager
+                .getInstance()
+                .queue(new EmailNotifyService(new EmailNotifyService.NewFeedback(feedback)));
+    }
 
 }

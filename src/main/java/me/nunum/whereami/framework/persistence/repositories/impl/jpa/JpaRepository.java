@@ -53,7 +53,7 @@ public abstract class JpaRepository<T, K extends Serializable>
         this.entityClass = (Class<T>) genericSuperclass.getActualTypeArguments()[0];
     }
 
-    protected EntityManagerFactory entityManagerFactory() {
+    protected synchronized EntityManagerFactory entityManagerFactory() {
         if (emFactory == null) {
             emFactory = Persistence.createEntityManagerFactory(persistenceUnitName());
         }

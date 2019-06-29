@@ -17,6 +17,7 @@ import me.nunum.whereami.model.persistance.jpa.TrainingRepositoryJpa;
 import me.nunum.whereami.model.request.NewTrainingRequest;
 import me.nunum.whereami.service.OfflinePhaseService;
 import me.nunum.whereami.service.TaskManager;
+import me.nunum.whereami.service.notification.NotifyService;
 
 import java.security.Principal;
 import java.util.List;
@@ -96,6 +97,7 @@ public class TrainingController implements AutoCloseable {
             training = this.repository.save(training);
 
             TaskManager.getInstance().queue(new OfflinePhaseService());
+            NotifyService.newTrainingRequest(training.getTask());
 
             return training.toDTO();
 
@@ -128,6 +130,8 @@ public class TrainingController implements AutoCloseable {
             this.repository.save(training1);
 
             TaskManager.getInstance().queue(new OfflinePhaseService());
+
+            NotifyService.newTrainingRequest(training1.getTask());
 
             return training1.toDTO();
         }

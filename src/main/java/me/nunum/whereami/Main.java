@@ -1,17 +1,14 @@
 package me.nunum.whereami;
 
-import me.nunum.whereami.facade.ApiListingResource;
 import me.nunum.whereami.framework.interceptor.PrincipalInterceptor;
-import me.nunum.whereami.model.*;
+import me.nunum.whereami.framework.interceptor.RequestTrackingFilter;
 import me.nunum.whereami.model.exceptions.EntityNotFoundException;
 import me.nunum.whereami.model.exceptions.ForbiddenSubResourceException;
-import me.nunum.whereami.model.persistance.*;
-import me.nunum.whereami.model.persistance.jpa.*;
-import me.nunum.whereami.model.request.FingerprintSample;
 import me.nunum.whereami.service.TaskManager;
-import org.glassfish.grizzly.http.server.CLStaticHttpHandler;
+import me.nunum.whereami.utils.AppConfig;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.grizzly.http.server.ServerConfiguration;
+import org.glassfish.grizzly.http.server.StaticHttpHandler;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.logging.LoggingFeature;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -19,13 +16,8 @@ import org.glassfish.jersey.server.ServerProperties;
 import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
 import org.slf4j.bridge.SLF4JBridgeHandler;
 
-import javax.json.Json;
 import java.io.IOException;
 import java.net.URI;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
@@ -35,9 +27,9 @@ import java.util.logging.Logger;
  */
 public final class Main {
     // Base URI the Grizzly HTTP server will listen on
-    private static final String BASE_URI = String.format("http://0.0.0.0:%s", System.getProperty("app.server.port", "8080"));
+    private static final String BASE_URI = String.format("http://0.0.0.0:%s/api", System.getProperty("app.server.port", "8080"));
 
-    private static final Logger LOGGER = Logger.getLogger("Main");
+    private static final Logger LOGGER = Logger.getLogger(Main.class.getSimpleName());
 
     /**
      * Starts Grizzly HTTP server exposing JAX-RS resources defined in this application.
@@ -49,16 +41,19 @@ public final class Main {
         // create a resource config that scans for JAX-RS resources and providers
         // in me.nunum.whereami.facade package
         final ResourceConfig rc = new ResourceConfig().packages("me.nunum.whereami.facade");
-        rc.setApplicationName("WhereAmI");
+        rc.setApplicationName(AppConfig.APP_NAME);
 
         rc.register(PrincipalInterceptor.class);
-        rc.register(ApiListingResource.class);
+        rc.register(RequestTrackingFilter.class);
+
         rc.register(io.swagger.jaxrs.listing.SwaggerSerializers.class);
 
         rc.property(LoggingFeature.LOGGING_FEATURE_VERBOSITY, LoggingFeature.Verbosity.PAYLOAD_ANY);
         rc.property(LoggingFeature.LOGGING_FEATURE_LOGGER_LEVEL, Level.INFO.getName());
 
         rc.property(ServerProperties.BV_SEND_ERROR_IN_RESPONSE, true);
+
+        rc.property(ServerProperties.MONITORING_STATISTICS_ENABLED, true);
 
         rc.register(RolesAllowedDynamicFeature.class);
 
@@ -82,63 +77,20 @@ public final class Main {
         LogManager.getLogManager().reset();
         SLF4JBridgeHandler.install();
 
-        PostRepository repository = new PostRepositoryJpa();
-
-        for (int i = 0; i < 10; i++) {
-            repository.save(new Post("Test title" + i, "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/R_logo.svg/120px-R_logo.svg.png", "https://nunum.me"));
-        }
-
-        DeviceRepository deviceRepository = new DeviceRepositoryJpa();
-        final Device device = deviceRepository.save(new Device("das"));
-
-        RoleRepository roleRepository = new RoleRepositoryJpa();
-        roleRepository.save(new Role("admin"));
-        final Role role = new Role("provider");
-        role.addDevice(device);
-        roleRepository.save(role);
-
-        AlgorithmRepository algorithmRepository = new AlgorithmRepositoryJpa();
-        Algorithm algorithm = algorithmRepository.save(new Algorithm("Mean", "Nuno", "example.pt", true, device));
-
-        ProviderRepository providerRepository = new ProviderRepositoryJpa();
-        final Provider provider = providerRepository.save(new Provider("nuno@nunum.me", UUID.randomUUID().toString(), true, device));
-
-        final HashMap<String, String> map = new HashMap<>(3);
-        map.put(AlgorithmProvider.HTTP_PROVIDER_INGESTION_URL_KEY, "http://www.mocky.io/v2/5cfd86b93200007100ccd52f");
-        map.put(AlgorithmProvider.HTTP_PROVIDER_PREDICTION_URL_KEY, String.format("%s/algorithm/%d/implementation/1", BASE_URI, algorithm.getId()));
-        algorithm.addProvider(new AlgorithmProvider(provider, AlgorithmProvider.METHOD.HTTP, map));
-        algorithm = algorithmRepository.save(algorithm);
-
-//
-//        LocalizationRepository localizationRepository = new LocalizationRepositoryJpa();
-//        final Localization localization = localizationRepository.save(new Localization("Porto", "NunuM", device));
-//
-//        PositionRepository positionRepository = new PositionRepositoryJpn();
-//        positionRepository.save(new Position("Quarto", localization));
-
-//        final FingerprintSample fingerprintSample = new FingerprintSample("", "Vodafone-F4386B", -78, 0, 0, 0, 0, "");
-//        final FingerprintSample fingerprintSample1 = new FingerprintSample("", "Vodafone-67C2AA", -95, 0, 0, 0, 0, "");
-//        final FingerprintSample fingerprintSample2 = new FingerprintSample("", "VodafoneMobileWiFi-4ECE70", -49, 0, 0, 0, 0, "");
-//
-//        final List<FingerprintSample> samples = Arrays.asList(fingerprintSample, fingerprintSample1, fingerprintSample2);
-//
-//        final FingerprintRepositoryJpa fingerprints = new FingerprintRepositoryJpa();
-//        fingerprints.predictUserLocalization(samples,22L);
-
         final HttpServer server = startServer();
 
-        ClassLoader loader = Main.class.getClassLoader();
-        CLStaticHttpHandler docsHandler = new CLStaticHttpHandler(loader, "swagger-ui/dist/");
+        StaticHttpHandler docsHandler = new StaticHttpHandler(System.getProperty("app.website.dir", ""));
         docsHandler.setFileCacheEnabled(false);
 
         ServerConfiguration cfg = server.getServerConfiguration();
         cfg.addHttpHandler(docsHandler, "/docs/");
 
-        LOGGER.log(Level.INFO, "Jersey app started with WADL available at "
-                + "{0}", BASE_URI);
+        LOGGER.log(Level.INFO, "Jersey app started with WADL available at {0}", BASE_URI);
 
         final Thread taskManager = new Thread(() -> TaskManager.getInstance().run(), "TaskManager");
         taskManager.start();
+
+        System.out.println("API is running at " + BASE_URI + "\n");
 
         taskManager.join();
 

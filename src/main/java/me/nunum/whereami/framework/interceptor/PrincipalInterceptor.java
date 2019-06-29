@@ -25,10 +25,6 @@ public class PrincipalInterceptor implements ContainerRequestFilter {
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
 
-        if (requestContext.getUriInfo().getPath().contains("swagger.json")) {
-            return;
-        }
-
         final Optional<String> instanceHeader = Optional.ofNullable(requestContext.getHeaderString(AppConfig.X_APP_HEADER));
 
         instanceHeader.ifPresent(instance -> requestContext.setSecurityContext(new DeviceSecurityContext(instance)));
@@ -73,7 +69,7 @@ public class PrincipalInterceptor implements ContainerRequestFilter {
 
         @Override
         public String getAuthenticationScheme() {
-            return null;
+            return "";
         }
 
         @Override

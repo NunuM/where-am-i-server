@@ -14,7 +14,7 @@ import me.nunum.whereami.model.persistance.PositionRepository;
 import me.nunum.whereami.model.persistance.jpa.DeviceRepositoryJpa;
 import me.nunum.whereami.model.persistance.jpa.FingerprintRepositoryJpa;
 import me.nunum.whereami.model.persistance.jpa.LocalizationRepositoryJpa;
-import me.nunum.whereami.model.persistance.jpa.PositionRepositoryJpn;
+import me.nunum.whereami.model.persistance.jpa.PositionRepositoryJpa;
 import me.nunum.whereami.model.request.FingerprintRequest;
 
 import java.security.Principal;
@@ -33,7 +33,7 @@ public class FingerprintController implements AutoCloseable {
     public FingerprintController() {
         this.repository = new FingerprintRepositoryJpa();
         this.deviceRepository = new DeviceRepositoryJpa();
-        this.positionRepository = new PositionRepositoryJpn();
+        this.positionRepository = new PositionRepositoryJpa();
         this.localizationRepository = new LocalizationRepositoryJpa();
     }
 

@@ -9,7 +9,7 @@ import me.nunum.whereami.model.persistance.LocalizationRepository;
 import me.nunum.whereami.model.persistance.PositionRepository;
 import me.nunum.whereami.model.persistance.jpa.DeviceRepositoryJpa;
 import me.nunum.whereami.model.persistance.jpa.LocalizationRepositoryJpa;
-import me.nunum.whereami.model.persistance.jpa.PostitionRepositoryJpa;
+import me.nunum.whereami.model.persistance.jpa.PositionRepositoryJpa;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.junit.Test;
@@ -46,7 +46,7 @@ public class PositionResourceTest extends JerseyTest {
                 false,
                 device));
 
-        PositionRepository positionRepository = new PostitionRepositoryJpa();
+        PositionRepository positionRepository = new PositionRepositoryJpa();
 
         for (int i = 0; i < 30; i++) {
             positionRepository.save(new Position("positions" + i, localization));

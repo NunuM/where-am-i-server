@@ -22,14 +22,18 @@ public class AppConfig {
         clientConfig.register(ClientLoggingInterceptor.class);
     }
 
-    public static final String JPA_UNIT = System.getProperty("app.persistence.unit", "me.nunum.whereami.JPA_PERSISTENCE");
+    public static final String APP_NAME = "WhereAmI";
+    public static final String APP_DESCRIPTION = "This is a free, collaborative platform with the goal of helping researchers to test and develop indoor tracking algorithms using Wi-Fi signal information";
+    public static final String APP_LICENSE = "https://github.com/NunuM/where-am-i-server/blob/master/LICENSE";
+    public static final String APP_VERSION = "1.0.0";
 
+    public static final String JPA_UNIT = System.getProperty("app.persistence.unit", "me.nunum.whereami.JPA_PERSISTENCE");
 
     public static final String X_APP_HEADER = "X-APP";
 
-
-    public static final String EMAIL_HOST = "smtp.nunum.me";
+    public static final String EMAIL_HOST = System.getProperty("app.smtp.host", "");
     public static final String EMAIL_FROM = "no-reply@whereami.nunum.me";
+    public static final String EMAIL_ADMIN_CONTACT = System.getProperty("app.admin.email", EMAIL_FROM);
 
 
     /**

@@ -135,7 +135,7 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.19.1</version>
                 <configuration>
-                    <argLine>-javaagent:lib/org.eclipse.persistence.jpa-2.7.4.jar</argLine>
+                    <argLine>@{argLine} -javaagent:lib/org.eclipse.persistence.jpa-2.7.4.jar</argLine>
                     <systemProperties>
                         <app.persistence.unit>me.nunum.whereami.TEST_JPA_PERSISTENCE</app.persistence.unit>
                     </systemProperties>
@@ -160,12 +160,20 @@
                             <value>8080</value>
                         </property>
                         <property>
+                            <key>app.smtp.host</key>
+                            <value>smtp.com.com</value>
+                        </property>
+                        <property>
+                            <key>app.admin.email</key>
+                            <value>changeMe</value>
+                        </property>
+                        <property>
                             <key>app.smtp.user</key>
-                            <value>nuno@nunum.me</value>
+                            <value>changeMe</value>
                         </property>
                         <property>
                             <key>app.smtp.password</key>
-                            <value>12NunuM34_wq</value>
+                            <value>changeMe</value>
                         </property>
                         <property>
                             <key>app.firebase.service.account</key>
@@ -174,6 +182,14 @@
                         <property>
                             <key>app.persistence.unit</key>
                             <value>me.nunum.whereami.JPA_PERSISTENCE</value>
+                        </property>
+                        <property>
+                            <key>app.log.dir</key>
+                            <value>/var/log</value>
+                        </property>
+                        <property>
+                            <key>app.website.dir</key>
+                            <value>docs/website</value>
                         </property>
                     </systemProperties>
                 </configuration>

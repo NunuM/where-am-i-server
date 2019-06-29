@@ -28,7 +28,7 @@ public class PositionsController implements AutoCloseable {
 
     public PositionsController(Localization localization) {
         this.localization = localization;
-        this.repository = new PositionRepositoryJpn();
+        this.repository = new PositionRepositoryJpa();
         this.deviceRepository = new DeviceRepositoryJpa();
         this.fingerprintRepository = new FingerprintRepositoryJpa();
         this.localizationRepository = new LocalizationRepositoryJpa();

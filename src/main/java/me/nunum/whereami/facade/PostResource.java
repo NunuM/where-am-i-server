@@ -13,8 +13,10 @@ import javax.annotation.security.RolesAllowed;
 import javax.inject.Singleton;
 import javax.validation.Valid;
 import javax.ws.rs.*;
-import javax.ws.rs.core.*;
-import java.util.Calendar;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -29,7 +31,6 @@ import java.util.stream.Collectors;
 public class PostResource {
 
     private static final Logger LOGGER = Logger.getLogger("PostResource");
-
 
     @Context
     SecurityContext securityContext;

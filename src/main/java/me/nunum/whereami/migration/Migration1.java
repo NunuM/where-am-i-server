@@ -1,15 +1,16 @@
 package me.nunum.whereami.migration;
 
 
-import me.nunum.whereami.model.Role;
+import me.nunum.whereami.model.*;
 import me.nunum.whereami.utils.AppConfig;
-import org.slf4j.bridge.SLF4JBridgeHandler;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
+import java.util.HashMap;
+import java.util.UUID;
 import java.util.logging.Level;
-import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 public final class Migration1 implements Runnable {
@@ -17,24 +18,55 @@ public final class Migration1 implements Runnable {
     private static final Logger LOGGER = Logger.getLogger(Migration1.class.getSimpleName());
 
     @Override
-    public void run() {
+    public synchronized void run() {
+        LOGGER.info("Migration started");
+        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory(AppConfig.JPA_UNIT);
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        final EntityTransaction transaction = entityManager.getTransaction();
+        transaction.begin();
         try {
-            EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory(AppConfig.JPA_UNIT);
-            EntityManager entityManager = entityManagerFactory.createEntityManager();
-            entityManager.getTransaction().begin();
-            entityManager.persist(new Role("admin"));
-            entityManager.persist(new Role("provider"));
-            entityManager.getTransaction().commit();
-            entityManager.close();
+
+            String adminInstallation = UUID.randomUUID().toString();
+            LOGGER.log(Level.INFO, "Admin installation ID {0}", adminInstallation);
+            Device device = new Device(adminInstallation);
+
+            entityManager.persist(device);
+
+            Role admin = new Role("admin");
+            admin.addDevice(device);
+            entityManager.persist(admin);
+
+            Role provider = new Role("provider");
+            provider.addDevice(device);
+            entityManager.persist(provider);
+
+            Algorithm algorithm = new Algorithm("Mean", "Nuno", "example.pt", true, device);
+            entityManager.persist(algorithm);
+
+
+            Provider aProvider = new Provider("nuno@nunum.me", UUID.randomUUID().toString(), true, device);
+            entityManager.persist(aProvider);
+
+            final HashMap<String, String> map = new HashMap<>(3);
+            map.put(AlgorithmProvider.HTTP_PROVIDER_INGESTION_URL_KEY, "http://www.mocky.io/v2/5cfd86b93200007100ccd52f");
+            map.put(AlgorithmProvider.HTTP_PROVIDER_PREDICTION_URL_KEY, String.format("/api/algorithm/%d/implementation/1", algorithm.getId()));
+            algorithm.addProvider(new AlgorithmProvider(aProvider, AlgorithmProvider.METHOD.HTTP, map));
+
+            entityManager.flush();
+            transaction.commit();
+
         } catch (Throwable e) {
-            LOGGER.log(Level.SEVERE, "Error on running migration1", e);
+            if (transaction.isActive())
+                transaction.rollback();
+            LOGGER.log(Level.SEVERE, "Error on running migration 1", e);
+        } finally {
+            entityManager.close();
         }
+
+        LOGGER.info("Migration finished");
     }
 
     public static void main(String[] args) {
-        LogManager.getLogManager().reset();
-        SLF4JBridgeHandler.install();
-
         new Migration1().run();
     }
 }

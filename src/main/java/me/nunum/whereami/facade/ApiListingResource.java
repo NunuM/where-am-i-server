@@ -10,38 +10,44 @@ import io.swagger.jaxrs.Reader;
 import io.swagger.jaxrs.config.JaxrsScanner;
 import io.swagger.jaxrs.config.ReaderConfig;
 import io.swagger.jaxrs.listing.SwaggerSerializers;
-import io.swagger.models.Info;
-import io.swagger.models.Scheme;
-import io.swagger.models.Swagger;
+import io.swagger.models.*;
 import io.swagger.util.Yaml;
+import me.nunum.whereami.utils.AppConfig;
 
 import javax.annotation.security.PermitAll;
 import javax.inject.Singleton;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.*;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-@Path("/api/doc")
+@Path("/swagger")
 @Singleton
 @PermitAll
 public class ApiListingResource {
-    static boolean initialized = false;
-
     private static final Logger LOGGER = Logger.getLogger(ApiListingResource.class.getSimpleName());
-
-
+    static boolean initialized = false;
     private Swagger mSwaggerConfig;
 
     public ApiListingResource() {
         mSwaggerConfig = new Swagger();
         mSwaggerConfig.setBasePath("/");
-        mSwaggerConfig.info(new Info().title("WhereAmI"));
-        mSwaggerConfig.setHost("localhost:8080");
-        mSwaggerConfig.setSchemes(Arrays.asList(Scheme.HTTP));
+
+        final Info info = new Info();
+        info.title(AppConfig.APP_NAME);
+        info.contact(new Contact().email(AppConfig.EMAIL_ADMIN_CONTACT));
+
+        info.description(AppConfig.APP_DESCRIPTION);
+        info.setLicense(new License().name("MIT").url(AppConfig.APP_LICENSE));
+        info.setVersion(AppConfig.APP_VERSION);
+
+        mSwaggerConfig.info(info);
+        mSwaggerConfig.setHost("whereami.nunum.me/api");
+        mSwaggerConfig.setSchemes(Arrays.asList(Scheme.HTTPS));
     }
 
     public ApiListingResource(Swagger swagger) {

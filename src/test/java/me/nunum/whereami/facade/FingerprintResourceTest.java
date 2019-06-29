@@ -11,7 +11,7 @@ import me.nunum.whereami.model.persistance.PositionRepository;
 import me.nunum.whereami.model.persistance.ProviderRepository;
 import me.nunum.whereami.model.persistance.jpa.DeviceRepositoryJpa;
 import me.nunum.whereami.model.persistance.jpa.LocalizationRepositoryJpa;
-import me.nunum.whereami.model.persistance.jpa.PostitionRepositoryJpa;
+import me.nunum.whereami.model.persistance.jpa.PositionRepositoryJpa;
 import me.nunum.whereami.model.persistance.jpa.ProviderRepositoryJpa;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
@@ -53,7 +53,7 @@ public class FingerprintResourceTest extends JerseyTest {
         Localization localization = localizationRepository.save(new Localization("collectFingerprint", "collectFingerprint", device));
         Localization localization1 = localizationRepository.save(new Localization("notCollectFingerprint", "notCollectFingerprint", device1));
 
-        PositionRepository positionRepository = new PostitionRepositoryJpa();
+        PositionRepository positionRepository = new PositionRepositoryJpa();
         Position position = positionRepository.save(new Position("collectFingerprint", localization));
         Position position1 = positionRepository.save(new Position("notCollectFingerprint", localization1));
 
