@@ -9,6 +9,7 @@ import org.glassfish.jersey.client.ClientConfig;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.HashMap;
 
 public class AppConfig {
 
@@ -55,6 +56,15 @@ public class AppConfig {
         }
 
         return firebaseApp;
+    }
+
+    public static HashMap<String, String> persistenceUnitOverrideConfigs() {
+
+        final HashMap<String, String> map = new HashMap<>(1);
+
+        map.put("javax.persistence.jdbc.url", System.getProperty("app.db.jdbc.url", "jdbc:h2:tcp://localhost/~/test"));
+
+        return map;
     }
 
     public ClientConfig clientConfig() {

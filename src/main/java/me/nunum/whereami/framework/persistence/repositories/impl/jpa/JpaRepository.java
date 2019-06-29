@@ -5,11 +5,13 @@ import me.nunum.whereami.framework.persistence.repositories.DeleteableRepository
 import me.nunum.whereami.framework.persistence.repositories.IterableRepository;
 import me.nunum.whereami.framework.persistence.repositories.Repository;
 import me.nunum.whereami.model.exceptions.EntityAlreadyExists;
+import me.nunum.whereami.utils.AppConfig;
 
 import javax.persistence.*;
 import javax.persistence.criteria.CriteriaQuery;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
@@ -55,7 +57,7 @@ public abstract class JpaRepository<T, K extends Serializable>
 
     protected synchronized EntityManagerFactory entityManagerFactory() {
         if (emFactory == null) {
-            emFactory = Persistence.createEntityManagerFactory(persistenceUnitName());
+            emFactory = Persistence.createEntityManagerFactory(persistenceUnitName(), AppConfig.persistenceUnitOverrideConfigs());
         }
         return emFactory;
     }

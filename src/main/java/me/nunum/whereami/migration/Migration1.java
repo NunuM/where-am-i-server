@@ -20,7 +20,7 @@ public final class Migration1 implements Runnable {
     @Override
     public synchronized void run() {
         LOGGER.info("Migration started");
-        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory(AppConfig.JPA_UNIT);
+        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory(AppConfig.JPA_UNIT, AppConfig.persistenceUnitOverrideConfigs());
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         final EntityTransaction transaction = entityManager.getTransaction();
         transaction.begin();

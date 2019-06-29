@@ -161,23 +161,25 @@
                         </property>
                         <property>
                             <key>app.smtp.host</key>
-                            <value>smtp.com.com</value>
+                            <value>email.me</value>
                         </property>
                         <property>
                             <key>app.admin.email</key>
-                            <value>changeMe</value>
+                            <value>my@email.me</value>
                         </property>
                         <property>
                             <key>app.smtp.user</key>
-                            <value>changeMe</value>
+                            <value>my@email.me</value>
                         </property>
                         <property>
                             <key>app.smtp.password</key>
-                            <value>changeMe</value>
+                            <value>mypass</value>
                         </property>
                         <property>
                             <key>app.firebase.service.account</key>
-                            <value>/home/nuno/IdeaProjects/where-am-i-server/src/main/resources/where-am-i-d215e-firebase-adminsdk-gh2ru-75881c2199.json</value>
+                            <value>
+                                ./where-am-i-d215e-firebase-adminsdk-gh2ru-75881c2199.json
+                            </value>
                         </property>
                         <property>
                             <key>app.persistence.unit</key>
@@ -185,11 +187,15 @@
                         </property>
                         <property>
                             <key>app.log.dir</key>
-                            <value>/var/log</value>
+                            <value>./</value>
                         </property>
                         <property>
                             <key>app.website.dir</key>
                             <value>docs/website</value>
+                        </property>
+                        <property>
+                            <key>app.db.jdbc.url</key>
+                            <value>jdbc:h2:mem:test</value>
                         </property>
                     </systemProperties>
                 </configuration>
@@ -219,6 +225,33 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <!-- Copy org.eclipse.persistence.jpa jar to lib folder since we need in javaagent argument-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>3.1.1</version>
+                <executions>
+                    <execution>
+                        <id>copy</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <artifactItems>
+                        <artifactItem>
+                            <groupId>org.eclipse.persistence</groupId>
+                            <artifactId>org.eclipse.persistence.jpa</artifactId>
+                            <version>2.7.4</version>
+                            <type>jar</type>
+                            <overWrite>false</overWrite>
+                            <outputDirectory>${project.basedir}/lib</outputDirectory>
+                        </artifactItem>
+                    </artifactItems>
+                </configuration>
             </plugin>
         </plugins>
     </build>
