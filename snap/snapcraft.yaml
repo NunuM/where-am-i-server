@@ -1,6 +1,5 @@
-name: WhereAmI # app name'
-adopt-info: Info
-base: Info
+name: where-am-i # app name'
+base: ''
 version: '1.0.0' # git tag version'
 summary: WhereAmI Java Server # 79 char long summary
 description: |
@@ -10,20 +9,52 @@ grade: stable # must be 'stable' to release into candidate/stable channels
 confinement: strict # use 'strict' once you have the right plugs and slots
 
 parts:
-  whereami:
+  whereami-java-part:
     plugin: maven
-    source: https://github.com/NunuM/where-am-i-server.git
-    source-type: git
-    maven-options:
-      [-DskipTests=true]
+    source: .
+    override-build: |
+      mvn package -DskipTests
+      mkdir -p "$SNAPCRAFT_PART_INSTALL/etc/whereami/lib"
+      cp target/*.jar "$SNAPCRAFT_PART_INSTALL/etc/whereami/lib"
+      cp lib/* "$SNAPCRAFT_PART_INSTALL/etc/whereami/lib"
     build-packages:
       - openjdk-8-jdk
+  config-part:
+    after: [whereami-java-part]
+    plugin: dump
+    organize:
+      'where-am-i-d215e-firebase-adminsdk-gh2ru-75881c2199.json': etc/whereami/firebase/where-am-i-d215e-firebase-adminsdk-gh2ru-75881c2199.json
+      'docs/*': etc/whereami/docs
+    prime:
+      - etc/whereami/firebase/where-am-i-d215e-firebase-adminsdk-gh2ru-75881c2199.json
+      - etc/whereami/docs
 
 apps:
   whereami:
-    command: java -XX:+UseShenandoahGC -Xms256M -Xmx512M -XX:+UnlockExperimentalVMOptions -XX:ShenandoahUncommitDelay=1000 -XX:ShenandoahGuaranteedGCInterval=10000 -jar $SNAP/jar/where-am-i-1.0.0.jar
-    daemon: forking
+    command: "java
+      -Xms256M
+      -Xmx512M
+      -classpath $SNAP/etc/whereami/lib/*
+      -javaagent:$SNAP/etc/whereami/lib/org.eclipse.persistence.jpa-2.7.4.jar
+      -Dapp.server.port=8089
+      -Dapp.smtp.host=smtp.user.me
+      -Dapp.admin.email=user@user.me
+      -Dapp.smtp.user=user@user.me
+      -Dapp.smtp.password=changeMe
+      -Dapp.firebase.service.account=$SNAP/etc/whereami/firebase/where-am-i-d215e-firebase-adminsdk-gh2ru-75881c2199.json
+      -Dapp.log.dir=$SNAP_USER_DATA
+      -Dapp.website.dir=$SNAP/etc/whereami/docs
+      -Dapp.db.jdbc.url=jdbc:h2:$SNAP_USER_DATA/whereami.db
+      me.nunum.whereami.Main"
+    daemon: simple
     restart-condition: always
     plugs:
       - network
       - network-bind
+  migrations:
+    command: "java
+      -classpath $SNAP/etc/whereami/lib/*
+      -javaagent:$SNAP/etc/whereami/lib/org.eclipse.persistence.jpa-2.7.4.jar
+      -Dapp.log.dir=$SNAP_USER_DATA
+      -Dapp.db.jdbc.url=jdbc:h2:$SNAP_USER_DATA/whereami.db
+      me.nunum.whereami.migration.MigrationManager"

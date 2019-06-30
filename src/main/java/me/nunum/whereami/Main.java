@@ -6,6 +6,7 @@ import me.nunum.whereami.model.exceptions.EntityNotFoundException;
 import me.nunum.whereami.model.exceptions.ForbiddenSubResourceException;
 import me.nunum.whereami.service.TaskManager;
 import me.nunum.whereami.utils.AppConfig;
+import org.glassfish.grizzly.http.server.DefaultErrorPageGenerator;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.grizzly.http.server.ServerConfiguration;
 import org.glassfish.grizzly.http.server.StaticHttpHandler;
@@ -79,6 +80,8 @@ public final class Main {
 
         final HttpServer server = startServer();
 
+        server.getServerConfiguration().setDefaultErrorPageGenerator(new DefaultErrorPageGenerator());
+
         StaticHttpHandler docsHandler = new StaticHttpHandler(System.getProperty("app.website.dir", ""));
         docsHandler.setFileCacheEnabled(false);
 
@@ -90,7 +93,10 @@ public final class Main {
         final Thread taskManager = new Thread(() -> TaskManager.getInstance().run(), "TaskManager");
         taskManager.start();
 
-        System.out.println("API is running at " + BASE_URI + "\n");
+        LOGGER.info("System Properties");
+        System.getProperties().forEach((k, v) -> {
+            LOGGER.info(k + ":" + v);
+        });
 
         taskManager.join();
 

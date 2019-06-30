@@ -5,12 +5,23 @@
 This is a free, collaborative platform with the goal of helping researchers to test and develop indoor tracking algorithms using Wi-Fi signal information. Apart of the server, we also build an [Android application](https://github.com/NunuM/where-am-i-android-app) to help user to collect raw data more easily.
 
 ### Table Of Contents
-
+* [Get Start](#get-started)
 * [Data Model & Lifecycle](#data-model--lifecycle) 
 * [How to become a Algorithm Provider](#how-to-become-a-algorithm-provider)
 * [REST API Docs](https://whereami.nunum.me/docs/swagger)
 * [Java API Docs](https://whereami.nunum.me/docs/java)
 * [FAQ](#faq)
+
+### Get Started
+
+To get start you will Java and Maven in you machine. To start the server you need to type the following commands. 
+
+```
+mvn compile
+mvn exec:exec -Dexec.executable="java"
+ ```
+
+*Note:* You must take a look and change the default System Argument in the pom.xml (Line 158 pom.xml).  
 
 ### Data Model & Lifecycle
 

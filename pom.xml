@@ -137,6 +137,7 @@
                 <configuration>
                     <argLine>@{argLine} -javaagent:lib/org.eclipse.persistence.jpa-2.7.4.jar</argLine>
                     <systemProperties>
+                        <app.db.jdbc.url>jdbc:h2:mem:test</app.db.jdbc.url>
                         <app.persistence.unit>me.nunum.whereami.TEST_JPA_PERSISTENCE</app.persistence.unit>
                     </systemProperties>
                 </configuration>
@@ -148,56 +149,28 @@
                 <executions>
                     <execution>
                         <goals>
-                            <goal>java</goal>
+                            <goal>exec</goal>
                         </goals>
                     </execution>
                 </executions>
                 <configuration>
-                    <mainClass>me.nunum.whereami.Main</mainClass>
-                    <systemProperties>
-                        <property>
-                            <key>app.server.port</key>
-                            <value>8080</value>
-                        </property>
-                        <property>
-                            <key>app.smtp.host</key>
-                            <value>email.me</value>
-                        </property>
-                        <property>
-                            <key>app.admin.email</key>
-                            <value>my@email.me</value>
-                        </property>
-                        <property>
-                            <key>app.smtp.user</key>
-                            <value>my@email.me</value>
-                        </property>
-                        <property>
-                            <key>app.smtp.password</key>
-                            <value>mypass</value>
-                        </property>
-                        <property>
-                            <key>app.firebase.service.account</key>
-                            <value>
-                                ./where-am-i-d215e-firebase-adminsdk-gh2ru-75881c2199.json
-                            </value>
-                        </property>
-                        <property>
-                            <key>app.persistence.unit</key>
-                            <value>me.nunum.whereami.JPA_PERSISTENCE</value>
-                        </property>
-                        <property>
-                            <key>app.log.dir</key>
-                            <value>./</value>
-                        </property>
-                        <property>
-                            <key>app.website.dir</key>
-                            <value>docs/website</value>
-                        </property>
-                        <property>
-                            <key>app.db.jdbc.url</key>
-                            <value>jdbc:h2:mem:test</value>
-                        </property>
-                    </systemProperties>
+                    <executable>/usr/lib/jvm/jdk1.8.0_202/bin/java</executable>
+                    <arguments>
+                        <argument>-javaagent:lib/org.eclipse.persistence.jpa-2.7.4.jar</argument>
+                        <argument>-Dapp.server.port=8080</argument>
+                        <argument>-Dapp.smtp.host=smtp.user.me</argument>
+                        <argument>-Dapp.admin.email=user@user.me</argument>
+                        <argument>-Dapp.smtp.user=user@user.me</argument>
+                        <argument>-Dapp.smtp.password=changeMe</argument>
+                        <argument>-Dapp.firebase.service.account=where-am-i-d215e-firebase-adminsdk-gh2ru-75881c2199.json</argument>
+                        <argument>-Dapp.persistence.unit=me.nunum.whereami.JPA_PERSISTENCE</argument>
+                        <argument>-Dapp.log.dir=./</argument>
+                        <argument>-Dapp.website.dir=docs/website</argument>
+                        <argument>-Dapp.db.jdbc.url=jdbc:h2:tcp://localhost/~/test</argument>
+                        <argument>-classpath</argument>
+                        <classpath />
+                        <argument>me.nunum.whereami.Main</argument>
+                    </arguments>
                 </configuration>
             </plugin>
             <plugin>
@@ -226,7 +199,7 @@
                     </execution>
                 </executions>
             </plugin>
-            <!-- Copy org.eclipse.persistence.jpa jar to lib folder since we need in javaagent argument-->
+            <!-- Copy org.eclipse.persistence.jpa jar to lib folder since we need in javaagent argument -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
@@ -238,20 +211,48 @@
                         <goals>
                             <goal>copy</goal>
                         </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.eclipse.persistence</groupId>
+                                    <artifactId>org.eclipse.persistence.jpa</artifactId>
+                                    <version>2.7.4</version>
+                                    <type>jar</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${project.basedir}/lib</outputDirectory>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.basedir}/lib</outputDirectory>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>copy-project-jar</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>me.nunum.whereami</groupId>
+                                    <artifactId>where-am-i</artifactId>
+                                    <version>1.0.0</version>
+                                    <type>jar</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${project.basedir}/lib</outputDirectory>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
                     </execution>
                 </executions>
-                <configuration>
-                    <artifactItems>
-                        <artifactItem>
-                            <groupId>org.eclipse.persistence</groupId>
-                            <artifactId>org.eclipse.persistence.jpa</artifactId>
-                            <version>2.7.4</version>
-                            <type>jar</type>
-                            <overWrite>false</overWrite>
-                            <outputDirectory>${project.basedir}/lib</outputDirectory>
-                        </artifactItem>
-                    </artifactItems>
-                </configuration>
             </plugin>
         </plugins>
     </build>

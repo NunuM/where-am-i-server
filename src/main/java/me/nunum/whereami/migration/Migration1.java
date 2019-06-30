@@ -40,7 +40,7 @@ public final class Migration1 implements Runnable {
             provider.addDevice(device);
             entityManager.persist(provider);
 
-            Algorithm algorithm = new Algorithm("Mean", "Nuno", "example.pt", true, device);
+            Algorithm algorithm = new Algorithm("Mean", "Nuno", "https://en.wikipedia.org/wiki/Mean", true, device);
             entityManager.persist(algorithm);
 
 
@@ -64,9 +64,5 @@ public final class Migration1 implements Runnable {
         }
 
         LOGGER.info("Migration finished");
-    }
-
-    public static void main(String[] args) {
-        new Migration1().run();
     }
 }
