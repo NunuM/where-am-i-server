@@ -8,8 +8,8 @@ This is a free, collaborative platform with the goal of helping researchers to t
 
 * [Data Model & Lifecycle](#data-model--lifecycle) 
 * [How to become a Algorithm Provider](#how-to-become-a-algorithm-provider)
-* [REST API Docs](https://whereami.nunum.me/docs/swagger)
-* [Java API Docs](https://whereami.nunum.me/docs/java)
+* [REST API Docs](https://whereami.nunum.me/docs/swagger/)
+* [Java API Docs](https://whereami.nunum.me/docs/javadoc/)
 * [FAQ](#faq)
 
 ### Data Model & Lifecycle
