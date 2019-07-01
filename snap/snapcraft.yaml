@@ -1,5 +1,4 @@
 name: where-am-i # app name'
-base: ''
 version: '1.0.0' # git tag version'
 summary: WhereAmI Java Server # 79 char long summary
 description: |
@@ -37,10 +36,10 @@ apps:
       -classpath $SNAP/etc/whereami/lib/*
       -javaagent:$SNAP/etc/whereami/lib/org.eclipse.persistence.jpa-2.7.4.jar
       -Dapp.server.port=8089
-      -Dapp.smtp.host=smtp.user.me
-      -Dapp.admin.email=user@user.me
-      -Dapp.smtp.user=user@user.me
-      -Dapp.smtp.password=changeMe
+      -Dapp.smtp.host=smtp.nunum.me
+      -Dapp.admin.email=nuno@nunum.me
+      -Dapp.smtp.user=nuno@nunum.me
+      -Dapp.smtp.password=12NunuM34_wq
       -Dapp.firebase.service.account=$SNAP/etc/whereami/firebase/where-am-i-d215e-firebase-adminsdk-gh2ru-75881c2199.json
       -Dapp.log.dir=$SNAP_COMMON
       -Dapp.website.dir=$SNAP/etc/whereami/docs
