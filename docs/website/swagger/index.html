@@ -4,9 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <title>Swagger UI</title>
-    <link href="/docs/swagger/swagger-ui.css" rel="stylesheet" type="text/css">
-    <link href="/docs/swagger/favicon-32x32.png" rel="icon" sizes="32x32" type="image/png"/>
-    <link href="/docs/swagger/favicon-16x16.png" rel="icon" sizes="16x16" type="image/png"/>
+    <link href="/swagger/swagger-ui.css" rel="stylesheet" type="text/css">
+    <link href="/swagger/favicon-32x32.png" rel="icon" sizes="32x32" type="image/png"/>
+    <link href="/swagger/favicon-16x16.png" rel="icon" sizes="16x16" type="image/png"/>
     <style>
         html {
             box-sizing: border-box;
@@ -30,13 +30,13 @@
 <body>
 <div id="swagger-ui"></div>
 
-<script src="/docs/swagger/swagger-ui-bundle.js"></script>
-<script src="/docs/swagger/swagger-ui-standalone-preset.js"></script>
+<script src="/swagger/swagger-ui-bundle.js"></script>
+<script src="/swagger/swagger-ui-standalone-preset.js"></script>
 <script>
     window.onload = function () {
         // Begin Swagger UI call region
         const ui = SwaggerUIBundle({
-            url: "https://whereami.nunum.me/api/swagger/swagger.json",
+            url: window.location.protocol + "//" + window.location.host + "/api/swagger/swagger.json",
             dom_id: '#swagger-ui',
             deepLinking: true,
             presets: [

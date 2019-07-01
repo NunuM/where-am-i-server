@@ -46,8 +46,8 @@ public class ApiListingResource {
         info.setVersion(AppConfig.APP_VERSION);
 
         mSwaggerConfig.info(info);
-        mSwaggerConfig.setHost("whereami.nunum.me/api");
-        mSwaggerConfig.setSchemes(Arrays.asList(Scheme.HTTPS));
+        mSwaggerConfig.setHost(AppConfig.APP_AUTHORITY + "/" + AppConfig.APP_API_PATH);
+        mSwaggerConfig.setSchemes(Arrays.asList(Scheme.HTTP));
     }
 
     public ApiListingResource(Swagger swagger) {

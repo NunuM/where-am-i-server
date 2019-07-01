@@ -27,6 +27,10 @@ public class AppConfig {
     public static final String APP_DESCRIPTION = "This is a free, collaborative platform with the goal of helping researchers to test and develop indoor tracking algorithms using Wi-Fi signal information";
     public static final String APP_LICENSE = "https://github.com/NunuM/where-am-i-server/blob/master/LICENSE";
     public static final String APP_VERSION = "1.0.0";
+    public static final String APP_PORT = System.getProperty("app.server.port", "8080");
+
+    public static final String APP_AUTHORITY = String.format("%s:%s", System.getProperty("app.domain", "localhost"), APP_PORT);
+    public static final String APP_API_PATH = "api";
 
     public static final String JPA_UNIT = System.getProperty("app.persistence.unit", "me.nunum.whereami.JPA_PERSISTENCE");
 

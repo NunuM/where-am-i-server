@@ -162,7 +162,7 @@
                         <argument>-Dapp.admin.email=user@user.me</argument>
                         <argument>-Dapp.smtp.user=user@user.me</argument>
                         <argument>-Dapp.smtp.password=changeMe</argument>
-                        <argument>-Dapp.firebase.service.account=where-am-i-d215e-firebase-adminsdk-gh2ru-75881c2199.json</argument>
+                        <argument>-Dapp.firebase.service.account=/home/nuno/IdeaProjects/where-am-i-server/where-am-i-d215e-firebase-adminsdk-gh2ru-75881c2199.json</argument>
                         <argument>-Dapp.persistence.unit=me.nunum.whereami.JPA_PERSISTENCE</argument>
                         <argument>-Dapp.log.dir=./</argument>
                         <argument>-Dapp.website.dir=docs/website</argument>

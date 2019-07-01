@@ -25,7 +25,7 @@ import java.util.logging.Logger;
  */
 public final class Main {
     // Base URI the Grizzly HTTP server will listen on
-    private static final String BASE_URI = String.format("http://0.0.0.0:%s/api", System.getProperty("app.server.port", "8080"));
+    private static final String BASE_URI = String.format("http://0.0.0.0:%s/%s", AppConfig.APP_PORT, AppConfig.APP_API_PATH);
 
     private static final Logger LOGGER = Logger.getLogger(Main.class.getSimpleName());
 
@@ -83,7 +83,7 @@ public final class Main {
         docsHandler.setFileCacheEnabled(false);
 
         ServerConfiguration cfg = server.getServerConfiguration();
-        cfg.addHttpHandler(docsHandler, "/docs/");
+        cfg.addHttpHandler(docsHandler, "/");
 
         LOGGER.log(Level.INFO, "Jersey app started with WADL available at {0}", BASE_URI);
 
