@@ -85,7 +85,7 @@ public final class Main {
         ServerConfiguration cfg = server.getServerConfiguration();
         cfg.addHttpHandler(docsHandler, "/");
 
-        LOGGER.log(Level.INFO, "Jersey app started with WADL available at {0}", BASE_URI);
+        LOGGER.log(Level.INFO, "Jersey app started with WADL available at http://{0}", AppConfig.APP_AUTHORITY);
 
         final Thread taskManager = new Thread(() -> TaskManager.getInstance().run(), "TaskManager");
         taskManager.start();
