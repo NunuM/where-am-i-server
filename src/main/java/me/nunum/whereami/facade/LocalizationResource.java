@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import me.nunum.whereami.controller.LocalizationController;
 import me.nunum.whereami.framework.dto.DTO;
+import me.nunum.whereami.framework.response.TheMediaType;
 import me.nunum.whereami.model.exceptions.EntityAlreadyExists;
 import me.nunum.whereami.model.exceptions.EntityNotFoundException;
 import me.nunum.whereami.model.exceptions.ForbiddenEntityDeletionException;
@@ -43,7 +44,7 @@ public class LocalizationResource {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "X-APP", value = "App Instance", required = true, dataType = "string", paramType = "header")
     })
-    @Produces({MediaType.APPLICATION_JSON})
+    @Produces({TheMediaType.APPLICATION_JSON})
     public Response retrieveLocalizations(@QueryParam("page") Integer page,
                                           @QueryParam("name") String localizationName,
                                           @QueryParam("trained") String trained,
@@ -73,7 +74,7 @@ public class LocalizationResource {
             @ApiImplicitParam(name = "X-APP", value = "App Instance", required = true, dataType = "string", paramType = "header")
     })
     @Consumes({MediaType.APPLICATION_JSON})
-    @Produces({MediaType.APPLICATION_JSON})
+    @Produces({TheMediaType.APPLICATION_JSON})
     public Response newLocalization(@Valid NewLocalizationRequest localizationRequest) {
 
         try (final LocalizationController controller = new LocalizationController()) {
@@ -101,7 +102,7 @@ public class LocalizationResource {
             @ApiImplicitParam(name = "X-APP", value = "App Instance", required = true, dataType = "string", paramType = "header")
     })
     @Path("{id}")
-    @Produces({MediaType.APPLICATION_JSON})
+    @Produces({TheMediaType.APPLICATION_JSON})
     public Response deleteLocalization(@PathParam("id") Long id) {
 
         try (final LocalizationController controller = new LocalizationController()) {

@@ -5,6 +5,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import me.nunum.whereami.controller.ProviderController;
+import me.nunum.whereami.framework.response.TheMediaType;
 import me.nunum.whereami.model.dto.ErrorDTO;
 import me.nunum.whereami.model.exceptions.EntityAlreadyExists;
 import me.nunum.whereami.model.exceptions.EntityNotFoundException;
@@ -38,7 +39,7 @@ public class ProviderResource {
             @ApiImplicitParam(name = "X-APP", value = "App Instance", required = true, dataType = "string", paramType = "header")
     })
     @Consumes({MediaType.APPLICATION_JSON})
-    @Produces({MediaType.APPLICATION_JSON})
+    @Produces({TheMediaType.APPLICATION_JSON})
     public Response requestToBeAProvider(NewProviderRequest request) {
         try (final ProviderController controller = new ProviderController()) {
 
@@ -60,7 +61,7 @@ public class ProviderResource {
             @ApiImplicitParam(name = "X-APP", value = "App Instance", required = true, dataType = "string", paramType = "header")
     })
     @Consumes({MediaType.APPLICATION_JSON})
-    @Produces({MediaType.APPLICATION_JSON})
+    @Produces({TheMediaType.APPLICATION_JSON})
     public Response confirmEmail(@QueryParam("token") String token) {
         try (final ProviderController controller = new ProviderController()) {
 

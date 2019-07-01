@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import me.nunum.whereami.controller.PositionsController;
 import me.nunum.whereami.framework.dto.DTO;
+import me.nunum.whereami.framework.response.TheMediaType;
 import me.nunum.whereami.model.Localization;
 import me.nunum.whereami.model.exceptions.EntityNotFoundException;
 import me.nunum.whereami.model.exceptions.ForbiddenEntityDeletionException;
@@ -45,7 +46,7 @@ public class PositionResource {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "X-APP", value = "App Instance", required = true, dataType = "string", paramType = "header")
     })
-    @Produces({MediaType.APPLICATION_JSON})
+    @Produces({TheMediaType.APPLICATION_JSON})
     public Response positions() {
 
         try {
@@ -68,7 +69,7 @@ public class PositionResource {
             @ApiImplicitParam(name = "X-APP", value = "App Instance", required = true, dataType = "string", paramType = "header")
     })
     @Consumes({MediaType.APPLICATION_JSON})
-    @Produces({MediaType.APPLICATION_JSON})
+    @Produces({TheMediaType.APPLICATION_JSON})
     public Response newPosition(@Valid NewPositionRequest newPositionRequest) {
 
         try {
@@ -103,7 +104,7 @@ public class PositionResource {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "X-APP", value = "App Instance", required = true, dataType = "string", paramType = "header")
     })
-    @Produces({MediaType.APPLICATION_JSON})
+    @Produces({TheMediaType.APPLICATION_JSON})
     public Response deletePosition(@PathParam("ip") Long ip) {
         try {
 

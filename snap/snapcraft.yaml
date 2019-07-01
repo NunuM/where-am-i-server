@@ -42,9 +42,10 @@ apps:
       -Dapp.smtp.user=user@user.me
       -Dapp.smtp.password=changeMe
       -Dapp.firebase.service.account=$SNAP/etc/whereami/firebase/where-am-i-d215e-firebase-adminsdk-gh2ru-75881c2199.json
-      -Dapp.log.dir=$SNAP_USER_DATA
+      -Dapp.log.dir=$SNAP_COMMON
       -Dapp.website.dir=$SNAP/etc/whereami/docs
-      -Dapp.db.jdbc.url=jdbc:h2:$SNAP_USER_DATA/whereami.db
+      -Dapp.db.jdbc.url=jdbc:h2:$SNAP_COMMON/whereami.db
+      -Dlog4j.configuration=log4jprd.properties
       me.nunum.whereami.Main"
     daemon: simple
     restart-condition: always
@@ -56,5 +57,6 @@ apps:
       -classpath $SNAP/etc/whereami/lib/*
       -javaagent:$SNAP/etc/whereami/lib/org.eclipse.persistence.jpa-2.7.4.jar
       -Dapp.log.dir=$SNAP_USER_DATA
-      -Dapp.db.jdbc.url=jdbc:h2:$SNAP_USER_DATA/whereami.db
+      -Dapp.db.jdbc.url=jdbc:h2:$SNAP_COMMON/whereami.db
+      -Dlog4j.configuration=log4j.properties
       me.nunum.whereami.migration.MigrationManager"

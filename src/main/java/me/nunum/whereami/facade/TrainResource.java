@@ -4,6 +4,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import me.nunum.whereami.controller.TrainingController;
+import me.nunum.whereami.framework.response.TheMediaType;
 import me.nunum.whereami.model.Localization;
 import me.nunum.whereami.model.dto.ErrorDTO;
 import me.nunum.whereami.model.exceptions.EntityAlreadyExists;
@@ -44,7 +45,7 @@ public class TrainResource {
             @ApiImplicitParam(name = "X-APP", value = "App Instance", required = true, dataType = "string", paramType = "header")
     })
     @Consumes({MediaType.APPLICATION_JSON})
-    @Produces({MediaType.APPLICATION_JSON})
+    @Produces({TheMediaType.APPLICATION_JSON})
     public Response submitTrainingRequest(@Valid NewTrainingRequest request) {
         try {
             return Response.ok(controller
@@ -83,7 +84,7 @@ public class TrainResource {
             @ApiImplicitParam(name = "X-APP", value = "App Instance", required = true, dataType = "string", paramType = "header")
     })
     @Path("{it}")
-    @Produces({MediaType.APPLICATION_JSON})
+    @Produces({TheMediaType.APPLICATION_JSON})
     public Response trainingStatus(@PathParam("it") Long it) {
 
         try {
@@ -112,7 +113,7 @@ public class TrainResource {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "X-APP", value = "App Instance", required = true, dataType = "string", paramType = "header")
     })
-    @Produces({MediaType.APPLICATION_JSON})
+    @Produces({TheMediaType.APPLICATION_JSON})
     public Response allTrainingStatus(@HeaderParam("timezone") String timezone) {
 
         try {
@@ -145,7 +146,7 @@ public class TrainResource {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "X-APP", value = "App Instance", required = true, dataType = "string", paramType = "header")
     })
-    @Produces({MediaType.APPLICATION_JSON})
+    @Produces({TheMediaType.APPLICATION_JSON})
     public Response deleteTrainingRequest(@PathParam("it") Long trainingId) {
 
         try {

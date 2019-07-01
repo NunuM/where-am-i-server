@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import me.nunum.whereami.controller.PostController;
 import me.nunum.whereami.framework.dto.DTO;
+import me.nunum.whereami.framework.response.TheMediaType;
 import me.nunum.whereami.model.exceptions.EntityNotFoundException;
 import me.nunum.whereami.model.request.PostRequest;
 
@@ -40,7 +41,7 @@ public class PostResource {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "X-APP", value = "App Instance", required = true, dataType = "string", paramType = "header")
     })
-    @Produces({MediaType.APPLICATION_JSON})
+    @Produces({TheMediaType.APPLICATION_JSON})
     public Response posts(@QueryParam("page") Integer page) {
 
         try (final PostController controller = new PostController()) {
@@ -67,7 +68,7 @@ public class PostResource {
     })
     @RolesAllowed({"admin"})
     @Consumes({MediaType.APPLICATION_JSON})
-    @Produces({MediaType.APPLICATION_JSON})
+    @Produces({TheMediaType.APPLICATION_JSON})
     public Response newPost(@Valid PostRequest postRequest) {
 
         try (final PostController controller = new PostController()) {
@@ -91,7 +92,7 @@ public class PostResource {
     @Path("{id}")
     @RolesAllowed({"admin"})
     @Consumes({MediaType.APPLICATION_JSON})
-    @Produces({MediaType.APPLICATION_JSON})
+    @Produces({TheMediaType.APPLICATION_JSON})
     public Response updatePost(@PathParam("id") Long id, PostRequest postRequest) {
 
         try (final PostController controller = new PostController()) {
@@ -119,7 +120,7 @@ public class PostResource {
     })
     @Path("{id}")
     @RolesAllowed({"admin"})
-    @Produces({MediaType.APPLICATION_JSON})
+    @Produces({TheMediaType.APPLICATION_JSON})
     public Response deletePost(@PathParam("id") Long id) {
 
         try (final PostController controller = new PostController()) {

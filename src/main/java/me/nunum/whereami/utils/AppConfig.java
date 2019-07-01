@@ -33,7 +33,7 @@ public class AppConfig {
     public static final String X_APP_HEADER = "X-APP";
 
     public static final String EMAIL_HOST = System.getProperty("app.smtp.host", "");
-    public static final String EMAIL_FROM = "no-reply@whereami.nunum.me";
+    public static final String EMAIL_FROM = System.getProperty("app.no.reply.email", "no-reply@whereami.nunum.me");
     public static final String EMAIL_ADMIN_CONTACT = System.getProperty("app.admin.email", EMAIL_FROM);
 
 

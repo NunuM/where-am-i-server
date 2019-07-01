@@ -23,11 +23,12 @@
         <class>me.nunum.whereami.model.Feedback</class>
 
         <properties>
-            <property name="javax.persistence.jdbc.url" value="jdbc:h2:tcp://localhost/~/test"/>
+            <!-- Default database is in memory -->
+            <property name="javax.persistence.jdbc.url" value="jdbc:h2:mem:test"/>
             <property name="javax.persistence.jdbc.password" value=""/>
             <property name="javax.persistence.jdbc.driver" value="org.h2.Driver"/>
             <property name="javax.persistence.jdbc.user" value="sa"/>
-            <property name="javax.persistence.schema-generation.database.action" value="drop-and-create"/>
+            <property name="javax.persistence.schema-generation.database.action" value="create"/>
 
             <property name="eclipselink.cache.shared.default" value="true"/>
             <property name="eclipselink.cache.size.default" value="50"/>

@@ -6,10 +6,7 @@ import me.nunum.whereami.model.exceptions.EntityNotFoundException;
 import me.nunum.whereami.model.exceptions.ForbiddenSubResourceException;
 import me.nunum.whereami.service.TaskManager;
 import me.nunum.whereami.utils.AppConfig;
-import org.glassfish.grizzly.http.server.DefaultErrorPageGenerator;
-import org.glassfish.grizzly.http.server.HttpServer;
-import org.glassfish.grizzly.http.server.ServerConfiguration;
-import org.glassfish.grizzly.http.server.StaticHttpHandler;
+import org.glassfish.grizzly.http.server.*;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.logging.LoggingFeature;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -93,9 +90,9 @@ public final class Main {
         final Thread taskManager = new Thread(() -> TaskManager.getInstance().run(), "TaskManager");
         taskManager.start();
 
-        LOGGER.info("System Properties");
+        LOGGER.fine("System Properties");
         System.getProperties().forEach((k, v) -> {
-            LOGGER.info(k + ":" + v);
+            LOGGER.fine(k + ":" + v);
         });
 
         taskManager.join();

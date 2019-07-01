@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import me.nunum.whereami.controller.FeedbackController;
 import me.nunum.whereami.framework.dto.DTO;
+import me.nunum.whereami.framework.response.TheMediaType;
 import me.nunum.whereami.model.request.NewFeedbackRequest;
 
 import javax.annotation.security.RolesAllowed;
@@ -33,7 +34,7 @@ public class FeedbackResource {
             @ApiImplicitParam(name = "X-APP", value = "App Instance", required = true, dataType = "string", paramType = "header")
     })
     @Consumes({MediaType.APPLICATION_JSON})
-    @Produces({MediaType.APPLICATION_JSON})
+    @Produces({TheMediaType.APPLICATION_JSON})
     @RolesAllowed("admin")
     public Response listFeedback() {
         try (final FeedbackController controller = new FeedbackController()) {
@@ -54,7 +55,7 @@ public class FeedbackResource {
             @ApiImplicitParam(name = "X-APP", value = "App Instance", required = true, dataType = "string", paramType = "header")
     })
     @Consumes({MediaType.APPLICATION_JSON})
-    @Produces({MediaType.APPLICATION_JSON})
+    @Produces({TheMediaType.APPLICATION_JSON})
     public Response submitFeedback(NewFeedbackRequest request) {
 
         try (final FeedbackController controller = new FeedbackController()) {

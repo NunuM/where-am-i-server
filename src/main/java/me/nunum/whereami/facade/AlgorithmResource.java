@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import me.nunum.whereami.controller.AlgorithmController;
 import me.nunum.whereami.framework.dto.DTO;
+import me.nunum.whereami.framework.response.TheMediaType;
 import me.nunum.whereami.model.dto.ErrorDTO;
 import me.nunum.whereami.model.exceptions.EntityAlreadyExists;
 import me.nunum.whereami.model.exceptions.EntityNotFoundException;
@@ -42,7 +43,7 @@ public class AlgorithmResource {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "X-APP", value = "App Instance", required = true, dataType = "string", paramType = "header")
     })
-    @Produces({MediaType.APPLICATION_JSON})
+    @Produces({TheMediaType.APPLICATION_JSON})
     public Response availableAlgorithm(@QueryParam("page") Integer page) {
 
         try (final AlgorithmController controller = new AlgorithmController()) {
@@ -64,7 +65,7 @@ public class AlgorithmResource {
             @ApiImplicitParam(name = "X-APP", value = "App Instance", required = true, dataType = "string", paramType = "header")
     })
     @Path("{it}")
-    @Produces({MediaType.APPLICATION_JSON})
+    @Produces({TheMediaType.APPLICATION_JSON})
     public Response getAlgorithm(@PathParam("it") Long aId) {
 
         try (final AlgorithmController controller = new AlgorithmController()) {
@@ -90,7 +91,7 @@ public class AlgorithmResource {
             @ApiImplicitParam(name = "X-APP", value = "App Instance", required = true, dataType = "string", paramType = "header")
     })
     @Consumes({MediaType.APPLICATION_JSON})
-    @Produces({MediaType.APPLICATION_JSON})
+    @Produces({TheMediaType.APPLICATION_JSON})
     public Response newAlgorithm(@Valid NewAlgorithmRequest algorithmRequest) {
 
         try (final AlgorithmController controller = new AlgorithmController()) {
@@ -117,7 +118,7 @@ public class AlgorithmResource {
     })
     @Path("{it}")
     @Consumes({MediaType.APPLICATION_JSON})
-    @Produces({MediaType.APPLICATION_JSON})
+    @Produces({TheMediaType.APPLICATION_JSON})
     public Response updateAlgorithm(@PathParam("it") Long aId, UpdateAlgorithmRequest request) {
         try (final AlgorithmController controller = new AlgorithmController()) {
 
@@ -146,7 +147,7 @@ public class AlgorithmResource {
     })
     @Path("{it}")
     @Consumes({MediaType.APPLICATION_JSON})
-    @Produces({MediaType.APPLICATION_JSON})
+    @Produces({TheMediaType.APPLICATION_JSON})
     @RolesAllowed("admin")
     public Response deleteAlgorithm(@PathParam("it") Long aId) {
 
@@ -173,7 +174,7 @@ public class AlgorithmResource {
     })
     @Path("{it}/approval")
     @Consumes({MediaType.APPLICATION_JSON})
-    @Produces({MediaType.APPLICATION_JSON})
+    @Produces({TheMediaType.APPLICATION_JSON})
     @RolesAllowed("admin")
     public Response approveAlgorithm(@PathParam("it") Long aId, ApprovalRequest request) {
 
@@ -199,7 +200,7 @@ public class AlgorithmResource {
             @ApiImplicitParam(name = "X-APP", value = "App Instance", required = true, dataType = "string", paramType = "header")
     })
     @Path("{it}/provider/{pr}")
-    @Produces({MediaType.APPLICATION_JSON})
+    @Produces({TheMediaType.APPLICATION_JSON})
     @RolesAllowed({"provider"})
     public Response deleteAlgorithmProvider(@PathParam("it") Long aId, @PathParam("pr") Long pId) {
 
@@ -238,7 +239,7 @@ public class AlgorithmResource {
     })
     @Path("{it}/provider")
     @Consumes({MediaType.APPLICATION_JSON})
-    @Produces({MediaType.APPLICATION_JSON})
+    @Produces({TheMediaType.APPLICATION_JSON})
     @RolesAllowed({"provider"})
     public Response addAlgorithmProvider(@PathParam("it") Long aId, NewAlgorithmProvider algorithmProvider) {
 
@@ -284,7 +285,7 @@ public class AlgorithmResource {
             @ApiImplicitParam(name = "X-APP", value = "App Instance", required = true, dataType = "string", paramType = "header")
     })
     @Path("{it}/provider/{pr}")
-    @Produces({MediaType.APPLICATION_JSON})
+    @Produces({TheMediaType.APPLICATION_JSON})
     @RolesAllowed({"provider"})
     public Response updateProvider(@PathParam("it") Long aId, @PathParam("pr") Long pId, UpdateAlgorithmProvider request) {
 
@@ -325,7 +326,7 @@ public class AlgorithmResource {
             @ApiImplicitParam(name = "X-APP", value = "App Instance", required = true, dataType = "string", paramType = "header")
     })
     @Consumes({MediaType.APPLICATION_JSON})
-    @Produces({MediaType.APPLICATION_JSON})
+    @Produces({TheMediaType.APPLICATION_JSON})
     public Response executeAlgorithm(@PathParam("it") Long aId, @PathParam("ag") Long ag, NewAlgorithmRunRequest request) {
 
         try (final AlgorithmController controller = new AlgorithmController()) {
@@ -338,7 +339,7 @@ public class AlgorithmResource {
 
             return Response.status(Response.Status.FORBIDDEN).entity(ErrorDTO.fromError(e)).build();
 
-        } catch (Exception e){
+        } catch (Exception e) {
 
             LOGGER.log(Level.SEVERE, "Unable to apply algorithms", e);
 

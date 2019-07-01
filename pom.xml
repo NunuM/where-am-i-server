@@ -154,7 +154,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <executable>/usr/lib/jvm/jdk1.8.0_202/bin/java</executable>
+                    <executable>java</executable>
                     <arguments>
                         <argument>-javaagent:lib/org.eclipse.persistence.jpa-2.7.4.jar</argument>
                         <argument>-Dapp.server.port=8080</argument>
@@ -166,7 +166,8 @@
                         <argument>-Dapp.persistence.unit=me.nunum.whereami.JPA_PERSISTENCE</argument>
                         <argument>-Dapp.log.dir=./</argument>
                         <argument>-Dapp.website.dir=docs/website</argument>
-                        <argument>-Dapp.db.jdbc.url=jdbc:h2:tcp://localhost/~/test</argument>
+                        <argument>-Dapp.db.jdbc.url=jdbc:h2:mem:test</argument>
+                        <argument>-Dlog4j.configuration=log4j.properties</argument>
                         <argument>-classpath</argument>
                         <classpath />
                         <argument>me.nunum.whereami.Main</argument>
