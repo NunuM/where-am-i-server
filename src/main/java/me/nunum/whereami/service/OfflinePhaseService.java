@@ -11,6 +11,7 @@ import me.nunum.whereami.model.persistance.jpa.FingerprintRepositoryJpa;
 import me.nunum.whereami.model.persistance.jpa.TaskRepositoryJpa;
 import me.nunum.whereami.model.persistance.jpa.TrainingRepositoryJpa;
 import me.nunum.whereami.service.exceptions.HTTPRequestError;
+import me.nunum.whereami.service.notification.NotifyService;
 import me.nunum.whereami.utils.AppConfig;
 
 import javax.ws.rs.client.Client;
@@ -52,31 +53,31 @@ public class OfflinePhaseService extends Executable {
 
             boolean wasLoopExhausted = true;
 
-            if (task.trainingInfo().isHTTPProvider()) {
+            if (task.getTraining().isHTTPProvider()) {
 
-                task.trainingInfo().trainingInProgress();
+                task.getTraining().trainingInProgress();
 
-                trainings.save(task.trainingInfo());
+                trainings.save(task.getTraining());
 
                 List<Fingerprint> fingerprintList = fingerprints
-                        .fingerprintByLocalizationIdAndWithIdGreater(task.trainingInfo().localizationAssociated(), task.getCursor(), task.getBatchSize());
+                        .fingerprintByLocalizationIdAndWithIdGreater(task.getTraining().localizationAssociated(), task.getCursor(), task.getBatchSize());
 
                 long size = fingerprintList.size();
 
                 while (size > 0) {
 
-                    LOGGER.log(Level.INFO, String.format("Processing task %d. Current cursor: %d. Provider %d", task.getId(), task.getCursor(), task.trainingInfo().getAlgorithmProvider().getId()));
+                    LOGGER.log(Level.INFO, String.format("Processing task %d. Current cursor: %d. Provider %d", task.getId(), task.getCursor(), task.getTraining().getAlgorithmProvider().getId()));
 
                     try {
 
-                        this.flushPayload(task.getId(), fingerprintList, task.trainingInfo().providerProperties());
+                        this.flushPayload(task.getId(), fingerprintList, task.getTraining().providerProperties());
 
                     } catch (Exception e) {
 
-                        LOGGER.log(Level.SEVERE, String.format("Sink Request fail. Processing task %d. Current cursor: %d. Provider %d", task.getId(), task.getCursor(), task.trainingInfo().getAlgorithmProvider().getId()), e);
+                        LOGGER.log(Level.SEVERE, String.format("Sink Request fail. Processing task %d. Current cursor: %d. Provider %d", task.getId(), task.getCursor(), task.getTraining().getAlgorithmProvider().getId()), e);
 
                         if (e instanceof HTTPRequestError) {
-                            this.warningProviderForRequestFailure(task.trainingInfo().getAlgorithmProvider().getEmail(), e.getMessage());
+                            this.warningProviderForRequestFailure(task.getTraining().getAlgorithmProvider().getEmail(), e.getMessage());
                         }
 
                         wasLoopExhausted = false;
@@ -93,7 +94,7 @@ public class OfflinePhaseService extends Executable {
                             });
 
                     fingerprintList = fingerprints
-                            .fingerprintByLocalizationIdAndWithIdGreater(task.trainingInfo().localizationAssociated(), task.getCursor(), task.getBatchSize());
+                            .fingerprintByLocalizationIdAndWithIdGreater(task.getTraining().localizationAssociated(), task.getCursor(), task.getBatchSize());
 
                     size = fingerprintList.size();
                 }
@@ -162,9 +163,10 @@ public class OfflinePhaseService extends Executable {
     }
 
     private void warningProviderForRequestFailure(final String mail, final String errorMessage) {
-
         LOGGER.log(Level.INFO, "Sending email: {0}", mail);
         LOGGER.log(Level.INFO, "Sending content: {0}", errorMessage);
+
+        NotifyService.providerSinkError(mail, errorMessage);
     }
 
 }

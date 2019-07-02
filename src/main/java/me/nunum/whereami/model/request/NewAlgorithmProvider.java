@@ -5,6 +5,8 @@ import me.nunum.whereami.model.Provider;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,8 +38,8 @@ public class NewAlgorithmProvider {
         }
 
         for (String key : selectedMethod.requiredKeys()) {
-            if (!this.properties.containsKey(key)) {
-                throw new IllegalArgumentException(String.format("Key %s is required on properties object", key));
+            if (!(this.properties.containsKey(key) && isValidURL(this.properties.get(key)))) {
+                throw new IllegalArgumentException(String.format("Key %s is required on properties object and must be a valid URL", key));
             }
         }
 
@@ -62,6 +64,15 @@ public class NewAlgorithmProvider {
 
     public void setProperties(Map<String, String> properties) {
         this.properties = properties;
+    }
+
+    public static boolean isValidURL(String urlStr) {
+        try {
+            new URL(urlStr);
+            return true;
+        } catch (MalformedURLException e) {
+            return false;
+        }
     }
 
     @Override

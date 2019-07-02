@@ -4,7 +4,7 @@ package me.nunum.whereami.service.notification.channel;
 import me.nunum.whereami.framework.domain.Executable;
 import me.nunum.whereami.framework.dto.DTO;
 import me.nunum.whereami.model.Feedback;
-import me.nunum.whereami.model.Task;
+import me.nunum.whereami.model.Training;
 import me.nunum.whereami.utils.AppConfig;
 
 import javax.mail.*;
@@ -101,9 +101,9 @@ public class EmailNotifyService extends Executable {
         private final DTO providerInfo;
         private final DTO taskInfo;
 
-        public NewTrainingRequest(final Task task) {
-            this.taskInfo = task.toDTO();
-            this.providerInfo = task.trainingInfo().getAlgorithmProvider().toDTO();
+        public NewTrainingRequest(final Training training) {
+            this.taskInfo = training.getTask().toDTO();
+            this.providerInfo = training.getAlgorithmProvider().toDTO();
         }
 
         @Override
@@ -119,6 +119,33 @@ public class EmailNotifyService extends Executable {
 
             msg.setContent(String.format("The following provider %s was issued the task %s",
                     providerInfo.dtoValues(), taskInfo.dtoValues()), "text/plain");
+
+            return msg;
+        }
+    }
+
+
+    public static class ProviderSinkErrorEmail
+    implements EmailMessage{
+        private final String to;
+        private final String message;
+
+        public ProviderSinkErrorEmail(String to, String message) {
+            this.to = to;
+            this.message = message;
+        }
+
+        @Override
+        public MimeMessage message(Session session) throws MessagingException {
+            MimeMessage msg = new MimeMessage(session);
+
+            msg.setFrom(new InternetAddress(AppConfig.EMAIL_FROM));
+            InternetAddress[] address = {new InternetAddress(to)};
+            msg.setRecipients(Message.RecipientType.TO, address);
+            msg.setSubject("Sink Error");
+            msg.setSentDate(new Date());
+
+            msg.setContent(String.format("The following error as occurred while sink data to your server: %n\t%s", this.message), "text/plain");
 
             return msg;
         }
@@ -145,7 +172,7 @@ public class EmailNotifyService extends Executable {
             msg.setSubject("New Feedback");
             msg.setSentDate(new Date());
 
-            msg.setContent(String.format("A new feedback was received: %s", this.info), "text/plain");
+            msg.setContent(String.format("A new feedback was received: %s", this.info.dtoValues()), "text/plain");
 
             return msg;
         }

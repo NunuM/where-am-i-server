@@ -541,7 +541,7 @@ public class AlgorithmResourceTest extends JerseyTest {
         // Add new property and change previous url without specify method
         HashMap<String, Object> entityToUpdate = new HashMap<>();
         HashMap<String, Object> entityPropertiesToUpdate = new HashMap<>();
-        entityPropertiesToUpdate.put("new", "new");
+        entityPropertiesToUpdate.put("new", "http://newexample.com");
         entityPropertiesToUpdate.put(AlgorithmProvider.GIT_PROVIDER_URL_KEY, "http://example.net");
         entityToUpdate.put("properties", entityPropertiesToUpdate);
 
@@ -562,7 +562,7 @@ public class AlgorithmResourceTest extends JerseyTest {
         // Add new property and change previous url specifying the method
         HashMap<String, Object> entityToUpdate1 = new HashMap<>();
         HashMap<String, Object> entityPropertiesToUpdate1 = new HashMap<>();
-        entityPropertiesToUpdate1.put("old", "old");
+        entityPropertiesToUpdate1.put("old", "http://oldexample.com");
         entityPropertiesToUpdate1.put(AlgorithmProvider.GIT_PROVIDER_URL_KEY, "http://example.pt");
         entityToUpdate1.put("properties", entityPropertiesToUpdate1);
         entityToUpdate1.put("method", "git");

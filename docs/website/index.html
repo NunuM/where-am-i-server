@@ -1,55 +1,73 @@
-<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
-    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
-    <meta content="NunuM" name="author">
-    <title>Home · WhereAmI</title>
-
-    <!-- Bootstrap core CSS -->
-    <link crossorigin="anonymous" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Muli&display=swap" rel="stylesheet">
-
-    <style>
-        * {
-            font-family: 'Roboto', sans-serif;
-        }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Angular Material style sheet -->
+    <link rel="stylesheet"
+          href="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.12/angular-material.min.css">
+    <title>Where Am I</title>
 </head>
-<body>
+<body ng-app="whereAmIApp" ng-cloak>
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="#">Where Am I</a>
-    <button aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"
-            class="navbar-toggler"
-            data-target="#navbarSupportedContent" data-toggle="collapse" type="button">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-                <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/swagger/">Swagger</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/javadoc/">JavaDoc</a>
-            </li>
-        </ul>
-    </div>
-</nav>
-
-<div class="container">
-    <footer class="pt-4 my-md-5 pt-md-5 border-top">
-        <div class="row">
-            <div class="col-12 col-md text-center">
-                <small class="d-block mb-3 text-muted">&copy; 2019</small>
-            </div>
-        </div>
-    </footer>
+<div>
+    <md-content layout="row" layout-align="center center">
+        <h1>WHERE AM I</h1>
+    </md-content>
 </div>
+
+<div layout="row" layout-align="center center">
+    <md-content class="md-padding">
+        <md-nav-bar
+                md-no-ink-bar="disableInkBar"
+                md-selected-nav-item="currentNavItem"
+                nav-bar-aria-label="navigation links">
+
+            <md-nav-item md-nav-href="https://whereami.nunum.me" name="home">
+                Home
+            </md-nav-item>
+            <md-nav-item md-nav-href="https://whereami.nunum.me/swagger/" name="swagger">
+                Swagger
+            </md-nav-item>
+            <md-nav-item md-nav-href="https://whereami.nunum.me/javadoc/" name="javadoc">
+                JavaDoc
+            </md-nav-item>
+            <md-nav-item md-nav-href="https://github.com/NunuM/where-am-i-server" name="page4">
+                <img src="/img/github-logo.png">
+            </md-nav-item>
+
+        </md-nav-bar>
+
+    </md-content>
+</div>
+</div>
+
+
+<!-- Angular Material requires Angular.js Libraries -->
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.6/angular.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.6/angular-animate.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.6/angular-aria.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.6/angular-messages.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.6/angular-route.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.6/angular-cookies.js"></script>
+
+<!-- Angular Material Library -->
+<script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.12/angular-material.min.js"></script>
+
+<!-- Your application bootstrap  -->
+<script>
+
+    angular.module('whereAmIApp', ['ngMaterial', 'ngMessages', 'ngRoute', 'ngCookies'])
+        .config(function ($routeProvider, $mdThemingProvider, $httpProvider) {
+
+        $mdThemingProvider.theme('default').accentPalette('yellow').dark();
+    });
+
+
+</script>
+
 </body>
 </html>
+
+<!--
+Copyright 2016-2019 Google Inc. All Rights Reserved.
+Use of this source code is governed by an MIT-style license that can be found in the LICENSE file at https://material.angularjs.org/latest/license.
+-->

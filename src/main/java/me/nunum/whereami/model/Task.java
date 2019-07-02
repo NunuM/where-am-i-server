@@ -116,7 +116,7 @@ public class Task implements DTOable {
         this.cursor = cursor;
     }
 
-    public Training trainingInfo() {
+    public Training getTraining() {
         return training;
     }
 
@@ -179,13 +179,13 @@ public class Task implements DTOable {
         if (this == o) return true;
         if (!(o instanceof Task)) return false;
         Task task = (Task) o;
-        return Objects.equals(trainingInfo(), task.trainingInfo()) &&
+        return Objects.equals(getTraining(), task.getTraining()) &&
                 getState() == task.getState();
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(trainingInfo(), getState());
+        return Objects.hash(getTraining(), getState());
     }
 
     @Override

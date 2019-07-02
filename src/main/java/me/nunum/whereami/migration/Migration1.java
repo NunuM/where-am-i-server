@@ -52,6 +52,13 @@ public final class Migration1 implements Runnable {
             map.put(AlgorithmProvider.HTTP_PROVIDER_PREDICTION_URL_KEY, String.format("/api/algorithm/%d/implementation/1", algorithm.getId()));
             algorithm.addProvider(new AlgorithmProvider(aProvider, AlgorithmProvider.METHOD.HTTP, map));
 
+
+            final Post wikiPost = new Post("Wi-Fi positioning system", "https://whereami.nunum.me/img/w.png", "https://en.wikipedia.org/wiki/Wi-Fi_positioning_system");
+            final Post myPost = new Post("Indoor Positioning Systems using Wi-Fi", "https://whereami.nunum.me/img/s.png", "https://whereami.nunum.me/pdf/paper_1140460_1140358.pdf");
+
+            entityManager.persist(wikiPost);
+            entityManager.persist(myPost);
+
             entityManager.flush();
             transaction.commit();
 

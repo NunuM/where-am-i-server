@@ -43,7 +43,7 @@ public class TaskController implements AutoCloseable {
 
         Task task = optionalTask.get();
 
-        if (!task.trainingInfo().getAlgorithmProvider().belongs(device)) {
+        if (!task.getTraining().getAlgorithmProvider().belongs(device)) {
             throw new ForbiddenEntityAccessException("Forbidden access");
         }
 
@@ -51,7 +51,7 @@ public class TaskController implements AutoCloseable {
 
             task.trainingFinish();
 
-            final Localization localization = task.trainingInfo().getLocalization();
+            final Localization localization = task.getTraining().getLocalization();
 
             localization.incrementTrainedModels();
 

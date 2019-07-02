@@ -41,6 +41,7 @@ public class Post
         this.title = title;
         this.imageURL = imageURL;
         this.sourceURL = sourceURL;
+        this.onCreate();
     }
 
     public String getTitle() {

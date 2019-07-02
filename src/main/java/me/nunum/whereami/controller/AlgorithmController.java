@@ -78,7 +78,7 @@ public class AlgorithmController implements AutoCloseable {
             throw new ForbiddenEntityAccessException(String.format("Device %s not have update privileges to update algorithm %d", device.instanceId(), aId));
         }
 
-        return this.repository.save(request.upateAlgorithm(algorithm)).toDTO();
+        return this.repository.save(request.updateAlgorithm(algorithm)).toDTO();
     }
 
 

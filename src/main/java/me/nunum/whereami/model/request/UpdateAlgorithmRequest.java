@@ -48,7 +48,7 @@ public class UpdateAlgorithmRequest {
         this.paperURL = paperURL;
     }
 
-    public Algorithm upateAlgorithm(Algorithm algorithm) {
+    public Algorithm updateAlgorithm(Algorithm algorithm) {
         if (!(this.name == null
                 || this.name.isEmpty()
                 || this.name.length() < 4

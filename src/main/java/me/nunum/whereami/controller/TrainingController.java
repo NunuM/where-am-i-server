@@ -97,7 +97,7 @@ public class TrainingController implements AutoCloseable {
             training = this.repository.save(training);
 
             TaskManager.getInstance().queue(new OfflinePhaseService());
-            NotifyService.newTrainingRequest(training.getTask());
+            NotifyService.newTrainingRequest(training);
 
             return training.toDTO();
 
@@ -131,7 +131,7 @@ public class TrainingController implements AutoCloseable {
 
             TaskManager.getInstance().queue(new OfflinePhaseService());
 
-            NotifyService.newTrainingRequest(training1.getTask());
+            NotifyService.newTrainingRequest(training1);
 
             return training1.toDTO();
         }

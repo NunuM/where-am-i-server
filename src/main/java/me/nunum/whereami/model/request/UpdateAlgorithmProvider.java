@@ -6,6 +6,8 @@ import javax.validation.constraints.Size;
 import java.util.HashMap;
 import java.util.Map;
 
+import static me.nunum.whereami.model.request.NewAlgorithmProvider.isValidURL;
+
 public class UpdateAlgorithmProvider {
 
 
@@ -37,7 +39,7 @@ public class UpdateAlgorithmProvider {
 
             if (!provider.getMethod().equals(selectedMethod)) {
                 for (String key : selectedMethod.requiredKeys()) {
-                    if (!this.properties.containsKey(key)) {
+                    if (!(this.properties.containsKey(key) && isValidURL(this.properties.get(key)))) {
                         throw new IllegalArgumentException(String.format("Key %s is required on properties object", key));
                     }
                 }
@@ -46,7 +48,13 @@ public class UpdateAlgorithmProvider {
         }
 
         this.properties.forEach((k, v) ->
-            provider.getProperties().put(k, v)
+                {
+                    if (isValidURL(this.properties.get(k))) {
+                        provider.getProperties().put(k, v);
+                    } else {
+                        throw new IllegalArgumentException(String.format("Key %s is not a valid URL", k));
+                    }
+                }
         );
 
         return provider;

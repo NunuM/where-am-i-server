@@ -31,13 +31,13 @@ public class NotifyService {
             return;
         }
 
-        final String name = task.trainingInfo().getAlgorithm().getName();
+        final String name = task.getTraining().getAlgorithm().getName();
 
         final HashMap<String, String> payload = new HashMap<>(4);
-        payload.put("algorithmId", task.trainingInfo().getAlgorithm().getId().toString());
+        payload.put("algorithmId", task.getTraining().getAlgorithm().getId().toString());
         payload.put("algorithmName", name);
         payload.put("localizationName", localization.getLabel());
-        payload.put("algorithmProviderId", task.trainingInfo().getAlgorithmProvider().getId().toString());
+        payload.put("algorithmProviderId", task.getTraining().getAlgorithmProvider().getId().toString());
         payload.put("action", TRAINED_FINISHED_NOTIFICATION_ACTION);
 
         TaskManager
@@ -101,11 +101,11 @@ public class NotifyService {
                 .queue(new EmailNotifyService(new EmailNotifyService.NewProviderMessage(provider.getEmail(), provider.getToken())));
     }
 
-    public static void newTrainingRequest(final Task task) {
+    public static void newTrainingRequest(final Training training) {
         try {
             TaskManager
                     .getInstance()
-                    .queue(new EmailNotifyService(new EmailNotifyService.NewTrainingRequest(task)));
+                    .queue(new EmailNotifyService(new EmailNotifyService.NewTrainingRequest(training)));
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Could not instantiate mailNotifyService.NewTrainingRequest", e);
         }
@@ -115,6 +115,13 @@ public class NotifyService {
         TaskManager
                 .getInstance()
                 .queue(new EmailNotifyService(new EmailNotifyService.NewFeedback(feedback)));
+    }
+
+
+    public static void providerSinkError(final String to, final String message){
+        TaskManager
+                .getInstance()
+                .queue(new EmailNotifyService(new EmailNotifyService.ProviderSinkErrorEmail(to, message)));
     }
 
 }
