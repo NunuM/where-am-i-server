@@ -40,72 +40,74 @@ public class OfflinePhaseService extends Executable {
      */
     public Boolean call() {
 
-        final TaskRepository tasks = new TaskRepositoryJpa();
-        final TrainingRepository trainings = new TrainingRepositoryJpa();
-        final FingerprintRepository fingerprints = new FingerprintRepositoryJpa();
-
-
         LOGGER.log(Level.INFO, "Starting OfflinePhaseService");
 
-        final Stream<Task> openTasks = tasks.openTasks();
+        try (final TaskRepository tasks = new TaskRepositoryJpa()) {
 
-        openTasks.forEach(task -> {
+            final TrainingRepository trainings = new TrainingRepositoryJpa();
+            final FingerprintRepository fingerprints = new FingerprintRepositoryJpa();
 
-            boolean wasLoopExhausted = true;
+            final Stream<Task> openTasks = tasks.openTasks();
 
-            if (task.getTraining().isHTTPProvider()) {
+            openTasks.forEach(task -> {
 
-                task.getTraining().trainingInProgress();
+                boolean wasLoopExhausted = true;
 
-                trainings.save(task.getTraining());
+                if (task.getTraining().isHTTPProvider()) {
 
-                List<Fingerprint> fingerprintList = fingerprints
-                        .fingerprintByLocalizationIdAndWithIdGreater(task.getTraining().localizationAssociated(), task.getCursor(), task.getBatchSize());
+                    task.getTraining().trainingInProgress();
 
-                long size = fingerprintList.size();
+                    trainings.save(task.getTraining());
 
-                while (size > 0) {
-
-                    LOGGER.log(Level.INFO, String.format("Processing task %d. Current cursor: %d. Provider %d", task.getId(), task.getCursor(), task.getTraining().getAlgorithmProvider().getId()));
-
-                    try {
-
-                        this.flushPayload(task.getId(), fingerprintList, task.getTraining().providerProperties());
-
-                    } catch (Exception e) {
-
-                        LOGGER.log(Level.SEVERE, String.format("Sink Request fail. Processing task %d. Current cursor: %d. Provider %d", task.getId(), task.getCursor(), task.getTraining().getAlgorithmProvider().getId()), e);
-
-                        if (e instanceof HTTPRequestError) {
-                            this.warningProviderForRequestFailure(task.getTraining().getAlgorithmProvider().getEmail(), e.getMessage());
-                        }
-
-                        wasLoopExhausted = false;
-                        break;
-                    }
-
-                    fingerprintList
-                            .stream()
-                            .max(Comparator.comparing(Fingerprint::getId))
-                            .map(Fingerprint::getId)
-                            .ifPresent(e -> {
-                                task.setCursor(e);
-                                tasks.save(task);
-                            });
-
-                    fingerprintList = fingerprints
+                    List<Fingerprint> fingerprintList = fingerprints
                             .fingerprintByLocalizationIdAndWithIdGreater(task.getTraining().localizationAssociated(), task.getCursor(), task.getBatchSize());
 
-                    size = fingerprintList.size();
+                    long size = fingerprintList.size();
+
+                    while (size > 0) {
+
+                        LOGGER.log(Level.INFO, String.format("Processing task %d. Current cursor: %d. Provider %d", task.getId(), task.getCursor(), task.getTraining().getAlgorithmProvider().getId()));
+
+                        try {
+
+                            this.flushPayload(task.getId(), fingerprintList, task.getTraining().providerProperties());
+
+                        } catch (Exception e) {
+
+                            LOGGER.log(Level.SEVERE, String.format("Sink Request fail. Processing task %d. Current cursor: %d. Provider %d", task.getId(), task.getCursor(), task.getTraining().getAlgorithmProvider().getId()), e);
+
+                            if (e instanceof HTTPRequestError) {
+                                this.warningProviderForRequestFailure(task.getTraining().getAlgorithmProvider().getEmail(), e.getMessage());
+                            }
+
+                            wasLoopExhausted = false;
+                            break;
+                        }
+
+                        fingerprintList
+                                .stream()
+                                .max(Comparator.comparing(Fingerprint::getId))
+                                .map(Fingerprint::getId)
+                                .ifPresent(e -> {
+                                    task.setCursor(e);
+                                    tasks.save(task);
+                                });
+
+                        fingerprintList = fingerprints
+                                .fingerprintByLocalizationIdAndWithIdGreater(task.getTraining().localizationAssociated(), task.getCursor(), task.getBatchSize());
+
+                        size = fingerprintList.size();
+                    }
                 }
-            }
 
-            if (wasLoopExhausted) {
-                task.sinkFinish(Date.from(Instant.now()));
-                tasks.save(task);
-            }
-
-        });
+                if (wasLoopExhausted) {
+                    task.sinkFinish(Date.from(Instant.now()));
+                    tasks.save(task);
+                }
+            });
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Could not close resources", e);
+        }
 
         return true;
     }

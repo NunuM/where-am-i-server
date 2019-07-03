@@ -8,7 +8,7 @@ import java.util.Date;
 import java.util.List;
 
 public interface PredictionRepository
-        extends Repository<Prediction, Long> {
+        extends Repository<Prediction, Long>, AutoCloseable {
 
     Long maxRequestIdForLocalization(Localization localization);
 

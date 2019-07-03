@@ -19,6 +19,7 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
@@ -102,6 +103,12 @@ public class OnlinePhaseService extends Executable {
                     }
 
                 });
+
+        try {
+            this.predictionRepository.close();
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Could not close resources", e);
+        }
 
         return true;
     }

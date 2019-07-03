@@ -79,11 +79,20 @@ public class Task implements DTOable {
         }
     }
 
+    private static int BATCH_SIZE = 100;
+
     public Task() {
     }
 
     public Task(Long cursor) {
-        this(100, cursor);
+        this(BATCH_SIZE, cursor);
+    }
+
+    public Task(Long cursor, Training training){
+        this.batchSize = 100;
+        this.cursor = cursor;
+        this.training = training;
+        this.state = STATE.RUNNING;
     }
 
     public Task(int batchSize, Long cursor) {

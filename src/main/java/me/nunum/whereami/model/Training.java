@@ -81,7 +81,7 @@ public class Training implements DTOable {
         this.status = status;
         this.localization = localization;
         this.algorithmProvider = provider;
-        this.task = new Task(0L);
+        this.task = new Task(0L, this);
     }
 
     public Long getId() {

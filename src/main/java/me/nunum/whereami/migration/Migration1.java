@@ -53,8 +53,8 @@ public final class Migration1 implements Runnable {
             algorithm.addProvider(new AlgorithmProvider(aProvider, AlgorithmProvider.METHOD.HTTP, map));
 
 
-            final Post wikiPost = new Post("Wi-Fi positioning system", "https://whereami.nunum.me/img/w.png", "https://en.wikipedia.org/wiki/Wi-Fi_positioning_system");
-            final Post myPost = new Post("Indoor Positioning Systems using Wi-Fi", "https://whereami.nunum.me/img/s.png", "https://whereami.nunum.me/pdf/paper_1140460_1140358.pdf");
+            final Post wikiPost = new Post("Wi-Fi positioning system", "https://whereami.nunum.me/img/wikipedia.png", "https://en.wikipedia.org/wiki/Wi-Fi_positioning_system");
+            final Post myPost = new Post("Indoor Positioning Systems using Wi-Fi", "https://whereami.nunum.me/img/my-paper.png", "https://whereami.nunum.me/pdf/paper_1140460_1140358.pdf");
 
             entityManager.persist(wikiPost);
             entityManager.persist(myPost);
