@@ -136,6 +136,8 @@ public class LocalizationResource {
             @ApiImplicitParam(name = "X-APP", value = "App Instance", required = true, dataType = "string", paramType = "header")
     })
     @Path("{id}/predict")
+    @Produces({TheMediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
     public Response startPrediction(@PathParam("id") Long id, NewPredictionRequest request) {
 
         try (final LocalizationController controller = new LocalizationController()) {
@@ -170,6 +172,8 @@ public class LocalizationResource {
             @ApiImplicitParam(name = "X-APP", value = "App Instance", required = true, dataType = "string", paramType = "header")
     })
     @Path("{id}/predict/{prediction}")
+    @Produces({TheMediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
     public Response predictionFeedbackRequest(@PathParam("id") Long localizationId,
                                               @PathParam("prediction") Long predictionId,
                                               UpdatePredictionRequest request) {

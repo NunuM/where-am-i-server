@@ -30,7 +30,7 @@
             <property name="javax.persistence.jdbc.user" value="sa"/>
             <property name="javax.persistence.schema-generation.database.action" value="create"/>
 
-            <property name="eclipselink.cache.shared.default" value="true"/>
+            <property name="eclipselink.cache.shared.default" value="false"/>
             <property name="eclipselink.cache.size.default" value="50"/>
             <property name="eclipselink.logging.level" value="INFO"/>
             <property name="eclipselink.logging.logger" value="JavaLogger"/>
