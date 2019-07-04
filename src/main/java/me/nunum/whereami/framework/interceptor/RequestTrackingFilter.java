@@ -15,13 +15,11 @@ public class RequestTrackingFilter implements ContainerRequestFilter, ContainerR
 
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
-        String requestId = null;
-        final String headerString = requestContext.getHeaderString(REQUEST_ID_HEADER);
+        String requestId = requestContext.getHeaderString(REQUEST_ID_HEADER);
 
-        if (headerString == null || headerString.isEmpty()) {
+        if (requestId == null || requestId.isEmpty()) {
             requestId = UUID.randomUUID().toString();
             requestContext.getHeaders().putSingle(REQUEST_ID_HEADER, requestId);
-
         }
 
         MDC.put(REQUEST_ID_HEADER, requestId);
