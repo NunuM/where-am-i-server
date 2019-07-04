@@ -203,7 +203,9 @@ public abstract class JpaRepository<T, K extends Serializable>
     @Override
     public void close() throws Exception {
         try {
-            entityManager().close();
+            EntityManager manager = entityManager();
+            manager.clear();
+            manager.close();
         } catch (Exception exception) {
             LOGGER.log(Level.SEVERE, "Could not close entity manager", exception);
         }

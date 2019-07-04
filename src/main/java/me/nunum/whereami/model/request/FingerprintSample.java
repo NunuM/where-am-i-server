@@ -1,5 +1,7 @@
 package me.nunum.whereami.model.request;
 
+import java.util.HashMap;
+
 public class FingerprintSample {
 
     private String bssid;
@@ -91,5 +93,20 @@ public class FingerprintSample {
 
     public void setTimeStamp(String timeStamp) {
         this.timeStamp = timeStamp;
+    }
+
+    public HashMap<String, Object> values(){
+        final HashMap<String, Object> map = new HashMap<>(7);
+
+        map.put("bssid", bssid);
+        map.put("ssid", ssid);
+        map.put("levelDBM",levelDBM );
+        map.put("centerFreq0",centerFreq0 );
+        map.put("centerFreq1",centerFreq1 );
+        map.put("channelWidth",channelWidth);
+        map.put("frequency",frequency);
+        map.put("timeStamp", timeStamp);
+
+        return map;
     }
 }

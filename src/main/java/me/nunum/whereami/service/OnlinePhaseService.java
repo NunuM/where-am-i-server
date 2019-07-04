@@ -1,12 +1,12 @@
 package me.nunum.whereami.service;
 
 import me.nunum.whereami.framework.domain.Executable;
-import me.nunum.whereami.model.AlgorithmProvider;
-import me.nunum.whereami.model.Localization;
-import me.nunum.whereami.model.Prediction;
-import me.nunum.whereami.model.Training;
+import me.nunum.whereami.model.*;
 import me.nunum.whereami.model.persistance.PredictionRepository;
+import me.nunum.whereami.model.persistance.jpa.LocalizationRepositoryJpa;
+import me.nunum.whereami.model.persistance.jpa.PositionRepositoryJpa;
 import me.nunum.whereami.model.persistance.jpa.PredictionRepositoryJpa;
+import me.nunum.whereami.model.persistance.jpa.TrainingRepositoryJpa;
 import me.nunum.whereami.model.request.FingerprintSample;
 import me.nunum.whereami.utils.AppConfig;
 
@@ -27,16 +27,14 @@ public class OnlinePhaseService extends Executable {
 
     private static final Logger LOGGER = Logger.getLogger(OnlinePhaseService.class.getSimpleName());
 
-    private final Localization localization;
+    private final Long localizationId;
     private final List<FingerprintSample> samples;
     private final Long requestId;
-    private final PredictionRepository predictionRepository;
 
-    public OnlinePhaseService(Localization localization, Long requestId, List<FingerprintSample> samples) {
+    public OnlinePhaseService(Long localizationId, Long requestId, List<FingerprintSample> samples) {
         super();
-        this.localization = localization;
+        this.localizationId = localizationId;
         this.samples = samples;
-        this.predictionRepository = new PredictionRepositoryJpa();
         this.requestId = requestId;
     }
 
@@ -44,27 +42,44 @@ public class OnlinePhaseService extends Executable {
     @Override
     public Boolean call() throws Exception {
 
-        final List<Training> trainings = this.localization
-                .getTrainings()
-                .stream()
-                .filter(Training::isFinished)
-                .collect(Collectors.toList());
+        final PredictionRepository predictionRepository = new PredictionRepositoryJpa();
+        final LocalizationRepositoryJpa localizationRepository = new LocalizationRepositoryJpa();
+
+        final Localization localization = localizationRepository.findById(this.localizationId).get();
+
+        final TrainingRepositoryJpa trainingRepository = new TrainingRepositoryJpa();
+
+        final List<Training> trainings = trainingRepository.findByLocalization(localization);
+
+        final PositionRepositoryJpa positionRepository = new PositionRepositoryJpa();
+
+        LOGGER.info("Collect training for the localization "
+                + localization.id() + ":"
+                + localization.getTrainings().size() + ":"
+                + localization.getPositionList().size());
+
+        LOGGER.info("FROM bd" + trainings.size());
+
+        localization.getTrainings().forEach(e -> LOGGER.info("Training " + e.isHTTPProvider()));
+
+        final List<HashMap<String, Object>> samplesList = samples.stream().map(FingerprintSample::values).collect(Collectors.toList());
 
         trainings
                 .stream()
                 .filter(Training::isHTTPProvider)
-                .parallel()
                 .forEach(e -> {
 
                     final Map<String, String> providerProperties = e.providerProperties();
 
                     final String url = providerProperties.get(AlgorithmProvider.HTTP_PROVIDER_PREDICTION_URL_KEY);
 
+                    LOGGER.log(Level.INFO, "Request {0}", url);
+
                     final Client client = ClientBuilder.newClient(AppConfig.getInstance().clientConfig());
 
                     final HashMap<String, Object> payload = new HashMap<>(2);
                     payload.put("localizationId", localization.id());
-                    payload.put("samples", samples);
+                    payload.put("samples", samplesList);
 
                     try (final Response response = client.target(url)
                             .request(MediaType.APPLICATION_JSON)
@@ -88,15 +103,17 @@ public class OnlinePhaseService extends Executable {
 
                                     final Float accuracy = ((BigDecimal) entity.getOrDefault(accuracyKey, 0f)).floatValue();
 
+                                    final Position position = positionRepository.findById(positionPredicated).get();
+
                                     final Prediction prediction = new Prediction(
                                             requestId,
                                             localization.id(),
                                             positionPredicated,
-                                            localization.positionLabelById(positionPredicated),
+                                            position.getLabel(),
                                             accuracy,
                                             e.getAlgorithmProvider().getId());
 
-                                    this.predictionRepository.save(prediction);
+                                    predictionRepository.save(prediction);
                                 }
                             }
                         }
@@ -105,7 +122,7 @@ public class OnlinePhaseService extends Executable {
                 });
 
         try {
-            this.predictionRepository.close();
+            predictionRepository.close();
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Could not close resources", e);
         }

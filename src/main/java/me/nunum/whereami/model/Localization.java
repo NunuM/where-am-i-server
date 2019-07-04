@@ -58,10 +58,10 @@ public class Localization implements DTOable, Identifiable<Long>, Comparable<Loc
     @ManyToOne(fetch = FetchType.LAZY)
     private Device owner;
 
-    @OneToMany(orphanRemoval = true, cascade = CascadeType.REMOVE, mappedBy = "localization")
+    @OneToMany(orphanRemoval = true, cascade = {CascadeType.REMOVE, CascadeType.REFRESH}, mappedBy = "localization")
     private List<Position> positionList;
 
-    @OneToMany(orphanRemoval = true, cascade = CascadeType.REMOVE, mappedBy = "localization")
+    @OneToMany(orphanRemoval = true, cascade = {CascadeType.REMOVE, CascadeType.REFRESH}, mappedBy = "localization")
     private List<Training> trainings;
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
@@ -209,6 +209,10 @@ public class Localization implements DTOable, Identifiable<Long>, Comparable<Loc
 
     public List<Training> getTrainings() {
         return trainings;
+    }
+
+    public List<Position> getPositionList() {
+        return positionList;
     }
 
     @Override

@@ -177,7 +177,7 @@ public class LocalizationController implements AutoCloseable {
 
             Long requestId = predictionRepository.maxRequestIdForLocalization(localization) + 1;
 
-            final OnlinePhaseService onlinePhaseService = new OnlinePhaseService(localization, requestId, request.getSamples());
+            final OnlinePhaseService onlinePhaseService = new OnlinePhaseService(localization.id(), requestId, request.getSamples());
 
             TaskManager.getInstance().queue(onlinePhaseService);
         }
