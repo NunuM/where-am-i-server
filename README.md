@@ -8,8 +8,8 @@ This is a free, collaborative platform with the goal of helping researchers to t
 * [Get Start](#get-started)
 * [Data Model & Lifecycle](#data-model--lifecycle) 
 * [How to become a Algorithm Provider](#how-to-become-a-algorithm-provider)
-* [REST API Docs](https://whereami.nunum.me/docs/swagger/)
-* [Java API Docs](https://whereami.nunum.me/docs/javadoc/)
+* [REST API Docs](https://whereami.nunum.me/swagger/)
+* [Java API Docs](https://whereami.nunum.me/javadoc/)
 * [FAQ](#faq)
 
 ### Get Started
@@ -21,7 +21,7 @@ mvn compile
 mvn exec:exec -Dexec.executable="java"
  ```
 
-*Note:* You must take a look and change the default System Argument in the pom.xml (Line 158 pom.xml).  
+*Note:* You must take a look and change the default System Arguments in the [pom.xml](https://github.com/NunuM/where-am-i-server/blob/master/pom.xml#L158)  
 
 ### Data Model & Lifecycle
 

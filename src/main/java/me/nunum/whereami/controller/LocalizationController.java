@@ -1,6 +1,7 @@
 package me.nunum.whereami.controller;
 
 import me.nunum.whereami.framework.dto.DTO;
+import me.nunum.whereami.model.AlgorithmProvider;
 import me.nunum.whereami.model.Device;
 import me.nunum.whereami.model.Localization;
 import me.nunum.whereami.model.Prediction;
@@ -8,9 +9,11 @@ import me.nunum.whereami.model.exceptions.EntityNotFoundException;
 import me.nunum.whereami.model.exceptions.ForbiddenEntityDeletionException;
 import me.nunum.whereami.model.exceptions.ForbiddenEntityModificationException;
 import me.nunum.whereami.model.exceptions.ForbiddenSubResourceException;
+import me.nunum.whereami.model.persistance.AlgorithmProviderRepository;
 import me.nunum.whereami.model.persistance.DeviceRepository;
 import me.nunum.whereami.model.persistance.LocalizationRepository;
 import me.nunum.whereami.model.persistance.PredictionRepository;
+import me.nunum.whereami.model.persistance.jpa.AlgorithmProviderRepositoryJpa;
 import me.nunum.whereami.model.persistance.jpa.DeviceRepositoryJpa;
 import me.nunum.whereami.model.persistance.jpa.LocalizationRepositoryJpa;
 import me.nunum.whereami.model.persistance.jpa.PredictionRepositoryJpa;
@@ -23,9 +26,13 @@ import me.nunum.whereami.service.TaskManager;
 import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 public class LocalizationController implements AutoCloseable {
+
+    private static final Logger LOGGER = Logger.getLogger(LocalizationController.class.getSimpleName());
 
     private final LocalizationRepository repository;
     private final DeviceRepository deviceRepository;
@@ -204,13 +211,25 @@ public class LocalizationController implements AutoCloseable {
 
         final Prediction prediction = optionalPrediction.get();
 
+
         if (!prediction.isSameLocalization(localization)) {
             throw new ForbiddenEntityModificationException(String.format("Prediction %d is not associated with localization %d", localizationId, predictionId));
         }
 
-        request.updateFeebdack(prediction);
+        request.updateFeedback(prediction);
 
-        return predictions.save(prediction).toDTO();
+        final DTO response = predictions.save(prediction).toDTO();
+
+        try {
+            final AlgorithmProviderRepository providerRepository = new AlgorithmProviderRepositoryJpa();
+            final AlgorithmProvider algorithmProvider = providerRepository.findById(prediction.getAlgorithmProviderId()).get();
+            request.updateAlgorithmProviderStats(algorithmProvider);
+            providerRepository.save(algorithmProvider);
+        } catch (Exception e) {
+            LOGGER.log(Level.WARNING, "Could not update stats of algorithm provider", e);
+        }
+
+        return response;
     }
 
 

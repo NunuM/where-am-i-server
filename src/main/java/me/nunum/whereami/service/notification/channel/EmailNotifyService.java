@@ -80,7 +80,7 @@ public class EmailNotifyService extends Executable {
             msg.setSubject("Provider email confirmation");
             msg.setSentDate(new Date());
 
-            msg.setContent(String.format("Hi,%n%nTanks for your registration. You can complete by clicking https://whereami.nunum.me/provider?token=%s", token), "text/plain");
+            msg.setContent(String.format("Hi,%n%nTanks for your registration. You can complete by clicking https://whereami.nunum.me/provider?token=%s", token), "text/plain;; charset=UTF-8");
 
             return msg;
         }
@@ -118,7 +118,7 @@ public class EmailNotifyService extends Executable {
             msg.setSentDate(new Date());
 
             msg.setContent(String.format("The following provider %s was issued the task %s",
-                    providerInfo.dtoValues(), taskInfo.dtoValues()), "text/plain");
+                    providerInfo.dtoValues(), taskInfo.dtoValues()), "text/plain; charset=UTF-8");
 
             return msg;
         }
@@ -145,7 +145,7 @@ public class EmailNotifyService extends Executable {
             msg.setSubject("Sink Error");
             msg.setSentDate(new Date());
 
-            msg.setContent(String.format("The following error as occurred while sink data to your server: %n\t%s", this.message), "text/plain");
+            msg.setContent(String.format("The following error as occurred while sink data to your server: %n\t%s", this.message), "text/plain; charset=UTF-8");
 
             return msg;
         }
@@ -172,7 +172,7 @@ public class EmailNotifyService extends Executable {
             msg.setSubject("New Feedback");
             msg.setSentDate(new Date());
 
-            msg.setContent(String.format("A new feedback was received: %s", this.info.dtoValues()), "text/plain");
+            msg.setContent(String.format("A new feedback was received: %s", this.info.dtoValues()), "text/plain; charset=UTF-8");
 
             return msg;
         }

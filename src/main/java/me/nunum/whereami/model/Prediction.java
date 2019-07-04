@@ -36,7 +36,7 @@ public class Prediction implements DTOable {
 
     private Float accuracy;
 
-    private Long providerId;
+    private Long algorithmProviderId;
 
     private String positionLabel;
 
@@ -70,17 +70,20 @@ public class Prediction implements DTOable {
     }
 
     /**
-     * @param requestId
-     * @param localizationId
-     * @param positionId
-     * @param accuracy
+     *
+     * @param requestId Batch
+     * @param localizationId Localization ID
+     * @param positionId Position ID
+     * @param positionLabel Label
+     * @param accuracy Certainty
+     * @param algorithmProviderId ID of algorithm provider
      */
-    public Prediction(Long requestId, Long localizationId, Long positionId, String positionLabel, Float accuracy, Long providerId) {
+    public Prediction(Long requestId, Long localizationId, Long positionId, String positionLabel, Float accuracy, Long algorithmProviderId) {
         this.requestId = requestId;
         this.localizationId = localizationId;
         this.positionId = positionId;
         this.accuracy = accuracy;
-        this.providerId = providerId;
+        this.algorithmProviderId = algorithmProviderId;
         this.positionLabel = positionLabel;
         this.predictionFeedback = PREDICTION_FEEDBACK.NOT_GIVEN;
     }
@@ -118,6 +121,10 @@ public class Prediction implements DTOable {
         this.predictionFeedback = PREDICTION_FEEDBACK.INCORRECT;
     }
 
+    public Long getAlgorithmProviderId() {
+        return algorithmProviderId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -141,7 +148,7 @@ public class Prediction implements DTOable {
                 this.requestId,
                 this.positionId,
                 this.accuracy,
-                this.providerId,
+                this.algorithmProviderId,
                 this.predictionFeedback.ordinal());
     }
 }

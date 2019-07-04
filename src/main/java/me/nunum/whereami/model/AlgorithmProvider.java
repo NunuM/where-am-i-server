@@ -28,9 +28,9 @@ public class AlgorithmProvider implements DTOable {
 
     private METHOD method;
 
+    private int successPredictions;
 
-    private float predictionRate;
-
+    private int failurePredictions;
 
     private boolean isDeployed;
 
@@ -113,7 +113,8 @@ public class AlgorithmProvider implements DTOable {
         this.provider = provider;
         this.method = method;
         this.properties = properties;
-        this.predictionRate = 0f;
+        this.failurePredictions = 0;
+        this.successPredictions = 0;
         this.isDeployed = method.isAutomaticDeployed();
     }
 
@@ -150,11 +151,21 @@ public class AlgorithmProvider implements DTOable {
     }
 
     public float getPredictionRate() {
-        return predictionRate;
+        float result = 0f;
+        int sum = this.failurePredictions + this.successPredictions;
+
+        if (sum > 0) {
+            result = successPredictions / (float) sum;
+        }
+        return result;
     }
 
-    public void setPredictionRate(float predictionRate) {
-        this.predictionRate = predictionRate;
+    public void incrementSuccessPredictions() {
+        this.successPredictions += 1;
+    }
+
+    public void incrementFailurePrections() {
+        this.failurePredictions += 1;
     }
 
     @PrePersist

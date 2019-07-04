@@ -1,5 +1,6 @@
 package me.nunum.whereami.model.request;
 
+import me.nunum.whereami.model.AlgorithmProvider;
 import me.nunum.whereami.model.Prediction;
 
 public class UpdatePredictionRequest {
@@ -22,11 +23,19 @@ public class UpdatePredictionRequest {
         this.wasCorrect = wasCorrect;
     }
 
-    public void updateFeebdack(Prediction prediction) {
+    public void updateFeedback(Prediction prediction) {
         if (this.wasCorrect) {
             prediction.correctPrediction();
         } else {
             prediction.incorrectPrediction();
+        }
+    }
+
+    public void updateAlgorithmProviderStats(AlgorithmProvider provider) {
+        if (this.wasCorrect) {
+            provider.incrementSuccessPredictions();
+        } else {
+            provider.incrementFailurePrections();
         }
     }
 
