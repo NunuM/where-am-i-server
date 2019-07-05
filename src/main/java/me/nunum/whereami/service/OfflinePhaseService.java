@@ -70,7 +70,7 @@ public class OfflinePhaseService extends Executable {
 
                         try {
 
-                            this.flushPayload(task.getId(), fingerprintList, task.getTraining().providerProperties());
+                            this.flushPayload(task.getId(), false, fingerprintList, task.getTraining().providerProperties());
 
                         } catch (Exception e) {
 
@@ -101,6 +101,7 @@ public class OfflinePhaseService extends Executable {
                 }
 
                 if (wasLoopExhausted) {
+                    this.flushPayload(task.getId(),true, new ArrayList<>(), task.getTraining().providerProperties());
                     task.sinkFinish(Date.from(Instant.now()));
                     tasks.save(task);
                 }
@@ -121,7 +122,7 @@ public class OfflinePhaseService extends Executable {
      * @return boolean
      * @throws HTTPRequestError
      */
-    private boolean flushPayload(Long taskID, List<Fingerprint> fingerprints, Map<String, String> providerServiceProperties) {
+    private boolean flushPayload(Long taskID, boolean isDrained, List<Fingerprint> fingerprints, Map<String, String> providerServiceProperties) {
 
         final String url = providerServiceProperties.get(AlgorithmProvider.HTTP_PROVIDER_INGESTION_URL_KEY);
         final Client client = ClientBuilder.newClient(AppConfig.getInstance().clientConfig());
@@ -131,6 +132,7 @@ public class OfflinePhaseService extends Executable {
         HashMap<String, Object> payload = new HashMap<>(2);
 
         payload.put("id", taskID);
+        payload.put("isDrained", isDrained);
         payload.put("fingerprints", fingerprints.stream().map(e -> e.toDTO().dtoValues()).collect(Collectors.toList()));
 
         try (final Response response = client.target(url)

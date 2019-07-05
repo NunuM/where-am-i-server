@@ -142,6 +142,8 @@ public class EmailNotifyService extends Executable {
             msg.setFrom(new InternetAddress(AppConfig.EMAIL_FROM));
             InternetAddress[] address = {new InternetAddress(to)};
             msg.setRecipients(Message.RecipientType.TO, address);
+            InternetAddress[] ccAddress = {new InternetAddress(AppConfig.EMAIL_ADMIN_CONTACT)};
+            msg.setRecipients(Message.RecipientType.CC,ccAddress);
             msg.setSubject("Sink Error");
             msg.setSentDate(new Date());
 
