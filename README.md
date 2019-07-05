@@ -48,6 +48,13 @@ To conclude this chapter, the use case that this platform offers is the integrat
 
 Open the swagger API, find the resource **provider**, make a POST request by filling your email and wait for it in your mailbox. click on the link and voila. You can use the **provider** sub-resource of **algorithm** to tell what implementations you have to offer.
 
+### Data Flow
+
+1 - User requests a new predictions model from **Algorithm Provider**
+
+![Training Request](https://i.ibb.co/mN5DjjN/Untitled-Diagram-5.png)
+
+
 ### FAQ
 
 What is a Wi-Fi fingerprint?
