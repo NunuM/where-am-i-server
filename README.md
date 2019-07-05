@@ -50,7 +50,7 @@ Open the swagger API, find the resource **provider**, make a POST request by fil
 
 ### Data Flow
 
-1 - User requests a new predictions model from **Algorithm Provider**
+1 - User requests a new prediction model from **Algorithm Provider**
 
 ![Training Request](https://i.ibb.co/mN5DjjN/Untitled-Diagram-5.png)
 
