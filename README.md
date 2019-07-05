@@ -7,6 +7,8 @@ This is a free, collaborative platform with the goal of helping researchers to t
 ### Table Of Contents
 * [Get Start](#get-started)
 * [Data Model & Lifecycle](#data-model--lifecycle) 
+* [Data Flow](#data-flow)
+* [Android Application](#android-application)
 * [How to become a Algorithm Provider](#how-to-become-a-algorithm-provider)
 * [REST API Docs](https://whereami.nunum.me/swagger/)
 * [Java API Docs](https://whereami.nunum.me/javadoc/)
@@ -44,16 +46,26 @@ The visible **Localizations** and **Positions** can be reported as **Spam** by s
 
 To conclude this chapter, the use case that this platform offers is the integration of two actors, a user who shares Wi-Fi information and a Provider who predicts the user localization using their algorithm implementation. 
 
-### How to become a Algorithm provider
-
-Open the swagger API, find the resource **provider**, make a POST request by filling your email and wait for it in your mailbox. click on the link and voila. You can use the **provider** sub-resource of **algorithm** to tell what implementations you have to offer.
-
 ### Data Flow
 
 1 - User requests a new prediction model from **Algorithm Provider**
 
 ![Training Request](https://i.ibb.co/mN5DjjN/Untitled-Diagram-5.png)
 
+### Android Application
+
+#### Table Of Contents
+* [ScreenShots](#screen-shots)
+
+##### Screen Shots
+
+![Posts Fragment](https://i.ibb.co/n3GY6Kf/65846243-359964648034468-7578109312891879424-n.jpg)
+
+
+
+### How to become a Algorithm provider
+
+Open the swagger API, find the resource **provider**, make a POST request by filling your email and wait for it in your mailbox. click on the link and voila. You can use the **provider** sub-resource of **algorithm** to tell what implementations you have to offer.
 
 ### FAQ
 
