@@ -2,7 +2,7 @@
 
 ### Motivation
 
-This is a free, collaborative platform with the goal of helping researchers to test and develop indoor tracking algorithms using Wi-Fi signal information. Apart of the server, we also build an [Android application](https://github.com/NunuM/where-am-i-android-app) to help user to collect raw data more easily.
+This is a free, collaborative platform with the goal of helping researchers to test and develop indoor tracking algorithms using Wi-Fi signal information. Apart of the server, we also build an [Android application](https://github.com/NunuM/where-am-i-android-app) to help users to collect raw data more easily.
 
 ### Table Of Contents
 * [Get Start](#get-started)
@@ -16,7 +16,7 @@ This is a free, collaborative platform with the goal of helping researchers to t
 
 ### Get Started
 
-To get start you will Java and Maven in you machine. To start the server you need to type the following commands. 
+To get start you will **Java 8** and Maven in you machine. To start the server you need to type the following commands. 
 
 ```
 mvn compile
@@ -108,7 +108,7 @@ The server start sending the samples with the following body:
 
 The **isDrained** value is set `true` when the server has no more samples to push, with this, the provider can start the model training. Once a model is trained, the provider makes a [POST request](http://localhost:8080/swagger/#/task/updateTask). The id that must be sent is the id of the root object when samples are pushing to the provider. Until then, the user cannot use your model. The server is expecting a `2XX` as a response, otherwise, the error will be send via email to the provider and the sinking will be postponed.
  
-In the **prediction phase**, the server make regular POST requests to the provider's model with the following body:
+2 - In the **prediction phase**, the server makes regular POST requests to the provider's model with the following body:
 
 ```json
 {
@@ -137,7 +137,11 @@ And expects as a response the following body:
 }
 ```
 
-All request between the server and the provider server will have the `X-APP` header and `x-request-id`.
+If the provider responds with the **positionId** equal to zero, it means that was not able to determine user's positions and the prediction will not be seen by the user. 
+
+All request between the server and the provider, the server will send in the headers the `X-APP` and `x-request-id` headers.
+
+The provider can [delete one of their algorithm implementation](https://whereami.nunum.me/swagger/#/algorithm/deleteAlgorithmProvider) and the affected users will be notified.
 
 ### Android Application
 
