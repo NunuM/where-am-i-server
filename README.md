@@ -141,7 +141,7 @@ If the provider responds with the **positionId** equal to zero, it means that wa
 
 All request between the server and the provider, the server will send in the headers the `X-APP` and `x-request-id` headers.
 
-The provider can [delete one of their algorithm implementation](https://whereami.nunum.me/swagger/#/algorithm/deleteAlgorithmProvider) and the affected users will be notified.
+The provider can [delete one of their algorithm implementations](https://whereami.nunum.me/swagger/#/algorithm/deleteAlgorithmProvider) and the affected users will be notified.
 
 ### Android Application
 
