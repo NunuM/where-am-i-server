@@ -49,6 +49,8 @@ public class LocalizationResourceTest extends JerseyTest {
                     0.0,
                     0.0,
                     i % 2 == 0,
+                    false,
+                    false,
                     device));
         }
 
@@ -114,6 +116,8 @@ public class LocalizationResourceTest extends JerseyTest {
                 "notRetrieveLocalizations",
                 0.0,
                 0.0,
+                false,
+                false,
                 false,
                 device1));
 

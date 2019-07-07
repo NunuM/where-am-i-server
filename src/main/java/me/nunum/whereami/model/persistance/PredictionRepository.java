@@ -1,6 +1,7 @@
 package me.nunum.whereami.model.persistance;
 
 import me.nunum.whereami.framework.persistence.repositories.Repository;
+import me.nunum.whereami.model.Device;
 import me.nunum.whereami.model.Localization;
 import me.nunum.whereami.model.Prediction;
 
@@ -13,6 +14,6 @@ public interface PredictionRepository
     Long maxRequestIdForLocalization(Localization localization);
 
 
-    List<Prediction> allPredictionsSince(Localization localization, Date since);
+    List<Prediction> allPredictionsSince(Device device, Localization localization, Date since);
 
 }

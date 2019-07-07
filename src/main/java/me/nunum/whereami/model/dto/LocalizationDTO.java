@@ -18,9 +18,10 @@ public final class LocalizationDTO implements DTO {
                            Integer numberOfModels,
                            Integer positions,
                            boolean isOwner,
+                           boolean canOthersSendSamples,
                            Date created) {
 
-        this.objectMap = new HashMap<>(5);
+        this.objectMap = new HashMap<>(6);
 
         final Map<String, Object> stats = new HashMap<>(3);
 
@@ -28,6 +29,7 @@ public final class LocalizationDTO implements DTO {
         this.objectMap.put("label", label);
         this.objectMap.put("user", userLabel);
         this.objectMap.put("isOwner", isOwner);
+        this.objectMap.put("canOthersSendSamples", canOthersSendSamples);
         this.objectMap.put("created", created);
 
         stats.put("samples", samples);

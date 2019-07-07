@@ -6,10 +6,7 @@ import io.swagger.annotations.ApiImplicitParams;
 import me.nunum.whereami.controller.LocalizationController;
 import me.nunum.whereami.framework.dto.DTO;
 import me.nunum.whereami.framework.response.TheMediaType;
-import me.nunum.whereami.model.exceptions.EntityAlreadyExists;
-import me.nunum.whereami.model.exceptions.EntityNotFoundException;
-import me.nunum.whereami.model.exceptions.ForbiddenEntityDeletionException;
-import me.nunum.whereami.model.exceptions.ForbiddenEntityModificationException;
+import me.nunum.whereami.model.exceptions.*;
 import me.nunum.whereami.model.request.NewLocalizationRequest;
 import me.nunum.whereami.model.request.NewPredictionRequest;
 import me.nunum.whereami.model.request.UpdatePredictionRequest;
@@ -152,7 +149,7 @@ public class LocalizationResource {
 
             return Response.status(Response.Status.NOT_FOUND).build();
 
-        } catch (ForbiddenEntityDeletionException e) {
+        } catch (ForbiddenEntityAccessException e) {
 
             LOGGER.log(Level.SEVERE, "Localization not belongs to requester", e);
 

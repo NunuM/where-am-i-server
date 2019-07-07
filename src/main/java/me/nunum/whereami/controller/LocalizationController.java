@@ -156,6 +156,29 @@ public class LocalizationController implements AutoCloseable {
 
         final Device device = this.deviceRepository.findOrPersist(principal);
 
+        final Localization localization = this.getLocalization(localizationId);
+
+        if (localization.isPublicForOffline() || localization.isOwner(device)) {
+            return localization;
+        }
+
+        throw new ForbiddenSubResourceException(String.format("Device %s is not allowed to the sub-resource", device.getId()));
+    }
+
+    public Localization localizationForOnlinePhase(final Principal principal, final Long localizationId) {
+
+        final Device device = this.deviceRepository.findOrPersist(principal);
+
+        final Localization localization = this.getLocalization(localizationId);
+
+        if (localization.isPublicForOnline() || localization.isOwner(device)) {
+            return localization;
+        }
+
+        throw new ForbiddenSubResourceException(String.format("Device %s is not allowed to the sub-resource", device.getId()));
+    }
+
+    private Localization getLocalization(final Long localizationId) {
         final Optional<Localization> someLocalization = this.repository.findById(localizationId);
 
         if (!someLocalization.isPresent()) {
@@ -164,19 +187,15 @@ public class LocalizationController implements AutoCloseable {
             );
         }
 
-        final Localization localization = someLocalization.get();
-
-        if (localization.isPublic() || localization.isOwner(device)) {
-            return localization;
-        }
-
-        throw new ForbiddenSubResourceException(String.format("Device %s is not allowed to the sub-resource", device.getId()));
+        return someLocalization.get();
     }
 
 
     public List<DTO> requestNewPrediction(Principal userPrincipal, Long id, NewPredictionRequest request) {
 
-        final Localization localization = this.localization(userPrincipal, id);
+        final Device device = this.deviceRepository.findOrPersist(userPrincipal);
+
+        final Localization localization = this.localizationForOnlinePhase(userPrincipal, id);
 
         final PredictionRepository predictionRepository = new PredictionRepositoryJpa();
 
@@ -184,13 +203,13 @@ public class LocalizationController implements AutoCloseable {
 
             Long requestId = predictionRepository.maxRequestIdForLocalization(localization) + 1;
 
-            final OnlinePhaseService onlinePhaseService = new OnlinePhaseService(localization.id(), requestId, request.getSamples());
+            final OnlinePhaseService onlinePhaseService = new OnlinePhaseService(device.getId(), localization.id(), requestId, request.getSamples());
 
             TaskManager.getInstance().queue(onlinePhaseService);
         }
 
         return predictionRepository
-                .allPredictionsSince(localization, request.getLastUpdate())
+                .allPredictionsSince(device, localization, request.getLastUpdate())
                 .stream()
                 .map(Prediction::toDTO)
                 .collect(Collectors.toList());
@@ -198,6 +217,8 @@ public class LocalizationController implements AutoCloseable {
 
 
     public DTO processPredictionFeedback(Principal userPrincipal, Long localizationId, Long predictionId, UpdatePredictionRequest request) {
+
+        final Device device = this.deviceRepository.findOrPersist(userPrincipal);
 
         final Localization localization = this.localization(userPrincipal, localizationId);
 
@@ -211,9 +232,12 @@ public class LocalizationController implements AutoCloseable {
 
         final Prediction prediction = optionalPrediction.get();
 
-
         if (!prediction.isSameLocalization(localization)) {
             throw new ForbiddenEntityModificationException(String.format("Prediction %d is not associated with localization %d", localizationId, predictionId));
+        }
+
+        if (!prediction.getDeviceId().equals(device.getId())) {
+            throw new ForbiddenEntityModificationException("Prediction does not belong to the requester");
         }
 
         request.updateFeedback(prediction);

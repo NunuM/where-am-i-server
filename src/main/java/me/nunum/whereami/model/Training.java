@@ -41,7 +41,7 @@ public class Training implements DTOable {
     @ManyToOne(fetch = FetchType.LAZY)
     private Algorithm algorithm;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.REFRESH, CascadeType.MERGE })
     private AlgorithmProvider algorithmProvider;
 
     private TrainingStatus status;

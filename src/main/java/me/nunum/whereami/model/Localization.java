@@ -14,15 +14,19 @@ import java.util.*;
 @NamedQueries({
         @NamedQuery(
                 name = "Localization.allVisibleLocalizations",
-                query = "SELECT OBJECT (l) FROM Localization l WHERE l.isPublic=true OR l.owner.id=:ownerId ORDER BY l.id DESC"
+                query = "SELECT OBJECT (l) FROM Localization l WHERE l.isPublicForOffline=true OR l.owner.id=:ownerId ORDER BY l.id DESC"
         ),
         @NamedQuery(
                 name = "Localization.allVisibleLocalizationsFilterByName",
-                query = "SELECT OBJECT (l) FROM Localization l WHERE (l.isPublic=true OR l.owner.id=:ownerId) AND l.label LIKE :name ORDER BY l.id DESC"
+                query = "SELECT OBJECT (l) FROM Localization l WHERE (l.isPublicForOffline=true OR l.owner.id=:ownerId) AND l.label LIKE :name ORDER BY l.id DESC"
         ),
         @NamedQuery(
                 name = "Localization.allVisibleLocalizationsFilterByTraining",
-                query = "SELECT OBJECT (l) FROM Localization l JOIN l.trainings t WHERE (l.isPublic=true OR l.owner.id=:ownerId) AND l.numberOfModels > 0 ORDER BY l.id DESC"
+                query = "SELECT OBJECT (l) FROM Localization l WHERE (l.isPublicForOnline=true OR l.owner.id=:ownerId) AND l.numberOfModels > 0 ORDER BY l.id DESC"
+        ),
+        @NamedQuery(
+                name = "Localization.allVisibleOwnerLocalizationsFilterByTraining",
+                query = "SELECT OBJECT (l) FROM Localization l WHERE l.owner.id=:ownerId AND l.numberOfModels > 0 ORDER BY l.id DESC"
         ),
         @NamedQuery(
                 name = "Localization.onlyOwnerLocalizations",
@@ -50,7 +54,12 @@ public class Localization implements DTOable, Identifiable<Long>, Comparable<Loc
     private Double longitude;
 
     @Index
-    private boolean isPublic;
+    private boolean isPublicForOffline;
+
+    private boolean canOtherUsersSendSamples;
+
+    @Index
+    private boolean isPublicForOnline;
 
     @Column(length = 100)
     private String user;
@@ -81,7 +90,7 @@ public class Localization implements DTOable, Identifiable<Long>, Comparable<Loc
 
     public Localization(String label,
                         String userLabel, Device owner) {
-        this(label, userLabel, 0.0, 0.0, false, owner);
+        this(label, userLabel, 0.0, 0.0, false, false, false, owner);
     }
 
 
@@ -89,7 +98,9 @@ public class Localization implements DTOable, Identifiable<Long>, Comparable<Loc
                         String userLabel,
                         Double latitude,
                         Double longitude,
-                        boolean isPublic,
+                        boolean isPublicForOffline,
+                        boolean canOtherUsersSendSamples,
+                        boolean isPublicForOnline,
                         Device owner) {
 
         this.label = label;
@@ -100,7 +111,9 @@ public class Localization implements DTOable, Identifiable<Long>, Comparable<Loc
         this.numberOfPositions = 0;
         this.user = userLabel;
         this.owner = owner;
-        this.isPublic = isPublic;
+        this.isPublicForOffline = isPublicForOffline;
+        this.canOtherUsersSendSamples = canOtherUsersSendSamples;
+        this.isPublicForOnline = isPublicForOnline;
         this.trainings = new ArrayList<>();
         this.positionList = new ArrayList<>();
         this.spamReport = new LocalizationSpamReport(this);
@@ -126,6 +139,7 @@ public class Localization implements DTOable, Identifiable<Long>, Comparable<Loc
                 this.numberOfModels,
                 this.numberOfPositions,
                 false,
+                this.canOtherUsersSendSamples,
                 this.created
         );
     }
@@ -138,6 +152,7 @@ public class Localization implements DTOable, Identifiable<Long>, Comparable<Loc
                 this.numberOfModels,
                 this.numberOfPositions,
                 this.owner.equals(requester),
+                this.canOtherUsersSendSamples,
                 this.created
         );
     }
@@ -160,8 +175,16 @@ public class Localization implements DTOable, Identifiable<Long>, Comparable<Loc
         return this.owner.equals(requester);
     }
 
-    public boolean isPublic() {
-        return isPublic;
+    public boolean isPublicForOffline() {
+        return isPublicForOffline;
+    }
+
+    public boolean canOtherUsersSendSamples() {
+        return canOtherUsersSendSamples;
+    }
+
+    public boolean isPublicForOnline() {
+        return isPublicForOnline;
     }
 
     public void incrementSample() {

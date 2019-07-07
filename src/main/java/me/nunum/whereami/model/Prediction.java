@@ -18,7 +18,7 @@ import java.util.Objects;
         ),
         @NamedQuery(
                 name = "Prediction.allPredictionsSince",
-                query = "SELECT OBJECT (u) FROM Prediction u WHERE u.localizationId=:localizationId AND u.created > :since"
+                query = "SELECT OBJECT (u) FROM Prediction u WHERE u.localizationId=:localizationId AND u.created > :since AND u.deviceId = :deviceId"
         )
 })
 public class Prediction implements DTOable {
@@ -40,8 +40,9 @@ public class Prediction implements DTOable {
 
     private String positionLabel;
 
-    private PREDICTION_FEEDBACK predictionFeedback;
+    private Long deviceId;
 
+    private PREDICTION_FEEDBACK predictionFeedback;
 
     enum PREDICTION_FEEDBACK {
         NOT_GIVEN {
@@ -78,13 +79,20 @@ public class Prediction implements DTOable {
      * @param accuracy Certainty
      * @param algorithmProviderId ID of algorithm provider
      */
-    public Prediction(Long requestId, Long localizationId, Long positionId, String positionLabel, Float accuracy, Long algorithmProviderId) {
+    public Prediction(Long requestId,
+                      Long localizationId,
+                      Long positionId,
+                      String positionLabel,
+                      Float accuracy,
+                      Long algorithmProviderId,
+                      Long deviceId) {
         this.requestId = requestId;
         this.localizationId = localizationId;
         this.positionId = positionId;
         this.accuracy = accuracy;
         this.algorithmProviderId = algorithmProviderId;
         this.positionLabel = positionLabel;
+        this.deviceId = deviceId;
         this.predictionFeedback = PREDICTION_FEEDBACK.NOT_GIVEN;
     }
 
@@ -123,6 +131,10 @@ public class Prediction implements DTOable {
 
     public Long getAlgorithmProviderId() {
         return algorithmProviderId;
+    }
+
+    public Long getDeviceId() {
+        return deviceId;
     }
 
     @Override

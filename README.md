@@ -74,10 +74,10 @@ Or for who has a repository:
 
 ```json
 {
-  "method": "git",
-  "properties": {
-    "repository_url": "https://rep.provider.com/sink"
-  }
+   "method":"git",
+   "properties":{
+      "repository_url":"https://rep.provider.com/sink"
+   }
 }
 ```
 
@@ -85,30 +85,59 @@ The server start sending the samples with the following body:
 
 ```json
 {
-  "id": 0,
-  "isDrained": false,
-  "fingerprints": [
-    {
-      "id" :  0,
-      "uid": "UUID",
-      "bssid" : "",
-      "ssid" : "",
-      "levelDBM": 0,
-      "centerFreq0": 0,
-      "centerFreq1": 0,
-      "channelWidth": 0,
-      "frequency": 2,
-      "timeStamp": "",
-      "localizationId": 0,
-      "positionId" : 0
-    }
-  ]
+   "id":0,
+   "isDrained":false,
+   "fingerprints":[
+      {
+         "id":0,
+         "uid":"UUID",
+         "bssid":"",
+         "ssid":"",
+         "levelDBM":0,
+         "centerFreq0":0,
+         "centerFreq1":0,
+         "channelWidth":0,
+         "frequency":2,
+         "timeStamp":"",
+         "localizationId":0,
+         "positionId":0
+      }
+   ]
 }
 ```
 
-The **isDrained** value is set `true` when the server has no more samples to push, with this, the provider can start the model training. Once a model is trained, the provider makes a [POST request](http://localhost:8080/swagger/#/task/updateTask). The id that must be sent is the id of the root object when samples are pushing to the provider. Until then, the user cannot use your model.
+The **isDrained** value is set `true` when the server has no more samples to push, with this, the provider can start the model training. Once a model is trained, the provider makes a [POST request](http://localhost:8080/swagger/#/task/updateTask). The id that must be sent is the id of the root object when samples are pushing to the provider. Until then, the user cannot use your model. The server is expecting a `2XX` as a response, otherwise, the error will be send via email to the provider and the sinking will be postponed.
  
+In the **prediction phase**, the server make regular POST requests to the provider's model with the following body:
 
+```json
+{
+   "localizationId":0,
+   "samples":[
+      {
+         "bssid":"",
+         "ssid":"",
+         "levelDBM":0,
+         "centerFreq0":0,
+         "centerFreq1":0,
+         "channelWidth":0,
+         "frequency":0,
+         "timeStamp":""
+      }
+   ]
+}
+```
+
+And expects as a response the following body:
+
+```json
+{
+   "positionId":0,
+   "accuracy":100.0
+}
+```
+
+All request between the server and the provider server will have the `X-APP` header and `x-request-id`.
 
 ### Android Application
 

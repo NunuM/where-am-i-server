@@ -42,6 +42,8 @@ public class TrainResourceTest extends JerseyTest {
                 0.0,
                 0.0,
                 false,
+                false,
+                false,
                 device));
 
         ProviderRepository providerRepository = new ProviderRepositoryJpa();
@@ -125,6 +127,8 @@ public class TrainResourceTest extends JerseyTest {
                 "trainingStatus",
                 0.0,
                 0.0,
+                false,
+                false,
                 false,
                 device));
 
@@ -220,6 +224,8 @@ public class TrainResourceTest extends JerseyTest {
                 0.0,
                 0.0,
                 false,
+                false,
+                false,
                 device));
 
         ProviderRepository providerRepository = new ProviderRepositoryJpa();
@@ -285,6 +291,8 @@ public class TrainResourceTest extends JerseyTest {
                 "deleteTrainingRequest",
                 0.0,
                 0.0,
+                false,
+                false,
                 false,
                 device));
 

@@ -41,6 +41,8 @@ public class PositionReportResourceTest extends JerseyTest {
                 0.0,
                 0.0,
                 false,
+                false,
+                false,
                 device));
 
 

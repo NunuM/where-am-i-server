@@ -30,12 +30,14 @@ public class OnlinePhaseService extends Executable {
     private final Long localizationId;
     private final List<FingerprintSample> samples;
     private final Long requestId;
+    private final Long deviceId;
 
-    public OnlinePhaseService(Long localizationId, Long requestId, List<FingerprintSample> samples) {
+    public OnlinePhaseService(Long deviceId, Long localizationId, Long requestId, List<FingerprintSample> samples) {
         super();
         this.localizationId = localizationId;
         this.samples = samples;
         this.requestId = requestId;
+        this.deviceId = deviceId;
     }
 
     @SuppressWarnings("unchecked")
@@ -111,7 +113,8 @@ public class OnlinePhaseService extends Executable {
                                             positionPredicated,
                                             position.getLabel(),
                                             accuracy,
-                                            e.getAlgorithmProvider().getId());
+                                            e.getAlgorithmProvider().getId(),
+                                            deviceId);
 
                                     predictionRepository.save(prediction);
                                 }

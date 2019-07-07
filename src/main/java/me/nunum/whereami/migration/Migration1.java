@@ -8,7 +8,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
-import javax.ws.rs.client.ClientBuilder;
 import java.util.HashMap;
 import java.util.UUID;
 import java.util.logging.Level;
@@ -50,7 +49,7 @@ public final class Migration1 implements Runnable {
 
             final HashMap<String, String> map = new HashMap<>(3);
             map.put(AlgorithmProvider.HTTP_PROVIDER_INGESTION_URL_KEY, "http://www.mocky.io/v2/5cfd86b93200007100ccd52f");
-            map.put(AlgorithmProvider.HTTP_PROVIDER_PREDICTION_URL_KEY, String.format("https://whereami.nunum.me/api/algorithm/%d/implementation/1", algorithm.getId()));
+            map.put(AlgorithmProvider.HTTP_PROVIDER_PREDICTION_URL_KEY, String.format("http://" + AppConfig.APP_AUTHORITY +"/api/algorithm/%d/implementation/1", algorithm.getId()));
             algorithm.addProvider(new AlgorithmProvider(aProvider, AlgorithmProvider.METHOD.HTTP, map));
 
             final Post wikiPost = new Post("Wi-Fi positioning system", "https://whereami.nunum.me/img/wikipedia.png", "https://en.wikipedia.org/wiki/Wi-Fi_positioning_system");

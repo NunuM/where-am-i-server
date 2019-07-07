@@ -1,6 +1,7 @@
 package me.nunum.whereami.model.persistance.jpa;
 
 import me.nunum.whereami.framework.persistence.repositories.impl.jpa.JpaRepository;
+import me.nunum.whereami.model.Device;
 import me.nunum.whereami.model.Localization;
 import me.nunum.whereami.model.Prediction;
 import me.nunum.whereami.model.persistance.PredictionRepository;
@@ -37,12 +38,13 @@ public class PredictionRepositoryJpa
 
     @SuppressWarnings("unchecked")
     @Override
-    public List<Prediction> allPredictionsSince(Localization localization, Date since) {
+    public List<Prediction> allPredictionsSince(Device device, Localization localization, Date since) {
         final EntityManager manager = entityManager();
 
         return manager.createNamedQuery("Prediction.allPredictionsSince")
                 .setParameter("localizationId", localization.id())
                 .setParameter("since", since)
+                .setParameter("deviceId", device.getId())
                 .getResultList();
     }
 }

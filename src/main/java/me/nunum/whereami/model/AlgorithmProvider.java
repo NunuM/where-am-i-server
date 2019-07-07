@@ -155,7 +155,7 @@ public class AlgorithmProvider implements DTOable {
         int sum = this.failurePredictions + this.successPredictions;
 
         if (sum > 0) {
-            result = successPredictions / (float) sum;
+            result = (successPredictions / (float) sum) * 100;
         }
         return result;
     }
@@ -164,7 +164,7 @@ public class AlgorithmProvider implements DTOable {
         this.successPredictions += 1;
     }
 
-    public void incrementFailurePrections() {
+    public void incrementFailurePerfections() {
         this.failurePredictions += 1;
     }
 

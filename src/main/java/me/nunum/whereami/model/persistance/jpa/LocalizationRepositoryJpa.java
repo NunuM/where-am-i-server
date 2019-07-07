@@ -47,6 +47,14 @@ public class LocalizationRepositoryJpa
         final EntityManager manager = entityManager();
 
         if (trained.isPresent()) {
+            if (onlyUserLocalizations.isPresent()) {
+                return (List<Localization>) manager.createNamedQuery("Localization.allVisibleOwnerLocalizationsFilterByTraining")
+                        .setParameter("ownerId", device.getId())
+                        .setMaxResults(DEFAULT_PAGE_SIZE)
+                        .setFirstResult((currentPage - 1) * DEFAULT_PAGE_SIZE)
+                        .getResultList();
+            }
+
             return (List<Localization>) manager.createNamedQuery("Localization.allVisibleLocalizationsFilterByTraining")
                     .setParameter("ownerId", device.getId())
                     .setMaxResults(DEFAULT_PAGE_SIZE)

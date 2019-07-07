@@ -72,7 +72,7 @@ public class FingerprintController implements AutoCloseable {
 
                     Localization localization = position.getLocalization();
 
-                    if (localization.isPublic() || localization.isOwner(device)) {
+                    if (localization.canOtherUsersSendSamples() || localization.isOwner(device)) {
                         this.repository.bulkFingerprints(fingerprintList);
                     } else {
                         continue;

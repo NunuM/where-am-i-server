@@ -13,7 +13,13 @@ public class NewLocalizationRequest {
     private String label;
 
     @NotNull
-    private boolean isPublic;
+    private Boolean publicForTraining;
+
+    @NotNull
+    private Boolean canOtherUsersSendSamples;
+
+    @NotNull
+    private Boolean publicForPrediction;
 
     @NotNull
     @Size(min = 3, max = 255)
@@ -26,16 +32,20 @@ public class NewLocalizationRequest {
     private Double longitude;
 
     public NewLocalizationRequest() {
-        this("", false, "", 0.0, 0.0);
+        this("", false, false, false, "", 0.0, 0.0);
     }
 
     public NewLocalizationRequest(String label,
-                                  boolean isPublic,
+                                  boolean isPublicForTraining,
+                                  boolean CanOtherUserSendSamples,
+                                  boolean isPublicForPrediction,
                                   String user,
                                   double latitude,
                                   double longitude) {
         this.label = label;
-        this.isPublic = isPublic;
+        this.publicForTraining = isPublicForTraining;
+        this.canOtherUsersSendSamples = CanOtherUserSendSamples;
+        this.publicForPrediction = isPublicForPrediction;
         this.user = user;
         this.latitude = latitude;
         this.longitude = longitude;
@@ -49,12 +59,16 @@ public class NewLocalizationRequest {
         this.label = label;
     }
 
-    public boolean isPublic() {
-        return isPublic;
+    public void setPublicForTraining(boolean publicForTraining) {
+        this.publicForTraining = publicForTraining;
     }
 
-    public void setIsPublic(boolean isPublic) {
-        this.isPublic = isPublic;
+    public void setCanOtherUsersSendSamples(boolean canOtherUsersSendSamples) {
+        this.canOtherUsersSendSamples = canOtherUsersSendSamples;
+    }
+
+    public void setPublicForPrediction(boolean publicForPrediction) {
+        this.publicForPrediction = publicForPrediction;
     }
 
     public String getUser() {
@@ -82,6 +96,13 @@ public class NewLocalizationRequest {
     }
 
     public Localization buildLocalization(final Device owner) {
-        return new Localization(this.label.trim().toLowerCase(), this.user.trim().toLowerCase(), latitude, longitude, isPublic, owner);
+        return new Localization(this.label.trim().toLowerCase(),
+                this.user.trim().toLowerCase(),
+                latitude,
+                longitude,
+                publicForTraining,
+                canOtherUsersSendSamples,
+                publicForPrediction,
+                owner);
     }
 }

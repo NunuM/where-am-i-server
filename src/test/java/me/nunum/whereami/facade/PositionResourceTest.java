@@ -44,6 +44,8 @@ public class PositionResourceTest extends JerseyTest {
                 0.0,
                 0.0,
                 false,
+                false,
+                false,
                 device));
 
         PositionRepository positionRepository = new PositionRepositoryJpa();
@@ -88,6 +90,8 @@ public class PositionResourceTest extends JerseyTest {
                 0.0,
                 0.0,
                 true,
+                false,
+                false,
                 device));
 
 
@@ -131,6 +135,8 @@ public class PositionResourceTest extends JerseyTest {
                 0.0,
                 0.0,
                 true,
+                false,
+                false,
                 device));
 
 

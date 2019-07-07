@@ -35,7 +35,7 @@ public class UpdatePredictionRequest {
         if (this.wasCorrect) {
             provider.incrementSuccessPredictions();
         } else {
-            provider.incrementFailurePrections();
+            provider.incrementFailurePerfections();
         }
     }
 
