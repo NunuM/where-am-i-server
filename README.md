@@ -209,9 +209,7 @@ Kind of, currently either you mark the localization as public or private for a l
 
 ##### Screen Shots
 
-![Posts Fragment](https://i.ibb.co/n3GY6Kf/65846243-359964648034468-7578109312891879424-n.jpg)
-
-
+<img src="https://i.ibb.co/n3GY6Kf/65846243-359964648034468-7578109312891879424-n.jpg" alt="Posts Fragment" width="300"/>
 
 ### How to become a Algorithm provider
 
