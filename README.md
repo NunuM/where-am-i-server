@@ -210,6 +210,12 @@ Kind of, currently either you mark the localization as public or private for a l
 ##### Screen Shots
 
 <img src="https://i.ibb.co/n3GY6Kf/65846243-359964648034468-7578109312891879424-n.jpg" alt="Posts Fragment" width="300"/>
+<img src="https://i.ibb.co/gSGs1td/66173223-678601435899829-4638181899309678592-n.jpg" alt="New Localization Fragment" width="300"/>
+<img src="https://i.ibb.co/18p0QsF/66383260-378099049729668-3632568727754506240-n.jpg" alt="Localizations Fragment" width="300"/>
+<img src="https://i.ibb.co/HFgkTZX/66438572-348106275883337-2898324556466880512-n.jpg" alt="Localizations Dashboard Fragment" width="300"/>
+<img src="https://i.ibb.co/QpSkLsZ/66269079-2181320211980385-4407071160810864640-n.jpg" alt="New Training Fragment" width="300"/>
+<img src="https://i.ibb.co/VHHQQ5K/66240579-638161973344689-8484108607871254528-n.jpg" alt="Notification Fragment" width="300"/>
+<img src="https://i.ibb.co/ftSGHRk/66526400-1527989434003740-864574528682983424-n.jpg" alt="Notification Fragment" width="300"/>
 
 ### How to become a Algorithm provider
 
