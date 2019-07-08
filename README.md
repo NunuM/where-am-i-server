@@ -170,14 +170,14 @@ The provider can [delete one of their algorithm implementations](https://wheream
 
 * [Internet](https://developer.android.com/reference/android/Manifest.permission.html#INTERNET) - To communicate with server;
 * [Access WI-FI State](https://developer.android.com/reference/android/Manifest.permission.html#ACCESS_WIFI_STATE) - For collect WI-FI samples
-* [Change WI-FI State](https://developer.android.com/reference/android/Manifest.permission#CHANGE_WIFI_STATE) - For Turning On the Wi-Fi;
+* [Change WI-FI State](https://developer.android.com/reference/android/Manifest.permission#CHANGE_WIFI_STATE) - For Turning On the Wi-Fi card;
 * [Access Coarse Location](https://developer.android.com/reference/android/Manifest.permission.html#ACCESS_COARSE_LOCATION) - For localization associated data at their creation;
 
 ##### FAQ Android
 
 ###### There are a ton of localizations, can I only see mine?
 
-Yes, you can. Click on top right button -> **settings** -> **HTTP API** and activate the option **List only my localizations**.
+Yes, you can. Click on top right button **&#8942;** -> **settings** -> **HTTP API** and activate the option **List only my localizations**.
 
 ###### Why the screen of my Android device is always ON when I am sending samples or requesting to predict my localization?
 
