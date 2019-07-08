@@ -146,7 +146,31 @@ The provider can [delete one of their algorithm implementations](https://wheream
 ### Android Application
 
 #### Table Of Contents
+* [Features](#features)
+* [Permissions](#permissions)
 * [ScreenShots](#screen-shots)
+
+##### Features
+* Posts view, with related material about the state of art;
+* Localizations management;
+* Positions management;
+* Customizable privacy of localizations.  
+* Notification center;
+* Offline localizations and posts visualization;
+* Offline fingerprinting collection;
+* Automatic synchronization of local stored data;
+* Highly configurable REST API;
+* All lists views use endless scrolling and swipe to refresh gesture;
+* No collect or sell information that is shared by the users;
+* Open source;
+* No Ads;
+
+##### Permissions
+
+* [Internet](https://developer.android.com/reference/android/Manifest.permission.html#INTERNET) - To communicate with server;
+* [Access WI-FI State](https://developer.android.com/reference/android/Manifest.permission.html#ACCESS_WIFI_STATE) - For collect WI-FI samples
+* [Change Wifi State](https://developer.android.com/reference/android/Manifest.permission#CHANGE_WIFI_STATE) - For Turning On the Wi-Fi;
+* [Access Coarse Location](https://developer.android.com/reference/android/Manifest.permission.html#ACCESS_COARSE_LOCATION) - For localization creation;
 
 ##### Screen Shots
 

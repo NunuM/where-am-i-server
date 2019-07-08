@@ -3,16 +3,21 @@ package me.nunum.whereami.facade;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
+import me.nunum.whereami.framework.persistence.repositories.impl.jpa.JpaRepository;
+import me.nunum.whereami.utils.AppConfig;
 import org.glassfish.jersey.server.monitoring.MonitoringStatistics;
 import org.glassfish.jersey.server.monitoring.TimeWindowStatistics;
 
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import javax.inject.Provider;
+import javax.persistence.EntityManager;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import java.util.Map;
+import java.util.Optional;
 
 @Api("status")
 @Path("status")
@@ -29,6 +34,7 @@ public class StatusResource {
     @Produces({MediaType.TEXT_HTML})
     @RolesAllowed({"admin"})
     public String getTotalExceptionMappings() throws InterruptedException {
+
         final MonitoringStatistics snapshot
                 = statistics.get().snapshot();
 
