@@ -177,7 +177,7 @@ The provider can [delete one of their algorithm implementations](https://wheream
 
 ###### There are a ton of localizations, can I only see mine?
 
-Yes, you can. Navigate to **settings menu** => **HTTP API** and activate the option **List only my localizations**
+Yes, you can. Click on top right button -> **settings** -> **HTTP API** and activate the option **List only my localizations**.
 
 ###### Why the screen of my Android device is always ON when I am sending samples or requesting to predict my localization?
 
@@ -205,8 +205,7 @@ Yes, you can use the feedback form to propose new material.
 
 ###### I have more than one device, can I share my localizations to another specific device? 
 
-Kind of, currently either you mark the localization as public or private for a list and/or predict, and is for all users. However, you can go to the **settings menu** => **general** and click on installation id and set on all devices the same installation, and all will see the same localizations.
-
+Kind of, currently either you mark the localization as public or private for a list and/or predict, and is for all users. However, you can go to the **settings** -> **general** and click on **Installation ID** and set on all devices the same installation, and all will see the same localizations.
 
 ##### Screen Shots
 
