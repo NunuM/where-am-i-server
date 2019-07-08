@@ -155,7 +155,7 @@ The provider can [delete one of their algorithm implementations](https://wheream
 * Posts view with related material about the state of art;
 * Localizations management;
 * Positions management;
-* Customizable privacy of localizations.  
+* Customizable privacy of localizations;
 * Notification center;
 * Offline localizations and posts visualization;
 * Offline fingerprinting collection;
@@ -163,13 +163,13 @@ The provider can [delete one of their algorithm implementations](https://wheream
 * Highly configurable REST API;
 * All lists views use endless scrolling and swipe to refresh gesture;
 * No collect or sell information that is shared by the users;
-* Open source;
+* Open Source;
 * No Ads;
 
 ##### Permissions
 
 * [Internet](https://developer.android.com/reference/android/Manifest.permission.html#INTERNET) - To communicate with server;
-* [Access WI-FI State](https://developer.android.com/reference/android/Manifest.permission.html#ACCESS_WIFI_STATE) - For collect WI-FI samples
+* [Access WI-FI State](https://developer.android.com/reference/android/Manifest.permission.html#ACCESS_WIFI_STATE) - For collect WI-FI samples;
 * [Change WI-FI State](https://developer.android.com/reference/android/Manifest.permission#CHANGE_WIFI_STATE) - For Turning On the Wi-Fi card;
 * [Access Coarse Location](https://developer.android.com/reference/android/Manifest.permission.html#ACCESS_COARSE_LOCATION) - For localization associated data at their creation;
 
@@ -223,3 +223,6 @@ Open the swagger API, find the resource **provider**, make a POST request by fil
 
 [Wikipedia knows better](https://en.wikipedia.org/wiki/Wi-Fi_positioning_system#Fingerprinting_based)
 
+##### I know that you do not have won anything besides knowledge building this project, can I pay you a beer?
+
+Thank you for your kindness, you can via <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=5RZGRRMR7FM9W&amp;source=url">PayPal</a>
