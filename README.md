@@ -148,17 +148,18 @@ The provider can [delete one of their algorithm implementations](https://wheream
 #### Table Of Contents
 * [Features](#features)
 * [Permissions](#permissions)
+* [FAQ Android](#faq-android)
 * [ScreenShots](#screen-shots)
 
 ##### Features
-* Posts view, with related material about the state of art;
+* Posts view with related material about the state of art;
 * Localizations management;
 * Positions management;
 * Customizable privacy of localizations.  
 * Notification center;
 * Offline localizations and posts visualization;
 * Offline fingerprinting collection;
-* Automatic synchronization of local stored data;
+* Automatic synchronization of locally stored data;
 * Highly configurable REST API;
 * All lists views use endless scrolling and swipe to refresh gesture;
 * No collect or sell information that is shared by the users;
@@ -169,8 +170,43 @@ The provider can [delete one of their algorithm implementations](https://wheream
 
 * [Internet](https://developer.android.com/reference/android/Manifest.permission.html#INTERNET) - To communicate with server;
 * [Access WI-FI State](https://developer.android.com/reference/android/Manifest.permission.html#ACCESS_WIFI_STATE) - For collect WI-FI samples
-* [Change Wifi State](https://developer.android.com/reference/android/Manifest.permission#CHANGE_WIFI_STATE) - For Turning On the Wi-Fi;
-* [Access Coarse Location](https://developer.android.com/reference/android/Manifest.permission.html#ACCESS_COARSE_LOCATION) - For localization creation;
+* [Change WI-FI State](https://developer.android.com/reference/android/Manifest.permission#CHANGE_WIFI_STATE) - For Turning On the Wi-Fi;
+* [Access Coarse Location](https://developer.android.com/reference/android/Manifest.permission.html#ACCESS_COARSE_LOCATION) - For localization associated data at their creation;
+
+##### FAQ Android
+
+###### There are a ton of localizations, can I only see mine?
+
+Yes, you can. Navigate to **settings menu** => **HTTP API** and activate the option **List only my localizations**
+
+###### Why the screen of my Android device is always ON when I am sending samples or requesting to predict my localization?
+
+When the screen goes dark (by inactivity), the WI-FI card no longer scans the available networks. This was the behavior on my device, I also have tried to build the sink service as a background job, but without success. If you know a better way, let me know, or open an issue.
+
+###### Do I need an Internet connection to see my localizations?
+
+No, the localization will be displayed from the application cache directory. If you clean it, you will need Internet.
+
+###### Do I need an Internet connection when am I collecting samples?
+
+No, the application will store locally and automatically sync with server when you are back online.
+
+###### When I delete one localization, what data is deleted?
+
+The server will hard delete all data associated with the localization. There is no coming back;
+
+###### You pretend to implement more indoor tracking algorithms, besides the Mean?
+
+Yes, when the community starts to share information (currently is a cold start), I will provide more implementations.
+
+###### Can I suggest posts and/or algorithms?
+
+Yes, you can use the feedback form to propose new material.
+
+###### I have more than one device, can I share my localizations to another specific device? 
+
+Kind of, currently either you mark the localization as public or private for a list and/or predict, and is for all users. However, you can go to the **settings menu** => **general** and click on installation id and set on all devices the same installation, and all will see the same localizations.
+
 
 ##### Screen Shots
 
@@ -180,10 +216,11 @@ The provider can [delete one of their algorithm implementations](https://wheream
 
 ### How to become a Algorithm provider
 
-Open the swagger API, find the resource **provider**, make a POST request by filling your email and wait for it in your mailbox. click on the link and voila. You can use the **provider** sub-resource of **algorithm** to tell what implementations you have to offer.
+Open the swagger API, find the resource **provider**, make a POST request by filling your email and wait for it in your mailbox (**verify the spam**). click on the link and voila. You can use the **provider** sub-resource of **algorithm** to tell what implementations you have to offer.
 
 ### FAQ
 
-What is a Wi-Fi fingerprint?
+##### What is a Wi-Fi fingerprint?
 
 [Wikipedia knows better](https://en.wikipedia.org/wiki/Wi-Fi_positioning_system#Fingerprinting_based)
+
