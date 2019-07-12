@@ -1,44 +1,101 @@
 <html lang="en">
 <head>
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Angular Material style sheet -->
     <link rel="stylesheet"
           href="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.12/angular-material.min.css">
-    <title>Where Am I</title>
+
+    <!-- Primary Meta Tags -->
+    <title>WhereAmI - Indoor Position Tool</title>
+    <meta name="title" content="WhereAmI - Indoor Position Tool">
+    <meta name="description" content="This is a free and collaborative platform with the goal of helping researchers to test and develop indoor tracking algorithms using Wi-Fi signal information.">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://whereami.nunum.me/">
+    <meta property="og:title" content="WhereAmI - Indoor Position Tool">
+    <meta property="og:description" content="This is a free and collaborative platform with the goal of helping researchers to test and develop indoor tracking algorithms using Wi-Fi signal information.">
+    <meta property="og:image" content="">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://whereami.nunum.me/">
+    <meta property="twitter:title" content="WhereAmI - Indoor Position Tool">
+    <meta property="twitter:description" content="This is a free and collaborative platform with the goal of helping researchers to test and develop indoor tracking algorithms using Wi-Fi signal information.">
+    <meta property="twitter:image" content="">
+
+    <meta name="author" content="NunuM">
+
+    <style>
+        html, body {
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+        a {
+            color: yellow;
+        }
+
+
+        iframe,
+        object,
+        embed {
+            border: 5px solid rgb(255, 255, 255);
+            border: 5px solid rgba(255, 255, 255, 0);
+            -webkit-border-radius: 2em !important;
+            -ms-border-radius: 2em !important;
+            -o-border-radius: 2em !important;
+            border-radius: 2em !important;
+        }
+
+        .html5-video-player {
+            border-radius: 2em !important;
+        }
+
+    </style>
+
 </head>
 <body ng-app="whereAmIApp" ng-cloak>
 
-<div>
-    <md-content layout="row" layout-align="center center">
-        <h1>WHERE AM I</h1>
-    </md-content>
-</div>
-
 <div layout="row" layout-align="center center">
-    <md-content class="md-padding">
+    <md-content class="md-padding mm">
         <md-nav-bar
                 md-no-ink-bar="disableInkBar"
-                md-selected-nav-item="currentNavItem"
+                md-selected-nav-item="home"
                 nav-bar-aria-label="navigation links">
 
-            <md-nav-item md-nav-href="https://whereami.nunum.me" name="home">
+            <md-nav-item md-nav-href="/" name="home">
                 Home
             </md-nav-item>
+
+            <md-nav-item
+                    md-nav-href="#!/privacy" name="privacy">
+                Privacy
+            </md-nav-item>
+
             <md-nav-item md-nav-href="https://whereami.nunum.me/swagger/" name="swagger">
                 Swagger
             </md-nav-item>
             <md-nav-item md-nav-href="https://whereami.nunum.me/javadoc/" name="javadoc">
                 JavaDoc
             </md-nav-item>
+
+            <md-nav-item
+                    md-nav-href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=5RZGRRMR7FM9W&source=url"
+                    name="donate">
+                Donate
+            </md-nav-item>
+
             <md-nav-item md-nav-href="https://github.com/NunuM/where-am-i-server" name="page4">
                 <img src="/img/github-logo.png">
             </md-nav-item>
 
         </md-nav-bar>
-
     </md-content>
 </div>
-</div>
+
+<div ng-view></div>
+
 
 
 <!-- Angular Material requires Angular.js Libraries -->
@@ -56,10 +113,46 @@
 <script>
 
     angular.module('whereAmIApp', ['ngMaterial', 'ngMessages', 'ngRoute', 'ngCookies'])
-        .config(function ($routeProvider, $mdThemingProvider, $httpProvider) {
+        .controller('homeCtrl', function ($http, $scope) {
 
-        $mdThemingProvider.theme('default').accentPalette('yellow').dark();
-    });
+            $scope.localizations =0;
+            $scope.devices = 0;
+            $scope.algorithms = 0;
+
+            $http
+                .get("/api/status/application", {
+                    headers : {'X-APP': 'b255ddb4-e395-49c3-8ee1-bb80f4c45a6c'}
+                })
+                .then(function (response) {
+                    let body = response.data;
+                    $scope.localizations = body.localizations;
+                    $scope.devices = body.devices;
+                    $scope.algorithms = body.algorithms;
+
+                })
+                .catch(function (reason) {
+                    console.log(reason);
+                })
+
+        })
+        .config(function ($routeProvider, $mdThemingProvider, $locationProvider) {
+
+            $routeProvider
+                .when("/", {
+                    templateUrl: 'routes/home.html',
+                    controller:'homeCtrl'
+                })
+                .when("/donate", {
+                    template: '<h1>content</h1>'
+                })
+                .when("/privacy", {
+                    templateUrl: 'routes/privacy.html'
+                })
+                .otherwise('404.html');
+
+
+            $mdThemingProvider.theme('default').primaryPalette('yellow').warnPalette('yellow').accentPalette('yellow').dark();
+        });
 
 
 </script>
