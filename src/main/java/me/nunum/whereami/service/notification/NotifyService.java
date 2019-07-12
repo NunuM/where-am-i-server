@@ -33,7 +33,7 @@ public class NotifyService {
 
         final String name = task.getTraining().getAlgorithm().getName();
 
-        final HashMap<String, String> payload = new HashMap<>(4);
+        final HashMap<String, String> payload = new HashMap<>(5);
         payload.put("algorithmId", task.getTraining().getAlgorithm().getId().toString());
         payload.put("algorithmName", name);
         payload.put("localizationName", localization.getLabel());
@@ -67,7 +67,7 @@ public class NotifyService {
                 .queue(new FirebaseChannel(new FirebaseChannel.FirebaseMessage(
                         targets,
                         DELETE_ALGORITHM_PROVIDER_TITLE,
-                        DELETE_ALGORITHM_PROVIDER_BODY,
+                        String.format(DELETE_ALGORITHM_PROVIDER_BODY, algorithmName),
                         payload
                 )));
     }
@@ -81,7 +81,7 @@ public class NotifyService {
                 .map(Device::getFirebaseToken)
                 .collect(Collectors.toSet());
 
-        final HashMap<String, String> payload = new HashMap<>(1);
+        final HashMap<String, String> payload = new HashMap<>(3);
         payload.put("action", NEW_ALGORITHM_NOTIFICATION_ACTION);
         payload.put("algorithmId", algorithm.getId().toString());
         payload.put("algorithmName", algorithm.getName());

@@ -80,7 +80,7 @@ public class EmailNotifyService extends Executable {
             msg.setSubject("Provider email confirmation");
             msg.setSentDate(new Date());
 
-            msg.setContent(String.format("Hi,%n%nTanks for your registration. You can complete by clicking https://whereami.nunum.me/provider?token=%s", token), "text/plain;; charset=UTF-8");
+            msg.setContent(String.format("Hi,%n%nTanks for your registration. You can complete by clicking https://whereami.nunum.me/provider?token=%s", token), "text/plain; charset=UTF-8");
 
             return msg;
         }
