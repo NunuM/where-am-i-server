@@ -54,7 +54,7 @@ public class EmailNotifyService extends Executable {
 
 
     interface EmailMessage {
-        MimeMessage message(Session session) throws MessagingException;
+        MimeMessage message(Session session) throws Exception;
     }
 
     public static class NewProviderMessage implements EmailMessage {
@@ -69,18 +69,19 @@ public class EmailNotifyService extends Executable {
             this.token = token;
         }
 
-        public MimeMessage message(Session session) throws MessagingException {
+        public MimeMessage message(Session session) throws Exception {
 
             MimeMessage msg = new MimeMessage(session);
 
-            msg.setFrom(new InternetAddress(from));
+            msg.setFrom(new InternetAddress(from, AppConfig.APP_NAME));
+
             InternetAddress[] address = {new InternetAddress(to)};
 
             msg.setRecipients(Message.RecipientType.TO, address);
             msg.setSubject("Provider email confirmation");
             msg.setSentDate(new Date());
 
-            msg.setContent(String.format("Hi,%n%nTanks for your registration. You can complete by clicking https://whereami.nunum.me/provider?token=%s", token), "text/plain; charset=UTF-8");
+            msg.setContent(String.format("Hi,%n%nTanks for your registration. You can complete by clicking https://whereami.nunum.me/api/provider?token=%s", token), "text/plain; charset=UTF-8");
 
             return msg;
         }
@@ -107,10 +108,10 @@ public class EmailNotifyService extends Executable {
         }
 
         @Override
-        public MimeMessage message(Session session) throws MessagingException {
+        public MimeMessage message(Session session) throws Exception {
             MimeMessage msg = new MimeMessage(session);
 
-            msg.setFrom(new InternetAddress(AppConfig.EMAIL_FROM));
+            msg.setFrom(new InternetAddress(AppConfig.EMAIL_FROM, AppConfig.APP_NAME));
             InternetAddress[] address = {new InternetAddress(AppConfig.EMAIL_ADMIN_CONTACT)};
 
             msg.setRecipients(Message.RecipientType.TO, address);
@@ -136,10 +137,10 @@ public class EmailNotifyService extends Executable {
         }
 
         @Override
-        public MimeMessage message(Session session) throws MessagingException {
+        public MimeMessage message(Session session) throws Exception {
             MimeMessage msg = new MimeMessage(session);
 
-            msg.setFrom(new InternetAddress(AppConfig.EMAIL_FROM));
+            msg.setFrom(new InternetAddress(AppConfig.EMAIL_FROM, AppConfig.APP_NAME));
             InternetAddress[] address = {new InternetAddress(to)};
             msg.setRecipients(Message.RecipientType.TO, address);
             InternetAddress[] ccAddress = {new InternetAddress(AppConfig.EMAIL_ADMIN_CONTACT)};
@@ -164,10 +165,10 @@ public class EmailNotifyService extends Executable {
         }
 
         @Override
-        public MimeMessage message(Session session) throws MessagingException {
+        public MimeMessage message(Session session) throws Exception {
             MimeMessage msg = new MimeMessage(session);
 
-            msg.setFrom(new InternetAddress(AppConfig.EMAIL_FROM));
+            msg.setFrom(new InternetAddress(AppConfig.EMAIL_FROM, AppConfig.APP_NAME));
             InternetAddress[] address = {new InternetAddress(AppConfig.EMAIL_ADMIN_CONTACT)};
 
             msg.setRecipients(Message.RecipientType.TO, address);

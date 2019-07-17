@@ -1,37 +1,60 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
     <!-- Angular Material style sheet -->
-    <link rel="stylesheet"
-          href="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.12/angular-material.min.css">
+    <link href="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.12/angular-material.min.css"
+          rel="stylesheet">
 
     <!-- Primary Meta Tags -->
     <title>WhereAmI - Indoor Position Tool</title>
-    <meta name="title" content="WhereAmI - Indoor Position Tool">
-    <meta name="description" content="This is a free and collaborative platform with the goal of helping researchers to test and develop indoor tracking algorithms using Wi-Fi signal information.">
+    <meta content="WhereAmI - Indoor Position Tool" name="title">
+    <meta content="This is a free and collaborative platform with the goal of helping researchers to test and develop indoor tracking algorithms using Wi-Fi signal information."
+          name="description">
 
     <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://whereami.nunum.me/">
-    <meta property="og:title" content="WhereAmI - Indoor Position Tool">
-    <meta property="og:description" content="This is a free and collaborative platform with the goal of helping researchers to test and develop indoor tracking algorithms using Wi-Fi signal information.">
-    <meta property="og:image" content="">
+    <meta content="website" property="og:type">
+    <meta content="https://whereami.nunum.me/" property="og:url">
+    <meta content="WhereAmI - Indoor Position Tool" property="og:title">
+    <meta content="This is a free and collaborative platform with the goal of helping researchers to test and develop indoor tracking algorithms using Wi-Fi signal information."
+          property="og:description">
+    <meta content="img/face-share.png" property="og:image">
 
     <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://whereami.nunum.me/">
-    <meta property="twitter:title" content="WhereAmI - Indoor Position Tool">
-    <meta property="twitter:description" content="This is a free and collaborative platform with the goal of helping researchers to test and develop indoor tracking algorithms using Wi-Fi signal information.">
-    <meta property="twitter:image" content="">
+    <meta content="summary_large_image" property="twitter:card">
+    <meta content="https://whereami.nunum.me/" property="twitter:url">
+    <meta content="WhereAmI - Indoor Position Tool" property="twitter:title">
+    <meta content="This is a free and collaborative platform with the goal of helping researchers to test and develop indoor tracking algorithms using Wi-Fi signal information."
+          property="twitter:description">
+    <meta content="img/face-share.png" property="twitter:image">
 
-    <meta name="author" content="NunuM">
+
+    <link href="img/apple-icon-57x57.png" rel="apple-touch-icon" sizes="57x57">
+    <link href="img/apple-icon-60x60.png" rel="apple-touch-icon" sizes="60x60">
+    <link href="img/apple-icon-72x72.png" rel="apple-touch-icon" sizes="72x72">
+    <link href="img/apple-icon-76x76.png" rel="apple-touch-icon" sizes="76x76">
+    <link href="img/apple-icon-114x114.png" rel="apple-touch-icon" sizes="114x114">
+    <link href="img/apple-icon-120x120.png" rel="apple-touch-icon" sizes="120x120">
+    <link href="img/apple-icon-144x144.png" rel="apple-touch-icon" sizes="144x144">
+    <link href="img/apple-icon-152x152.png" rel="apple-touch-icon" sizes="152x152">
+    <link href="img/apple-icon-180x180.png" rel="apple-touch-icon" sizes="180x180">
+    <link href="img/android-icon-192x192.png" rel="icon" sizes="192x192" type="image/png">
+    <link href="img/favicon-32x32.png" rel="icon" sizes="32x32" type="image/png">
+    <link href="img/favicon-96x96.png" rel="icon" sizes="96x96" type="image/png">
+    <link href="img/favicon-16x16.png" rel="icon" sizes="16x16" type="image/png">
+    <link href="img/manifest.json" rel="manifest">
+    <meta content="#ffffff" name="msapplication-TileColor">
+    <meta content="img/ms-icon-144x144.png" name="msapplication-TileImage">
+    <meta content="#ffffff" name="theme-color">
+
+    <meta content="NunuM" name="author">
 
     <style>
         html, body {
             max-width: 100%;
             overflow-x: hidden;
         }
+
         a {
             color: yellow;
         }
@@ -73,6 +96,11 @@
                 Privacy
             </md-nav-item>
 
+            <md-nav-item
+                    md-nav-href="#!/faq" name="faq">
+                FAQ
+            </md-nav-item>
+
             <md-nav-item md-nav-href="https://whereami.nunum.me/swagger/" name="swagger">
                 Swagger
             </md-nav-item>
@@ -81,12 +109,13 @@
             </md-nav-item>
 
             <md-nav-item
-                    md-nav-href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=5RZGRRMR7FM9W&source=url"
+                    md-nav-href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=5F3L26AKGKLR2&source=url"
                     name="donate">
                 Donate
             </md-nav-item>
 
-            <md-nav-item md-nav-href="https://github.com/NunuM/where-am-i-server" name="page4">
+            <md-nav-item md-nav-href="https://github.com/NunuM/where-am-i-server" name="page4"
+                         nav-item-aria-label="github">
                 <img src="/img/github-logo.png">
             </md-nav-item>
 
@@ -97,14 +126,12 @@
 <div ng-view></div>
 
 
-
 <!-- Angular Material requires Angular.js Libraries -->
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.6/angular.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.6/angular-animate.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.6/angular-aria.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.6/angular-messages.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.6/angular-route.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.6/angular-cookies.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.6/angular-message-format.js"></script>
 
 <!-- Angular Material Library -->
 <script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.12/angular-material.min.js"></script>
@@ -112,22 +139,28 @@
 <!-- Your application bootstrap  -->
 <script>
 
-    angular.module('whereAmIApp', ['ngMaterial', 'ngMessages', 'ngRoute', 'ngCookies'])
+    angular.module('whereAmIApp', ['ngMaterial', 'ngRoute', 'ngMessageFormat'])
         .controller('homeCtrl', function ($http, $scope) {
 
-            $scope.localizations =0;
+            $scope.localizations = 0;
             $scope.devices = 0;
             $scope.algorithms = 0;
+            $scope.providers = 0;
+            $scope.algorithmProviders = 0;
+            $scope.top = [];
 
             $http
                 .get("/api/status/application", {
-                    headers : {'X-APP': 'b255ddb4-e395-49c3-8ee1-bb80f4c45a6c'}
+                    headers: {'X-APP': 'b255ddb4-e395-49c3-8ee1-bb80f4c45a6c'}
                 })
                 .then(function (response) {
                     let body = response.data;
-                    $scope.localizations = body.localizations;
-                    $scope.devices = body.devices;
-                    $scope.algorithms = body.algorithms;
+                    $scope.localizations = body.localization;
+                    $scope.devices = body.device;
+                    $scope.algorithms = body.algorithm;
+                    $scope.providers = body.provider;
+                    $scope.algorithmProviders = body.algorithmProvider;
+                    $scope.top = body.top;
 
                 })
                 .catch(function (reason) {
@@ -140,16 +173,15 @@
             $routeProvider
                 .when("/", {
                     templateUrl: 'routes/home.html',
-                    controller:'homeCtrl'
-                })
-                .when("/donate", {
-                    template: '<h1>content</h1>'
+                    controller: 'homeCtrl'
                 })
                 .when("/privacy", {
                     templateUrl: 'routes/privacy.html'
                 })
-                .otherwise('404.html');
-
+                .when("/faq", {
+                    templateUrl: 'routes/faq.html'
+                })
+                .otherwise('/');
 
             $mdThemingProvider.theme('default').primaryPalette('yellow').warnPalette('yellow').accentPalette('yellow').dark();
         });
@@ -159,8 +191,3 @@
 
 </body>
 </html>
-
-<!--
-Copyright 2016-2019 Google Inc. All Rights Reserved.
-Use of this source code is governed by an MIT-style license that can be found in the LICENSE file at https://material.angularjs.org/latest/license.
--->

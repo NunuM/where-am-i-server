@@ -1,38 +1,69 @@
-<div layout="row" flex-offset="5" flex-offset-xs="0" layout-xs="column" layout-wrap="">
-    <div flex="50" flex-xs="100" layout-padding>
+<div flex-offset="5" flex-offset-xs="0" layout="row" layout-wrap="" layout-xs="column">
+
+    <div flex="" flex-xs="100" layout-padding>
         <p class="md-display-4" style="margin-bottom: 10px;word-break: break-all;">WhereAmI</p>
         <p class="md-headline">
             This is a free and collaborative platform with the goal of helping researchers to test and develop indoor
             tracking algorithms using Wi-Fi signal information.
         </p>
-        <p style="text-align: center;">
-            <a href="#"><img width="250" src="../img/google-play-badge.png"></a>
+        <p style="text-align: center; margin-bottom: 5px">
+            <a href="https://play.google.com/store/apps/details?id=me.nunum.whereami" target="_blank"><img src="../img/google-play-badge.png" width="250"></a>
         </p>
     </div>
-    <div flex="50" flex-xs="100" style="text-align: center;">
 
-        <iframe width="260" height="550" src="https://www.youtube.com/embed/wqch9cWnpzE" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    <div flex="" flex-xs="100" style="text-align: center;">
+
+        <iframe allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen frameborder="0"
+                height="550" src="https://www.youtube.com/embed/wqch9cWnpzE"
+                style="border-radius: 1em;"
+                width="260"></iframe>
     </div>
 </div>
 
-<div flex="100"><hr/></div>
+<div flex="100">
+    <hr/>
+</div>
 
 <div layout="row" flex-offset="5" flex-offset-xs="0" layout-xs="column" layout-wrap="" style="text-align: center;">
+
     <div flex="33" flex-xs="100" layout-padding>
-        <h1 class="md-display-1">{{ algorithms }}<br/>Algorithm Providers</h1>
+        <h1 class="md-display-1">{{ devices }}<br/>
+            {{devices, plural,
+            =1 {Installation}
+            other {Installations}
+            }}
+        </h1>
     </div>
+
     <div flex="33" flex-xs="100" layout-padding>
-        <h1 class="md-display-1">{{ localizations }}<br/>Localizations</h1>
+        <h1 class="md-display-1">{{ localizations }}<br/>
+            {{localizations, plural,
+            =1 {Localization}
+            other {Localizations}
+            }}
+        </h1>
     </div>
+
     <div flex="33" flex-xs="100" layout-padding>
-        <h1 class="md-display-1">{{ devices }}<br/>Installations</h1>
+        <h1 class="md-display-1">{{ algorithms }}<br/>
+            {{algorithms, plural,
+            =1 {Algorithm}
+            other {Algorithms}
+            }}
+        </h1>
     </div>
+
 </div>
 
 
-<div flex="100"><hr/></div>
+<div flex="100">
+    <hr/>
+</div>
 
 <div layout="row" flex-offset="5" flex-offset-xs="0" layout-xs="column" layout-wrap="">
+
+
     <div flex="50" flex-xs="100" layout-padding>
         <h1 class="md-display-2">Features</h1>
         <ul>
@@ -58,13 +89,71 @@
             <li>Internet - To communicate with server;</li>
             <li>Access WI-FI State - For collect WI-FI samples;</li>
             <li>Change WI-FI State - For Turning On the Wi-Fi card;</li>
-            <li>Customizable privacy of localizations;</li>
             <li>Access Coarse Location - For localization associated data at their creation;</li>
         </ul>
     </div>
 
 </div>
 
-<div layout="row" layout-align="center center">
-    <h3 class="md-subhead">Made with ❤️ by NunuM</h3>
+<div flex="100">
+    <hr/>
+</div>
+
+
+<div layout="row" flex-offset="5" flex-offset-xs="0" layout-xs="column" layout-wrap="" style="text-align: center;">
+
+    <div flex="50" flex-xs="100" layout-padding>
+        <h1 class="md-display-1">{{ providers }}<br/>
+            {{providers, plural,
+            =1 {Algorithm Provider}
+            other {Algorithm Providers}
+            }}
+        </h1>
+    </div>
+    <div flex="50" flex-xs="100" layout-padding>
+        <h1 class="md-display-1">{{ algorithmProviders }}<br/>
+            {{algorithmProviders , plural,
+            =1 {Algorithm Implementation}
+            other {Algorithm Implementations}
+            }}
+        </h1>
+    </div>
+</div>
+
+
+<div flex="100">
+    <hr/>
+</div>
+
+
+<div layout="row" flex-offset="5" flex-offset-xs="0" layout-xs="column" layout-wrap="">
+
+    <div flex="100" flex-xs="100" layout-padding style="text-align: center;">
+        <h1 class="md-display-2">Hall of Fame</h1>
+
+        <p ng-repeat="item in top | orderBy: 'rate' : true">{{ item.name }} - Provider {{ item.providerId }} - {{
+            item.rate }}%</p>
+    </div>
+</div>
+
+
+<div layout="row" style="margin-top: 20px;" flex-offset="5" flex-offset-xs="0" layout-xs="column" layout-wrap="">
+
+    <div flex="100" flex-xs="100" layout-padding style="text-align: center;">
+        <a href="https://github.com/NunuM/where-am-i-server#data-flow"><h5>I want to test my algorithm</h5></a>
+    </div>
+
+    <div flex="100" flex-xs="100" layout-padding style="text-align: center;">
+        <img style="-webkit-box-shadow: 0px 0px 22px -2px rgba(0,0,0,0.75);
+-moz-box-shadow: 0px 0px 22px -2px rgba(0,0,0,0.75);
+box-shadow: 0px 0px 22px -2px rgba(0,0,0,0.75); border-radius: 2em;" src="../img/apple-icon-120x120.png">
+    </div>
+
+</div>
+
+
+<div layout="row" flex-offset="5" flex-offset-xs="0" layout-xs="column" layout-wrap="">
+    <div flex="100" flex-xs="100" layout-padding style="text-align: center;">
+        <h3 class="md-subhead">Made with ❤️ by <a target="_blank" rel="author" href="https://www.nunum.me">NunuM</a></h3>
+    </div>
 </div>

@@ -1,0 +1,91 @@
+<div layout="row" layout-align="center start" layout-fill layout-padding>
+    <div flex="50" flex-xs="100" id="privacy_content">
+        <h1>FAQ</h1>
+
+        <p>
+            <strong>
+                There are a ton of localizations, can I only see mine?
+            </strong>
+        </p>
+        <p style="margin-bottom: 50px;">
+            Yes, you can. Click on top right button ⋮ -> settings -> HTTP API and activate the option List only my
+            localizations.
+        </p>
+
+        <p>
+            <strong>
+                Why the screen of my Android device is always ON when I am sending samples or requesting to predict my
+                localization?
+            </strong>
+        </p>
+        <p style="margin-bottom: 50px;">
+            When the screen goes dark (by inactivity), the WI-FI card no longer scans the available networks. This was
+            the behavior on my device, I also have tried to build the sink service as a background job, but without
+            success. If you know a better way, let me know, or open an issue.
+        </p>
+
+        <p>
+            <strong>
+                Do I need an Internet connection to see my localizations?
+            </strong>
+        </p>
+        <p style="margin-bottom: 50px;">
+            No, the localization will be displayed from the application cache directory. If you clean it, you will need
+            Internet.
+        </p>
+
+        <p>
+            <strong>
+                Do I need an Internet connection when am I collecting samples?
+            </strong>
+        </p>
+        <p style="margin-bottom: 50px;">
+            No, the application will store locally and automatically sync with server when you are back online.
+        </p>
+
+        <p>
+            <strong>
+                When I delete one localization, what data is deleted?
+            </strong>
+        </p>
+        <p style="margin-bottom: 50px;">
+            The server will hard delete all data associated with the localization. There is no coming back;
+        </p>
+
+        <p>
+            <strong>
+                You pretend to implement more indoor tracking algorithms, besides the Mean?
+            </strong>
+        </p>
+
+        <p style="margin-bottom: 50px;">
+            Yes, when the community starts to share information (currently is a cold start), I will provide more
+            implementations.
+        </p>
+
+        <p>
+            <strong>
+                Can I suggest posts and/or algorithms?
+            </strong>
+        </p>
+        <p style="margin-bottom: 50px;">
+            Yes, you can use the feedback form to propose new material.
+        </p>
+
+        <p>
+            <strong>
+                I have more than one device, can I share my localizations to another specific device?
+            </strong>
+        </p>
+
+        <p style="margin-bottom: 50px;">
+            Kind of, currently either you mark the localization as public or private for a list and/or predict, and is
+            for all users. However, you can go to the settings -> general and click on Installation ID and set on all
+            devices the same installation, and all will see the same localizations.
+        </p>
+
+        <div style="text-align: center;">
+            <h3 class="md-subhead">Made with ❤️ by <a target="_blank" rel="author" href="https://www.nunum.me">NunuM</a></h3>
+        </div>
+    </div>
+</div>

@@ -14,6 +14,7 @@ import me.nunum.whereami.service.exceptions.HTTPRequestError;
 import me.nunum.whereami.service.notification.NotifyService;
 import me.nunum.whereami.utils.AppConfig;
 
+import javax.ws.rs.ProcessingException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
@@ -101,7 +102,7 @@ public class OfflinePhaseService extends Executable {
                 }
 
                 if (wasLoopExhausted) {
-                    this.flushPayload(task.getId(),true, new ArrayList<>(), task.getTraining().providerProperties());
+                    this.flushPayload(task.getId(), true, new ArrayList<>(), task.getTraining().providerProperties());
                     task.sinkFinish(Date.from(Instant.now()));
                     tasks.save(task);
                 }
@@ -162,6 +163,8 @@ public class OfflinePhaseService extends Executable {
             }
 
             throw new HTTPRequestError(errorAsString.toString());
+        } catch (ProcessingException e) {
+            throw new HTTPRequestError("The server is down.");
         }
 
     }
