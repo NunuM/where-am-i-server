@@ -1,5 +1,7 @@
 ## WhereAmI
 
+[![Build Status](https://travis-ci.org/NunuM/where-am-i-server.svg?branch=master)](https://travis-ci.org/NunuM/where-am-i-server)
+
 ### Motivation
 
 This is a free, collaborative platform with the goal of helping researchers to test and develop indoor tracking algorithms using Wi-Fi signal information. Apart of the server, we also build an [Android application](https://github.com/NunuM/where-am-i-android-app) to help users to collect raw data more easily.
