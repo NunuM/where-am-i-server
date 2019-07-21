@@ -227,4 +227,4 @@ Open the swagger API, find the resource **provider**, make a POST request by fil
 
 ##### I know that you do not have won anything besides knowledge building this project, can I pay you a beer?
 
-Thank you for your kindness, you can via <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=5RZGRRMR7FM9W&amp;source=url">PayPal</a>
+Thank you for your kindness, you can via <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=5F3L26AKGKLR2&source=url">PayPal</a>
