@@ -6,6 +6,8 @@
 
 This is a free, collaborative platform with the goal of helping researchers to test and develop indoor tracking algorithms using Wi-Fi signal information. Apart of the server, we also build an [Android application](https://github.com/NunuM/where-am-i-android-app) to help users to collect raw data more easily.
 
+Android Application already available on [market](https://play.google.com/store/apps/details?id=me.nunum.whereami&hl=pt_PT)
+
 ### Table Of Contents
 * [Get Start](#get-started)
 * [Data Model & Lifecycle](#data-model--lifecycle) 
