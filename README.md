@@ -110,7 +110,7 @@ The server start sending the samples with the following body:
 }
 ```
 
-The **isDrained** value is set `true` when the server has no more samples to push, with this, the provider can start the model training. Once a model is trained, the provider makes a [POST request](http://localhost:8080/swagger/#/task/updateTask). The id that must be sent is the id of the root object when samples are pushing to the provider. Until then, the user cannot use your model. The server is expecting a `2XX` as a response, otherwise, the error will be send via email to the provider and the sinking will be postponed.
+The **isDrained** value is set `true` when the server has no more samples to push, with this, the provider can start the model training. Once a model is trained, the provider makes a [POST request](https://whereami.nunum.me/swagger/#/task/updateTask). The id that must be sent is the id of the root object when samples are pushing to the provider. Until then, the user cannot use your model. The server is expecting a `2XX` as a response, otherwise, the error will be send via email to the provider and the sinking will be postponed.
  
 2 - In the **prediction phase**, the server makes regular POST requests to the provider's model with the following body:
 
