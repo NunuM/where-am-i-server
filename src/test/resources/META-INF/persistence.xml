@@ -22,7 +22,7 @@
         <class>me.nunum.whereami.model.Task</class>
 
         <properties>
-            <property name="javax.persistence.jdbc.url" value="-Dapp.server.port=8089
+            <property name="jakarta.persistence.jdbc.url" value="-Dapp.server.port=8089
       -Dapp.smtp.host=smtp.nunum.me
       -Dapp.admin.email=nuno@nunum.me
       -Dapp.smtp.user=nuno@nunum.me
@@ -31,10 +31,10 @@
       -Dapp.log.dir=$SNAP_USER_DATA
       -Dapp.db.jdbc.url=jdbc:h2:$SNAP_USER_DATA/whereami.db
       -Dapp.website.dir=$SNAP/etc/whereami/docs"/>
-            <property name="javax.persistence.jdbc.password" value=""/>
-            <property name="javax.persistence.jdbc.driver" value="org.h2.Driver"/>
-            <property name="javax.persistence.jdbc.user" value="sa"/>
-            <property name="javax.persistence.schema-generation.database.action" value="drop-and-create"/>
+            <property name="jakarta.persistence.jdbc.password" value=""/>
+            <property name="jakarta.persistence.jdbc.driver" value="org.h2.Driver"/>
+            <property name="jakarta.persistence.jdbc.user" value="sa"/>
+            <property name="jakarta.persistence.schema-generation.database.action" value="drop-and-create"/>
 
             <property name="eclipselink.cache.shared.default" value="false"/>
             <property name="eclipselink.cache.size.default" value="0"/>

@@ -53,7 +53,8 @@ public class AlgorithmResourceTest extends JerseyTest {
 
     @Override
     protected Application configure() {
-        return new ResourceConfig(AlgorithmResource.class).register(PrincipalInterceptor.class);
+        return new ResourceConfig(AlgorithmResource.class)
+                .register(PrincipalInterceptor.class);
     }
 
     @Test

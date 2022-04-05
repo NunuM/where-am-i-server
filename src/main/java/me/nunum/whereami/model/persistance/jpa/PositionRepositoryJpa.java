@@ -8,9 +8,9 @@ import me.nunum.whereami.model.stats.NetworkingStats;
 import me.nunum.whereami.model.stats.StrongRouterSignal;
 import me.nunum.whereami.utils.AppConfig;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.NoResultException;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.NoResultException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;

@@ -5,7 +5,7 @@ import me.nunum.whereami.framework.dto.DTOable;
 import me.nunum.whereami.model.dto.FingerprintDTO;
 import org.eclipse.persistence.annotations.Index;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.Date;
 import java.util.UUID;
 

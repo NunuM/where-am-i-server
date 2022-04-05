@@ -7,8 +7,8 @@ import me.nunum.whereami.framework.persistence.repositories.Repository;
 import me.nunum.whereami.model.exceptions.EntityAlreadyExists;
 import me.nunum.whereami.utils.AppConfig;
 
-import javax.persistence.*;
-import javax.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.*;
+import jakarta.persistence.criteria.CriteriaQuery;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.util.Iterator;

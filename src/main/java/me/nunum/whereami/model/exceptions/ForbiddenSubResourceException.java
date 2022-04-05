@@ -13,6 +13,9 @@ public class ForbiddenSubResourceException
         extends WebApplicationException
         implements ExceptionMapper<ForbiddenSubResourceException> {
 
+    public ForbiddenSubResourceException() {
+    }
+
     public ForbiddenSubResourceException(String message) {
         super(message, Response.Status.FORBIDDEN);
     }

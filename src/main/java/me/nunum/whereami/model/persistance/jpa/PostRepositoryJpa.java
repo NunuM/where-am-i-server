@@ -5,7 +5,7 @@ import me.nunum.whereami.model.Post;
 import me.nunum.whereami.model.persistance.PostRepository;
 import me.nunum.whereami.utils.AppConfig;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;

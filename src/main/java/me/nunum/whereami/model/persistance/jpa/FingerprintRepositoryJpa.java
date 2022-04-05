@@ -7,11 +7,11 @@ import me.nunum.whereami.model.persistance.FingerprintRepository;
 import me.nunum.whereami.model.request.FingerprintSample;
 import me.nunum.whereami.utils.AppConfig;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;

@@ -5,7 +5,7 @@ import me.nunum.whereami.model.Role;
 import me.nunum.whereami.model.persistance.RoleRepository;
 import me.nunum.whereami.utils.AppConfig;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 
 public class RoleRepositoryJpa
         extends JpaRepository<Role, Long>

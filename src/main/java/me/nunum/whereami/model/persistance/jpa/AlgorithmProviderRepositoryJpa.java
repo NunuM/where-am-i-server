@@ -5,7 +5,7 @@ import me.nunum.whereami.model.AlgorithmProvider;
 import me.nunum.whereami.model.persistance.AlgorithmProviderRepository;
 import me.nunum.whereami.utils.AppConfig;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 import java.util.Optional;
 
 public class AlgorithmProviderRepositoryJpa

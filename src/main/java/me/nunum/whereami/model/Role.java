@@ -2,7 +2,7 @@ package me.nunum.whereami.model;
 
 import org.eclipse.persistence.annotations.Index;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;

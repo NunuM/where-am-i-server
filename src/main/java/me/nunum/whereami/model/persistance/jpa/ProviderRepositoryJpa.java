@@ -6,8 +6,8 @@ import me.nunum.whereami.model.Provider;
 import me.nunum.whereami.model.persistance.ProviderRepository;
 import me.nunum.whereami.utils.AppConfig;
 
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
 import java.util.Optional;
 
 public class ProviderRepositoryJpa

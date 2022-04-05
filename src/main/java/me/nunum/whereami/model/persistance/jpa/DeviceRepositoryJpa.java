@@ -7,9 +7,9 @@ import me.nunum.whereami.model.exceptions.NotAbleToPersistDeviceException;
 import me.nunum.whereami.model.persistance.DeviceRepository;
 import me.nunum.whereami.utils.AppConfig;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.NoResultException;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.NoResultException;
 import java.security.Principal;
 import java.util.Set;
 import java.util.stream.Collectors;

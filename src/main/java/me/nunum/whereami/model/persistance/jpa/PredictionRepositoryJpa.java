@@ -7,7 +7,7 @@ import me.nunum.whereami.model.Prediction;
 import me.nunum.whereami.model.persistance.PredictionRepository;
 import me.nunum.whereami.utils.AppConfig;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 import java.util.Date;
 import java.util.List;
 

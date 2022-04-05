@@ -6,7 +6,7 @@ import me.nunum.whereami.framework.dto.DTOable;
 import me.nunum.whereami.model.dto.AlgorithmDTO;
 import org.eclipse.persistence.annotations.Index;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.*;
 import java.util.stream.Collectors;
 

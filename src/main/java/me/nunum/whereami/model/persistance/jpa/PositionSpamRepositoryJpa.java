@@ -6,9 +6,9 @@ import me.nunum.whereami.model.PositionSpamReport;
 import me.nunum.whereami.model.persistance.PositionSpamRepository;
 import me.nunum.whereami.utils.AppConfig;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.NoResultException;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.NoResultException;
 
 public class PositionSpamRepositoryJpa
         extends JpaRepository<PositionSpamReport, Long>

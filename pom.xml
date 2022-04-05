@@ -60,7 +60,7 @@
         <dependency>
             <groupId>org.eclipse.persistence</groupId>
             <artifactId>org.eclipse.persistence.jpa</artifactId>
-            <version>2.7.4</version>
+            <version>3.0.2</version>
         </dependency>
 
         <dependency>
@@ -72,7 +72,7 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.13.1</version>
+            <version>4.13.2</version>
             <scope>test</scope>
         </dependency>
 
@@ -95,6 +95,12 @@
         </dependency>
 
         <dependency>
+            <groupId>jakarta.xml.bind</groupId>
+            <artifactId>jakarta.xml.bind-api</artifactId>
+            <version>2.3.2</version>
+        </dependency>
+
+        <dependency>
             <groupId>com.google.firebase</groupId>
             <artifactId>firebase-admin</artifactId>
             <version>6.8.1</version>
@@ -103,12 +109,12 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>1.7.5</version>
+            <version>1.7.36</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
-            <version>1.7.5</version>
+            <version>1.7.36</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -135,7 +141,7 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.19.1</version>
                 <configuration>
-                    <argLine>@{argLine} -javaagent:lib/org.eclipse.persistence.jpa-2.7.4.jar</argLine>
+                    <argLine>@{argLine} -javaagent:lib/org.eclipse.persistence.jpa-3.0.2.jar</argLine>
                     <systemProperties>
                         <app.db.jdbc.url>jdbc:h2:mem:test</app.db.jdbc.url>
                         <app.persistence.unit>me.nunum.whereami.TEST_JPA_PERSISTENCE</app.persistence.unit>
@@ -156,7 +162,7 @@
                 <configuration>
                     <executable>java</executable>
                     <arguments>
-                        <argument>-javaagent:lib/org.eclipse.persistence.jpa-2.7.4.jar</argument>
+                        <argument>-javaagent:lib/org.eclipse.persistence.jpa-3.0.2.jar</argument>
                         <argument>-Dapp.server.port=8080</argument>
                         <argument>-Dapp.smtp.host=smtp.user.me</argument>
                         <argument>-Dapp.admin.email=user@user.me</argument>
@@ -256,7 +262,7 @@
                                 <artifactItem>
                                     <groupId>org.eclipse.persistence</groupId>
                                     <artifactId>org.eclipse.persistence.jpa</artifactId>
-                                    <version>2.7.4</version>
+                                    <version>3.0.2</version>
                                     <type>jar</type>
                                     <overWrite>true</overWrite>
                                     <outputDirectory>${project.basedir}/lib</outputDirectory>
@@ -298,7 +304,7 @@
     </build>
 
     <properties>
-        <jersey.version>2.27</jersey.version>
+        <jersey.version>2.35</jersey.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 </project>

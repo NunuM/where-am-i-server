@@ -66,7 +66,8 @@ public class AppConfig {
 
         final HashMap<String, String> map = new HashMap<>(1);
 
-        map.put("javax.persistence.jdbc.url", System.getProperty("app.db.jdbc.url", "jdbc:h2:mem:test"));
+        map.put("jakarta.persistence.jdbc.url", System.getProperty("app.db.jdbc.url", "jdbc:h2:mem:test"));
+        map.put("jakarta.persistence.jdbc.driver", "org.h2.Driver");
 
         return map;
     }

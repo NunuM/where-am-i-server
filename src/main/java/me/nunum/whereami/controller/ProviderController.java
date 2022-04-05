@@ -14,7 +14,7 @@ import me.nunum.whereami.model.persistance.jpa.RoleRepositoryJpa;
 import me.nunum.whereami.model.request.NewProviderRequest;
 import me.nunum.whereami.service.notification.NotifyService;
 
-import javax.persistence.EntityNotFoundException;
+import jakarta.persistence.EntityNotFoundException;
 import java.security.Principal;
 import java.util.Optional;
 import java.util.logging.Level;
