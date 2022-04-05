@@ -10,7 +10,7 @@ import jakarta.persistence.*;
 import java.util.*;
 
 @Entity
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"label", "user"}))
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"label", "USER_NAME"}))
 @NamedQueries({
         @NamedQuery(
                 name = "Localization.allVisibleLocalizations",
@@ -61,7 +61,7 @@ public class Localization implements DTOable, Identifiable<Long>, Comparable<Loc
     @Index
     private boolean isPublicForOnline;
 
-    @Column(length = 100)
+    @Column(name = "USER_NAME",length = 100)
     private String user;
 
     @ManyToOne(fetch = FetchType.LAZY)

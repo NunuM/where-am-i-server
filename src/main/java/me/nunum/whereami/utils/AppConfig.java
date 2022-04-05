@@ -4,6 +4,7 @@ import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import me.nunum.whereami.framework.interceptor.ClientLoggingInterceptor;
+import org.eclipse.persistence.config.PersistenceUnitProperties;
 import org.glassfish.jersey.client.ClientConfig;
 
 import java.io.FileInputStream;
@@ -66,8 +67,7 @@ public class AppConfig {
 
         final HashMap<String, String> map = new HashMap<>(1);
 
-        map.put("jakarta.persistence.jdbc.url", System.getProperty("app.db.jdbc.url", "jdbc:h2:mem:test"));
-        map.put("jakarta.persistence.jdbc.driver", "org.h2.Driver");
+        map.put(PersistenceUnitProperties.JDBC_URL, System.getProperty("app.db.jdbc.url", "jdbc:h2:mem:test;DB_CLOSE_DELAY=-1"));
 
         return map;
     }

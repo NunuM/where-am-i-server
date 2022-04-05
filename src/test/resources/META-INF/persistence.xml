@@ -22,15 +22,7 @@
         <class>me.nunum.whereami.model.Task</class>
 
         <properties>
-            <property name="jakarta.persistence.jdbc.url" value="-Dapp.server.port=8089
-      -Dapp.smtp.host=smtp.nunum.me
-      -Dapp.admin.email=nuno@nunum.me
-      -Dapp.smtp.user=nuno@nunum.me
-      -Dapp.smtp.password=12NunuM34_wq
-      -Dapp.firebase.service.account=$SNAP/etc/whereami/firebase/where-am-i-d215e-firebase-adminsdk-gh2ru-75881c2199.json
-      -Dapp.log.dir=$SNAP_USER_DATA
-      -Dapp.db.jdbc.url=jdbc:h2:$SNAP_USER_DATA/whereami.db
-      -Dapp.website.dir=$SNAP/etc/whereami/docs"/>
+            <property name="jakarta.persistence.jdbc.url" value="jdbc:h2:mem:test"/>
             <property name="jakarta.persistence.jdbc.password" value=""/>
             <property name="jakarta.persistence.jdbc.driver" value="org.h2.Driver"/>
             <property name="jakarta.persistence.jdbc.user" value="sa"/>
@@ -39,7 +31,7 @@
             <property name="eclipselink.cache.shared.default" value="false"/>
             <property name="eclipselink.cache.size.default" value="0"/>
             <property name="eclipselink.cache.type.default" value="None"/>
-            <property name="eclipselink.logging.level" value="OFF"/>
+            <property name="eclipselink.logging.level" value="FINE"/>
             <property name="eclipselink.logging.logger" value="JavaLogger"/>
 
         </properties>
