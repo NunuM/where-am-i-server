@@ -1,5 +1,5 @@
 name: where-am-i # app name'
-version: '1.0.0' # git tag version'
+version: '1.0.1' # git tag version'
 summary: WhereAmI Java Server # 79 char long summary
 description: |
   This is a APP
@@ -34,7 +34,7 @@ apps:
       -Xms256M
       -Xmx512M
       -classpath $SNAP/etc/whereami/lib/*
-      -javaagent:$SNAP/etc/whereami/lib/org.eclipse.persistence.jpa-2.7.4.jar
+      -javaagent:$SNAP/etc/whereami/lib/org.eclipse.persistence.jpa-3.0.2.jar
       -Dapp.server.port=8089
       -Dapp.smtp.host=smtp.user.me
       -Dapp.admin.email=user@user.me
@@ -54,7 +54,7 @@ apps:
   migrations:
     command: "java
       -classpath $SNAP/etc/whereami/lib/*
-      -javaagent:$SNAP/etc/whereami/lib/org.eclipse.persistence.jpa-2.7.4.jar
+      -javaagent:$SNAP/etc/whereami/lib/org.eclipse.persistence.jpa-3.0.2.jar
       -Dapp.log.dir=$SNAP_USER_DATA
       -Dapp.db.jdbc.url=jdbc:h2:$SNAP_COMMON/whereami.db
       -Dlog4j.configuration=log4j.properties
