@@ -191,28 +191,28 @@ public class LocalizationController implements AutoCloseable {
     }
 
 
-    public List<DTO> requestNewPrediction(Principal userPrincipal, Long id, NewPredictionRequest request) {
+    public List<DTO> requestNewPrediction(Principal userPrincipal, Long id, NewPredictionRequest request) throws Exception {
 
         final Device device = this.deviceRepository.findOrPersist(userPrincipal);
 
         final Localization localization = this.localizationForOnlinePhase(userPrincipal, id);
 
-        final PredictionRepository predictionRepository = new PredictionRepositoryJpa();
+        try (final PredictionRepository predictionRepository = new PredictionRepositoryJpa()) {
+            if (!request.isOnlyPolling()) {
 
-        if (!request.isOnlyPolling()) {
+                Long requestId = predictionRepository.maxRequestIdForLocalization(localization) + 1;
 
-            Long requestId = predictionRepository.maxRequestIdForLocalization(localization) + 1;
+                final OnlinePhaseService onlinePhaseService = new OnlinePhaseService(device.getId(), localization.id(), requestId, request.getSamples());
 
-            final OnlinePhaseService onlinePhaseService = new OnlinePhaseService(device.getId(), localization.id(), requestId, request.getSamples());
+                TaskManager.getInstance().queue(onlinePhaseService);
+            }
 
-            TaskManager.getInstance().queue(onlinePhaseService);
+            return predictionRepository
+                    .allPredictionsSince(device, localization, request.getLastUpdate())
+                    .stream()
+                    .map(Prediction::toDTO)
+                    .collect(Collectors.toList());
         }
-
-        return predictionRepository
-                .allPredictionsSince(device, localization, request.getLastUpdate())
-                .stream()
-                .map(Prediction::toDTO)
-                .collect(Collectors.toList());
     }
 
 
