@@ -37,6 +37,9 @@ public class TaskManager implements Runnable {
                 final Executable task = this.tasks.take();
                 LOGGER.info("Executing task");
                 this.executor.submit(task).get();
+            } catch (InterruptedException ex) {
+                LOGGER.log(Level.SEVERE, "Interrupted!", ex);
+                Thread.currentThread().interrupt();
             } catch (Exception e) {
                 LOGGER.log(Level.SEVERE, "Error while executing task", e);
             }
